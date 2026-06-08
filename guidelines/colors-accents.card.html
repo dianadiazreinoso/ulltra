@@ -1,0 +1,32 @@
+<!-- @dsCard group="Colors" viewport="700x190" name="Accents" subtitle="Magenta primary · status yellow · voltage lime" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; background: var(--c-bg); padding: 22px; font-family: var(--ff-mono); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .chip { border-radius: var(--r-md); height: 110px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+  .tok { font-size: 11px; font-weight: 500; }
+  .hex { font-size: 10px; letter-spacing: 0.08em; opacity: 0.75; }
+  .note { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 10px; color: var(--c-ink-mute); }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="chip" style="background:var(--c-accent); color:var(--c-accent-ink)">
+      <span class="tok">--c-accent</span>
+      <div><div class="hex">#D95BFF</div><div class="note" style="color:rgba(10,8,7,.6)">primary · CTA dot · selection</div></div>
+    </div>
+    <div class="chip" style="background:var(--c-status); color:#0A0807">
+      <span class="tok">--c-status</span>
+      <div><div class="hex">#E5DC4D</div><div class="note" style="color:rgba(10,8,7,.6)">operational · live dot</div></div>
+    </div>
+    <div class="chip" style="background:var(--c-volt); color:#0A0807">
+      <span class="tok">--c-volt</span>
+      <div><div class="hex">#D2FF00</div><div class="note" style="color:rgba(10,8,7,.6)">header CTA only</div></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!-- @dsCard group="Colors" viewport="700x190" name="Neutral foundation" subtitle="Warm black → cream ink ramp" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; background: var(--c-bg); padding: 22px; font-family: var(--ff-mono); }
+  .row { display: flex; gap: 0; border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--c-line-soft); }
+  .sw { flex: 1; height: 96px; display: flex; align-items: flex-end; padding: 8px; }
+  .lbl { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .dark-ink { color: var(--c-ink-mute); }
+  .light-ink { color: rgba(10,8,7,0.6); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="sw" style="background:var(--c-bg)"><span class="lbl dark-ink">bg #0A0807</span></div>
+    <div class="sw" style="background:var(--c-bg-1)"><span class="lbl dark-ink">bg-1</span></div>
+    <div class="sw" style="background:var(--c-bg-2)"><span class="lbl dark-ink">bg-2</span></div>
+    <div class="sw" style="background:var(--c-ink-dim)"><span class="lbl dark-ink">ink-dim</span></div>
+    <div class="sw" style="background:var(--c-ink-mute)"><span class="lbl light-ink">ink-mute</span></div>
+    <div class="sw" style="background:var(--c-ink-sub)"><span class="lbl light-ink">ink-sub</span></div>
+    <div class="sw" style="background:var(--c-ink)"><span class="lbl light-ink">ink #EDE5CC</span></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+/* =============================================================================
+   SVRN · Motion tokens
+   The site moves cinematically: long tails, no bounce, nothing springy. Content
+   fades and rises a few px on entry; hover lifts are small (-3px) and slow.
+   Scroll-driven sequences (pinned reveals, the turntable bust) scrub 1:1.
+   ========================================================================== */
+:root {
+  /* ── Duration ────────────────────────────────────────────────────────────*/
+  --t-instant: 120ms;   /* press feedback */
+  --t-fast:    220ms;   /* small hovers */
+  --t-base:    420ms;   /* default transition */
+  --t-slow:    720ms;   /* panel / drawer */
+  --t-grand:  1200ms;   /* hero entrance */
+
+  /* ── Easings ─────────────────────────────────────────────────────────────
+     No overshoot anywhere. Cine has the longest tail and is the house curve
+     for entrances; edit is a crisp editorial reveal; in-out for symmetric
+     loops (the pulsing status dot). */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);   /* gentle decel */
+  --ease-out-edit: cubic-bezier(0.16, 0.84, 0.30, 1);   /* editorial reveal */
+  --ease-out-cine: cubic-bezier(0.19, 1.00, 0.22, 1);   /* cinematic long tail */
+  --ease-in-out:   cubic-bezier(0.65, 0.00, 0.35, 1);   /* symmetric */
+
+  /* ── Composed defaults ───────────────────────────────────────────────────*/
+  --motion-hover:  var(--t-base) var(--ease-out-edit);
+  --motion-enter:  var(--t-grand) var(--ease-out-cine);
+}
+
+/* Honour reduced-motion: collapse durations so entrances resolve instantly. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 1ms; --t-base: 1ms; --t-slow: 1ms; --t-grand: 1ms;
+  }
+}

@@ -1,0 +1,43 @@
+/* =============================================================================
+   SVRN · Spacing, layout, radii & elevation tokens
+   A 4px base grid. Containers are wide (1480) and centred with a fluid gutter.
+   Radii are restrained (6–14px); the design favours sharp editorial edges and
+   uses rounding only on cards, inputs and the floating header.
+   ========================================================================== */
+:root {
+  /* ── 4px spacing scale ───────────────────────────────────────────────────*/
+  --s-1: 4px;   --s-2: 8px;   --s-3: 12px;  --s-4: 16px;
+  --s-5: 20px;  --s-6: 24px;  --s-7: 32px;  --s-8: 40px;
+  --s-9: 56px;  --s-10: 72px; --s-11: 96px; --s-12: 128px;
+
+  /* ── Layout containers ───────────────────────────────────────────────────*/
+  --container:        min(1480px, 100vw - 64px);
+  --container-narrow: min(1280px, 100vw - 48px);
+  --gutter:           clamp(20px, 3.2vw, 56px);
+
+  /* ── Radii ───────────────────────────────────────────────────────────────*/
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   14px;
+  --r-card: 16px;   /* overlay panels / large cards */
+  --r-pill: 999px;
+
+  /* ── Elevation ───────────────────────────────────────────────────────────
+     Shadows are deep, soft and near-black — used only on floating overlays and
+     the largest cards. Most surfaces rely on hairlines, not shadow. */
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md:   0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-lg:   0 30px 80px rgba(0, 0, 0, 0.60);
+  --shadow-glow: 0 0 10px 1px color-mix(in oklab, var(--c-status) 50%, transparent);
+
+  /* ── Frosted glass ───────────────────────────────────────────────────────*/
+  --blur-glass: blur(8px) saturate(120%);
+
+  /* ── Z-index architecture ────────────────────────────────────────────────*/
+  --z-bg:       0;    /* background image + gradients */
+  --z-bg-glow:  5;
+  --z-content:  10;   /* hero text + cards */
+  --z-header:   40;
+  --z-overlay:  60;   /* inspectors / drawers */
+  --z-tweaks:   80;
+}

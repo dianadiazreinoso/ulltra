@@ -1,0 +1,73 @@
+/* =============================================================================
+   SVRN · Color tokens
+   Warm-black foundation with cream ink. A magenta primary accent, an
+   operational-yellow status colour, and a high-voltage lime reserved for the
+   header CTA. Two "paper" surfaces invert the system for the light editorial
+   sections (Capabilities, Software, Stack).
+   ========================================================================== */
+:root {
+  /* ── Neutral foundation · warm black → cream ─────────────────────────────
+     The page is built on a near-black that is warmed toward brown, never a
+     pure #000. Ink is a warm cream, stepped down through three mute levels. */
+  --c-bg:            #0A0807;   /* page base — warm black */
+  --c-bg-1:          #100D0B;   /* raised surface */
+  --c-bg-2:          #1A1612;   /* card / panel surface */
+  --c-ink:           #EDE5CC;   /* primary cream — headlines + body on dark */
+  --c-ink-sub:       #B8AD93;   /* secondary cream */
+  --c-ink-mute:      #6E6857;   /* tertiary / nav idle / mono labels */
+  --c-ink-dim:       #3A3730;   /* faintest — disabled, hairline ink */
+
+  /* Hairlines are cream at very low alpha so they read as light catching an
+     edge rather than as drawn borders. */
+  --c-line:          rgba(237, 229, 204, 0.14);
+  --c-line-soft:     rgba(237, 229, 204, 0.07);
+
+  /* ── Accents ─────────────────────────────────────────────────────────────
+     Magenta is THE brand accent (CTA dot, marker, selection, ::selection).
+     Status-yellow signals "operational / live". Lime is a single high-voltage
+     note reserved for the primary header CTA outline + label. */
+  --c-accent:        #D95BFF;   /* magenta — primary accent */
+  --c-accent-ink:    #0A0807;   /* ink to place ON magenta */
+  --c-status:        #E5DC4D;   /* operational yellow — live dot */
+  --c-volt:          #D2FF00;   /* lime — header CTA only, used sparingly */
+
+  /* ── Glass surfaces ──────────────────────────────────────────────────────
+     Frosted dark panels over imagery (hero info cards). */
+  --c-glass:         rgba(20, 17, 14, 0.50);
+  --c-glass-stroke:  rgba(237, 229, 204, 0.10);
+
+  /* ── Paper surfaces · the light inversion ────────────────────────────────
+     Editorial sections flip to a warm cream paper with near-black ink. Two
+     paper tones: capabilities (cooler) and software/stack (warmer). */
+  --c-paper:         #EFE9DB;   /* capabilities paper */
+  --c-paper-warm:    #F2EAD3;   /* software / stack paper */
+  --c-paper-ink:     #1A1612;   /* primary ink on paper */
+  --c-paper-ink-sub: #5A5446;   /* secondary ink on paper */
+  --c-paper-line:    rgba(26, 22, 18, 0.18);   /* hairline on paper */
+
+  /* ── Product brand tints ─────────────────────────────────────────────────
+     The three platform cards (AOS / DataSpaces / Portal) carry their own
+     duotone identities. */
+  --c-dataspaces:    #C5A0D7;   --c-dataspaces-ink: #401555;
+  --c-portal:        #2F3A0A;   --c-portal-ink:     #EDE5CC;
+
+  /* ── Semantic aliases ────────────────────────────────────────────────────
+     Prefer these in components so intent survives a palette change. */
+  --surface-page:    var(--c-bg);
+  --surface-raised:  var(--c-bg-1);
+  --surface-card:    var(--c-bg-2);
+  --surface-glass:   var(--c-glass);
+  --surface-paper:   var(--c-paper);
+
+  --text-strong:     var(--c-ink);
+  --text-body:       var(--c-ink-sub);
+  --text-muted:      var(--c-ink-mute);
+  --text-on-paper:   var(--c-paper-ink);
+
+  --border-hairline: var(--c-line);
+  --border-faint:    var(--c-line-soft);
+
+  --accent-primary:  var(--c-accent);
+  --accent-live:     var(--c-status);
+  --accent-cta:      var(--c-volt);
+}

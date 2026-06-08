@@ -1,0 +1,66 @@
+<!-- @dsCard group="Components" viewport="700x440" name="Core primitives" subtitle="Button · Eyebrow · StatusPill · InfoCard · CapabilityCard" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  body { margin: 0; background: var(--c-bg); color: var(--c-ink); padding: 26px; font-family: var(--ff-display); }
+  .sec { margin-bottom: 24px; }
+  .sec-h { font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--c-ink-dim); margin: 0 0 12px; }
+  .rowflex { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+  /* Button */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--ff-mono); font-weight: 500; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; border-radius: var(--r-pill); padding: 0 22px; height: 44px; transition: all var(--t-base) var(--ease-in-out); }
+  .btn-volt { background: transparent; border: 1px solid var(--c-volt); color: var(--c-volt); }
+  .btn-volt:hover { background: var(--c-volt); color: #0A0807; }
+  .btn-solid { background: var(--c-paper-ink); border: 1px solid var(--c-paper-ink); color: #F4EFE3; border-radius: var(--r-md); }
+  .btn-ghost { background: transparent; border: 1px solid var(--c-line); color: var(--c-ink); }
+  .btn-ghost:hover { border-color: var(--c-ink); background: rgba(237,229,204,.05); }
+
+  /* Eyebrow / StatusPill */
+  .eyebrow { display:inline-flex; align-items:center; gap:10px; font-family: var(--ff-mono); font-size: var(--fs-nav); font-weight:500; letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--c-ink-mute); }
+  .eyebrow .num { color: var(--c-ink-dim); }
+  .pill { display:inline-flex; align-items:center; gap:10px; font-family: var(--ff-mono); font-size: var(--fs-nav); font-weight:500; letter-spacing:0.04em; color: var(--c-ink-sub); }
+  .dot { width:7px; height:7px; border-radius:50%; background: var(--c-status); box-shadow: 0 0 10px 1px color-mix(in oklab, var(--c-status) 50%, transparent); animation: pulse 2.4s var(--ease-in-out) infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(.82)} }
+
+  /* InfoCard */
+  .glassrow { display:flex; gap: 14px; max-width: 520px; }
+  .glass { flex:1; padding: 20px 24px; display:flex; flex-direction:column; gap:14px; background: var(--c-glass); -webkit-backdrop-filter: var(--blur-glass); backdrop-filter: var(--blur-glass); border-radius: var(--r-md); border: 1px solid var(--c-glass-stroke); }
+  .glass-body { font-weight:600; font-size:14px; line-height:1.25; color: var(--c-ink); }
+</style>
+</head>
+<body>
+  <div class="sec">
+    <p class="sec-h">Button — volt · solid · ghost</p>
+    <div class="rowflex">
+      <span class="btn btn-volt">Get started</span>
+      <span class="btn btn-solid">Book a discovery call</span>
+      <span class="btn btn-ghost">View work</span>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sec-h">Eyebrow &amp; StatusPill</p>
+    <div class="rowflex">
+      <span class="eyebrow"><span class="num">§ 05</span> Stack · Tech &amp; AI</span>
+      <span class="pill"><span class="dot"></span> Operating 24 / 7 / 365</span>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-bottom:0">
+    <p class="sec-h">InfoCard — frosted glass pair</p>
+    <div class="glassrow">
+      <div class="glass">
+        <span class="eyebrow">Origin</span>
+        <span class="glass-body">European AI &amp; Data Engineering — established for sovereign systems.</span>
+      </div>
+      <div class="glass">
+        <span class="eyebrow">Status</span>
+        <span class="pill"><span class="dot"></span> Operating 24 / 7 / 365</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

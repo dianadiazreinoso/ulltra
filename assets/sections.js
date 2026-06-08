@@ -1,0 +1,216 @@
+/* =============================================================================
+   SVRN · Sections — Transition + Approach
+   -----------------------------------------------------------------------------
+   All motion is scroll-progress driven (no IntersectionObserver), which gives:
+     · deterministic timing tied to viewport position
+     · cinematic scroll-linked choreography
+     · works regardless of host environment IO support
+   Builds on the cinematic vocabulary established in the hero (EASE_CINE,
+   layered z-index, atmospheric depth).
+   ========================================================================== */
+
+const SX_FM = window.Motion || window.framerMotion || window["framer-motion"] || {};
+const { motion, useScroll, useTransform } = SX_FM;
+
+const SX_EASE_CINE = [0.19, 1, 0.22, 1];
+
+/* ─── revealRange — map a [progress 0..1] window to [from..to] cleanly.
+   Used to choreograph stagger across siblings inside one scroll range. */
+const revealRange = (mv, start, end, from, to) =>
+  useTransform(mv, [start, end], [from, to], { clamp: true });
+
+/* =============================================================================
+   Transition Section — narrative pacing beat between dark hero & cream stage.
+   ========================================================================== */
+function TransitionSection() {
+  const ref = React.useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  // Reveal window: 0.15..0.45 of section scroll range
+  const eyebrowOpacity = revealRange(scrollYProgress, 0.15, 0.42, 0, 1);
+  const eyebrowY       = revealRange(scrollYProgress, 0.15, 0.42, 24, 0);
+
+  const letterOpacity  = revealRange(scrollYProgress, 0.20, 0.52, 0, 1);
+  const letterY        = revealRange(scrollYProgress, 0.20, 0.52, 36, 0);
+
+  // Gentle upward drift across whole section for editorial pacing
+  const driftY = useTransform(scrollYProgress, [0, 1], [30, -30]);
+
+  const paragraph =
+    "VRN designs, builds and operates AI systems that automate business processes. We do it on sovereign infrastructure — owned, governed in Europe, independent of external vendors. Old wisdom, new instruments.";
+
+  return (
+    <section ref={ref} className="trans" data-screen-label="Transition">
+      <motion.div className="trans-inner container" style={{ y: driftY }}>
+        <motion.span
+          className="trans-eyebrow"
+          style={{ opacity: eyebrowOpacity, y: eyebrowY }}
+        >
+          — A Letter from the editor
+        </motion.span>
+
+        <motion.p
+          className="trans-letter"
+          style={{ opacity: letterOpacity, y: letterY }}
+        >
+          <span className="trans-dropcap">S</span>
+          {paragraph}
+        </motion.p>
+      </motion.div>
+    </section>
+  );
+}
+
+/* =============================================================================
+   Approach Section — wordmark + 3 editorial cards over atmospheric image.
+   ========================================================================== */
+function ApproachSection() {
+  const ref = React.useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  // BACKGROUND IMAGE — slow parallax + breathing scale
+  const bgY     = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+  const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.10, 1.04, 1.00]);
+
+  // TITLE — long cinematic reveal: opacity in (0.15..0.45), then drifts up
+  // across the whole section so it feels like the camera is moving past it.
+  const titleOpacity = revealRange(scrollYProgress, 0.12, 0.40, 0, 1);
+  const titleY       = useTransform(scrollYProgress, [0.10, 0.60, 1], [80, 0, -60]);
+  const titleLetter  = useTransform(scrollYProgress, [0.10, 0.45], ["-0.02em", "-0.05em"]);
+
+  // CARDS — staggered scroll-driven entrance.  Each card has its own
+  // 0..1 reveal sliced from the parent progress.  Stagger ≈ 0.05 of the
+  // section scroll range per card.
+  const c1Op = revealRange(scrollYProgress, 0.35, 0.60, 0, 1);
+  const c1Y  = revealRange(scrollYProgress, 0.35, 0.60, 80, 0);
+  const c2Op = revealRange(scrollYProgress, 0.40, 0.65, 0, 1);
+  const c2Y  = revealRange(scrollYProgress, 0.40, 0.65, 80, 0);
+  const c3Op = revealRange(scrollYProgress, 0.45, 0.70, 0, 1);
+  const c3Y  = revealRange(scrollYProgress, 0.45, 0.70, 80, 0);
+
+  return (
+    <section ref={ref} className="approach" data-screen-label="Approach">
+      <div className="approach-bg-wrap">
+        <motion.div className="approach-bg" style={{ y: bgY, scale: bgScale }} />
+        <div className="approach-bg-vignette" />
+      </div>
+
+      <motion.h2
+        className="approach-title"
+        style={{ opacity: titleOpacity, y: titleY, letterSpacing: titleLetter }}
+      >
+        Approach
+      </motion.h2>
+
+      <div className="approach-cards container">
+        <ApproachCard
+          n="A · 01"
+          title="Diagnose & map"
+          desc="Audit current systems, find friction, mark sovereign boundaries."
+          bgSrc="assets/card-1-bg.png"
+          assetSrc="assets/card-1-asset.png"
+          variant="cream"
+          opacity={c1Op}
+          y={c1Y}
+        />
+        <ApproachCard
+          n="A · 02"
+          title="Compose, don't assemble"
+          desc={"Custom systems, not stitched-together SaaS.\nOwned end-to-end."}
+          bgSrc="assets/card-2-bg.png"
+          assetSrc="assets/card-2-asset.png"
+          variant="teal"
+          opacity={c2Op}
+          y={c2Y}
+        />
+        <ApproachCard
+          n="A · 03"
+          title="Operate, ship, hold"
+          desc={"We don't hand it back at launch.\nWe run the system through its life."}
+          bgSrc="assets/card-3-bg.png"
+          assetSrc={null}
+          variant="rouge"
+          opacity={c3Op}
+          y={c3Y}
+        />
+      </div>
+    </section>
+  );
+}
+
+/* ─── Editorial card — premium glass floating panel.
+   Receives its reveal opacity/y as MotionValues from the parent so the
+   stagger choreography lives in one place. Hover handled locally. */
+function ApproachCard({ n, title, desc, bgSrc, assetSrc, variant, opacity, y }) {
+  const cardRef = React.useRef(null);
+  const [hovered, setHovered] = React.useState(false);
+
+  // Pointer-driven micro-parallax — extremely subtle
+  const onPointerMove = (e) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    card.style.setProperty("--px", px.toFixed(3));
+    card.style.setProperty("--py", py.toFixed(3));
+  };
+  const onPointerLeave = () => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.setProperty("--px", "0");
+    card.style.setProperty("--py", "0");
+    setHovered(false);
+  };
+
+  return (
+    <motion.article
+      ref={cardRef}
+      className={`acard acard--${variant}`}
+      onPointerMove={onPointerMove}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={onPointerLeave}
+      style={{ opacity, y }}
+      whileHover={{ y: -10, transition: { duration: 0.7, ease: SX_EASE_CINE } }}
+    >
+      <div className="acard-media">
+        <motion.div
+          className="acard-bg"
+          style={{ backgroundImage: `url("${bgSrc}")` }}
+          animate={{ scale: hovered ? 1.04 : 1.0 }}
+          transition={{ duration: 1.4, ease: SX_EASE_CINE }}
+        />
+        {assetSrc && (
+          <motion.img
+            className="acard-asset"
+            src={assetSrc}
+            alt=""
+            draggable={false}
+            animate={{ y: hovered ? -8 : 0 }}
+            transition={{ duration: 1.0, ease: SX_EASE_CINE }}
+          />
+        )}
+        <div className="acard-floor" />
+      </div>
+
+      <div className="acard-body">
+        <span className="acard-n">{n}</span>
+        <h3 className="acard-t">{title}</h3>
+        <p className="acard-d">
+          {desc.split("\n").map((line, i) => (
+            <span key={i} className="acard-d-line">{line}</span>
+          ))}
+        </p>
+      </div>
+    </motion.article>
+  );
+}
+
+/* ─── Expose to global scope for app.jsx ──────────────────────────────────── */
+Object.assign(window, { TransitionSection, ApproachSection });

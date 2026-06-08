@@ -1,0 +1,69 @@
+/* =============================================================================
+   SVRN · Typography tokens
+   Three voices:
+   · Archivo — the workhorse. Every headline, section wordmark, card title and
+     UI label is Archivo, run heavy (700–800) and tight. This is what the brand
+     LOOKS like.
+   · Instrument Serif / Cormorant — editorial italic accent. Used for single
+     emphasised words inside display lines ("the operating layer.") and quiet
+     serif captions. Never for UI.
+   · JetBrains Mono — the instrument panel. Eyebrows, nav numerals, kickers,
+     metadata, status labels. Always UPPERCASE with wide tracking.
+   ========================================================================== */
+:root {
+  /* ── Families ────────────────────────────────────────────────────────────
+     --ff-display is the real workhorse (Archivo). --ff-grotesk (Bricolage
+     Grotesque) is an alternate display used in a couple of specimen contexts.
+     --ff-editor is the serif accent; --ff-mono the instrument panel. */
+  --ff-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --ff-grotesk: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --ff-editor:  "Instrument Serif", "Cormorant", "Times New Roman", serif;
+  --ff-serif:   "Cormorant", "Times New Roman", serif;
+  --ff-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* ── Fluid scale · clamp(min, ideal-vw, max) ─────────────────────────────
+     Everything scales with the viewport; mins keep mobile legible, maxes keep
+     desktop from ballooning. */
+  --fs-micro: clamp(10px, 0.69vw, 11px);   /* mono fine print */
+  --fs-nav:   clamp(11px, 0.78vw, 12px);   /* nav numerals, eyebrows */
+  --fs-body:  clamp(15px, 1.04vw, 16px);   /* body copy */
+  --fs-lede:  clamp(20px, 1.74vw, 28px);   /* standfirst / lede */
+  --fs-h6:    clamp(18px, 1.40vw, 22px);
+  --fs-h5:    clamp(24px, 1.80vw, 32px);
+  --fs-h4:    clamp(32px, 2.50vw, 44px);
+  --fs-h3:    clamp(44px, 3.60vw, 64px);
+  --fs-h2:    clamp(60px, 5.20vw, 92px);
+  --fs-h1:    clamp(64px, 7.50vw, 132px);  /* hero wordmark */
+
+  /* ── Weights ─────────────────────────────────────────────────────────────
+     Display lives at 700/800. Body at 400. Mono + labels at 500. */
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+  --fw-black:   800;
+
+  /* ── Line-height ─────────────────────────────────────────────────────────
+     Display sets nearly solid (0.94–1.02); body breathes at 1.55. */
+  --lh-tight:   0.94;
+  --lh-display: 1.02;
+  --lh-snug:    1.18;
+  --lh-body:    1.55;
+
+  /* ── Letter-spacing ──────────────────────────────────────────────────────
+     Display tracks tight & negative; mono labels track wide & positive. */
+  --ls-display: -0.045em;   /* big Archivo wordmarks */
+  --ls-tight:   -0.025em;   /* headings */
+  --ls-normal:  0;
+  --ls-wide:    0.14em;     /* mono eyebrows / kickers */
+  --ls-wider:   0.24em;     /* menu eyebrow */
+
+  /* ── Semantic roles ──────────────────────────────────────────────────────
+     Compose these in components. */
+  --text-display:  var(--fw-black) var(--fs-h1)/var(--lh-tight) var(--ff-display);
+  --text-h2:       var(--fw-black) var(--fs-h2)/var(--lh-tight) var(--ff-display);
+  --text-h3:       var(--fw-bold)  var(--fs-h3)/var(--lh-snug)  var(--ff-display);
+  --text-lede:     var(--fw-regular) var(--fs-lede)/1.4 var(--ff-display);
+  --text-body-r:   var(--fw-regular) var(--fs-body)/var(--lh-body) var(--ff-display);
+  --text-label:    var(--fw-medium) var(--fs-nav)/1 var(--ff-mono);
+}

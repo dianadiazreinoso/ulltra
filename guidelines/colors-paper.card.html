@@ -1,0 +1,36 @@
+<!-- @dsCard group="Colors" viewport="700x200" name="Paper surfaces" subtitle="The light inversion — cream paper, near-black ink" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; background: var(--c-bg); padding: 22px; font-family: var(--ff-mono); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .paper { border-radius: var(--r-md); padding: 16px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
+  .ttl { font-family: var(--ff-display); font-weight: 800; font-size: 28px; letter-spacing: -0.03em; }
+  .meta { font-size: 10px; letter-spacing: 0.08em; }
+  .hair { height: 1px; background: var(--c-paper-line); margin: 8px 0; }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="paper" style="background:var(--c-paper); color:var(--c-paper-ink)">
+      <div class="ttl">Capabilities</div>
+      <div>
+        <div class="hair"></div>
+        <div class="meta">--c-paper · #EFE9DB</div>
+        <div class="meta" style="color:var(--c-paper-ink-sub)">ink #1A1612 · sub #5A5446</div>
+      </div>
+    </div>
+    <div class="paper" style="background:var(--c-paper-warm); color:var(--c-paper-ink)">
+      <div class="ttl">Software</div>
+      <div>
+        <div class="hair"></div>
+        <div class="meta">--c-paper-warm · #F2EAD3</div>
+        <div class="meta" style="color:var(--c-paper-ink-sub)">warmer editorial paper</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

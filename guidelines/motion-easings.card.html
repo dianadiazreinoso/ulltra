@@ -1,0 +1,24 @@
+<!-- @dsCard group="Spacing" viewport="700x180" name="Motion — easings" subtitle="Cinematic long tails, no bounce" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; background: var(--c-bg); padding: 22px 26px; font-family: var(--ff-mono); }
+  .row { display: flex; align-items: center; gap: 14px; padding: 7px 0; }
+  .lbl { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-ink-mute); width: 110px; flex: 0 0 auto; }
+  .track { flex: 1; height: 3px; background: var(--c-line-soft); border-radius: 2px; position: relative; }
+  .dot { position: absolute; top: 50%; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--c-accent); transform: translate(0, -50%); }
+  @keyframes run { 0%,8% { left: 0; } 92%,100% { left: calc(100% - 12px); } }
+  .cine .dot { animation: run 2.6s var(--ease-out-cine) infinite alternate; }
+  .edit .dot { animation: run 2.6s var(--ease-out-edit) infinite alternate; }
+  .io   .dot { animation: run 2.6s var(--ease-in-out)   infinite alternate; }
+</style>
+</head>
+<body>
+  <div class="row cine"><span class="lbl">out-cine</span><span class="track"><span class="dot"></span></span></div>
+  <div class="row edit"><span class="lbl">out-edit</span><span class="track"><span class="dot"></span></span></div>
+  <div class="row io"><span class="lbl">in-out</span><span class="track"><span class="dot"></span></span></div>
+</body>
+</html>
