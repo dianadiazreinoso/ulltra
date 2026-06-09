@@ -1,3 +1,4 @@
+(function(){
 const {
   useEffect,
   useRef
@@ -198,3 +199,4 @@ function PixelDissolve({
   }));
 }
 window.PixelDissolve = PixelDissolve;
+})();

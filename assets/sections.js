@@ -1,3 +1,4 @@
+(function(){
 const SX_FM = window.Motion || window.framerMotion || window["framer-motion"] || {};
 const {
   motion,
@@ -208,3 +209,4 @@ Object.assign(window, {
   TransitionSection,
   ApproachSection
 });
+})();

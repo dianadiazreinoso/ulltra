@@ -1,3 +1,4 @@
+(function(){
 const {
   useRef: clUseRef,
   useEffect: clUseEffect
@@ -227,3 +228,4 @@ function ClientsSection() {
 Object.assign(window, {
   ClientsSection
 });
+})();

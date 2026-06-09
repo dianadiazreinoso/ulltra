@@ -1,3 +1,4 @@
+(function(){
 const OC_LOGOS = [{
   name: "Inditex",
   src: "assets/clients-logos/inditex.svg"
@@ -407,3 +408,4 @@ function ClientLogosGrid() {
 Object.assign(window, {
   ClientLogosGrid
 });
+})();

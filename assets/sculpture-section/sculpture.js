@@ -1,3 +1,4 @@
+(function(){
 const {
   useEffect,
   useRef
@@ -155,3 +156,4 @@ function ArchetypeSection() {
 window.ArchetypeSection = ArchetypeSection;
 const __mount = document.getElementById("sculpture-root");
 if (__mount) ReactDOM.createRoot(__mount).render(React.createElement(ArchetypeSection, null));
+})();

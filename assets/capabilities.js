@@ -1,3 +1,4 @@
+(function(){
 const CAP_CARDS = [{
   kind: "panel",
   tone: "lime",
@@ -427,3 +428,4 @@ Object.assign(window, {
   CapabilitiesSection,
   CapCard
 });
+})();

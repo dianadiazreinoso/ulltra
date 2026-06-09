@@ -1,3 +1,4 @@
+(function(){
 const fcR = React;
 const FCFM = window.Motion || window.framerMotion || {};
 const fcMotion = FCFM.motion;
@@ -239,3 +240,4 @@ function FooterCTA() {
 Object.assign(window, {
   FooterCTA
 });
+})();

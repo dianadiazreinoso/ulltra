@@ -1,3 +1,4 @@
+(function(){
 function RevealSection() {
   const sectionRef = React.useRef(null);
   const pinRef = React.useRef(null);
@@ -213,3 +214,4 @@ function RevealSection() {
 Object.assign(window, {
   RevealSection
 });
+})();

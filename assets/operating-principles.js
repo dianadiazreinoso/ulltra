@@ -1,3 +1,4 @@
+(function(){
 const opR = React;
 const OP_FRAME_COUNT = 26;
 const opFrameSrc = i => "assets/heart-seq/ezgif-frame-" + String(i + 1).padStart(3, "0") + ".png";
@@ -192,3 +193,4 @@ function OperatingPrinciplesSection() {
 Object.assign(window, {
   OperatingPrinciplesSection
 });
+})();
