@@ -28,6 +28,17 @@ import { useGLTF, ContactShadows, Environment, Lightformer, Center, useProgress,
 import { EffectComposer, N8AO, Bloom, ToneMapping, SMAA } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
 
+// Perf gate: aligera la escena en móvil / equipos flojos.
+const LITE = (() => {
+  try {
+    const mm = window.matchMedia;
+    const small = mm && mm("(max-width: 900px)").matches;
+    const coarse = mm && mm("(pointer: coarse)").matches;
+    const weak = (navigator.hardwareConcurrency || 8) <= 2 || (navigator.deviceMemory || 8) <= 2;
+    return !!(small || coarse || weak);
+  } catch (e) { return false; }
+})();
+
 const html = htm.bind(React.createElement);
 const MODEL_URL = "assets/sculpture/cara.glb";
 
@@ -248,9 +259,9 @@ function Scene() {
 
       ${!window.__NOPOST && html`
       <${EffectComposer} disableNormalPass multisampling=${0}>
-        <${N8AO} halfRes color="black" aoRadius=${2.2} intensity=${1.25} aoSamples=${4} denoiseSamples=${3} denoiseRadius=${10} />
+        ${!LITE && html`<${N8AO} halfRes color="black" aoRadius=${2.2} intensity=${1.15} aoSamples=${3} denoiseSamples=${2} denoiseRadius=${8} />`}
         <${Bloom} mipmapBlur intensity=${0.16} luminanceThreshold=${0.9} luminanceSmoothing=${0.22} />
-        <${SMAA} />
+        ${!LITE && html`<${SMAA} />`}
         <${ToneMapping} mode=${ToneMappingMode.ACES_FILMIC} />
       <//>
       `}
@@ -279,9 +290,9 @@ function Island() {
     <${React.Fragment}>
       <${Loader} />
       <${Canvas}
-        shadows
+        shadows=${!LITE}
         frameloop="demand"
-        dpr=${[1, 1.5]}
+        dpr=${LITE ? [1, 1] : [1, 1.25]}
         gl=${{ antialias: false, alpha: true, powerPreference: "high-performance", preserveDrawingBuffer: false }}
         camera=${{ position: [0, 0.15, 4.7], fov: 32, near: 0.1, far: 100 }}
         onCreated=${({ gl }) => {
