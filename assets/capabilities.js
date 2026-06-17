@@ -1,3 +1,4 @@
+/*GLUE_IIFE*/(function(){
 /* =============================================================================
    SVRN · Capabilities — "luxury technology meets Renaissance art"
    -----------------------------------------------------------------------------
@@ -471,3 +472,4 @@ Object.assign(window, {
   CapabilitiesSection,
   CapCard
 });
+})();

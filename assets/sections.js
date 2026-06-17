@@ -1,3 +1,4 @@
+/*GLUE_IIFE*/(function(){
 /* =============================================================================
    SVRN · Sections — Transition + Approach
    -----------------------------------------------------------------------------
@@ -251,3 +252,4 @@ Object.assign(window, {
   TransitionSection,
   ApproachSection
 });
+})();

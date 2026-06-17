@@ -1,3 +1,4 @@
+/*GLUE_IIFE*/(function(){
 /* =============================================================================
    SVRN · Reveal Section — day → night transition
    -----------------------------------------------------------------------------
@@ -334,3 +335,4 @@ function RevealSection() {
 Object.assign(window, {
   RevealSection
 });
+})();

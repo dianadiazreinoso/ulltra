@@ -1,3 +1,4 @@
+/*GLUE_IIFE*/(function(){
 /* ARCHETYPE · sculpture.jsx — now the mechanical-heart beat */
 const {
   useEffect,
@@ -223,3 +224,4 @@ function ArchetypeSection() {
 window.ArchetypeSection = ArchetypeSection;
 const __mount = document.getElementById("sculpture-root");
 if (__mount) ReactDOM.createRoot(__mount).render(/*#__PURE__*/React.createElement(ArchetypeSection, null));
+})();

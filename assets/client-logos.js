@@ -1,3 +1,4 @@
+/*GLUE_IIFE*/(function(){
 /* =============================================================================
    Ulltra · Our Clients — seamless logo marquee
    -----------------------------------------------------------------------------
@@ -442,3 +443,4 @@ function ClientLogosGrid() {
 Object.assign(window, {
   ClientLogosGrid
 });
+})();

@@ -1,3 +1,4 @@
+/*GLUE_IIFE*/(function(){
 /* =============================================================================
    Ulltra · Clients — "Selected work" (scroll-driven exhibition)
    -----------------------------------------------------------------------------
@@ -283,3 +284,4 @@ function ClientsSection() {
 Object.assign(window, {
   ClientsSection
 });
+})();

@@ -1,3 +1,4 @@
+/*GLUE_IIFE*/(function(){
 /* =============================================================================
    PixelDissolve — scroll-driven canvas pixel dissolve.
    -----------------------------------------------------------------------------
@@ -262,3 +263,4 @@ function PixelDissolve({
   }));
 }
 window.PixelDissolve = PixelDissolve;
+})();
