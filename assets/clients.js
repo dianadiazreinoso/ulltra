@@ -24,74 +24,116 @@
      other, sweep through, overlap naturally, then slide off the top (clipped).
    ========================================================================== */
 
-const { useRef: clUseRef, useEffect: clUseEffect } = React;
+const {
+  useRef: clUseRef,
+  useEffect: clUseEffect
+} = React;
 
 /* Reveal order matches the curated sequence:
    1 project · 2 project · art · 3 project · 4 project · art · 5 project
    Positions are CENTRES, as % of the stage. `speed` is the parallax multiplier. */
-const CL_ITEMS = [
-  { kind: "project", tone: "lime",
-    name: "DataLab", type: "Platform", year: "2024",
-    desc: "Internal data platform unifying ingestion, governance and AI model operations for a retail group.",
-    left: "27%", top: "50%", speed: 0.8 },
-
-  { kind: "project", tone: "dark",
-    name: "Securitas Hub", type: "System", year: "2024",
-    desc: "Operational control surface integrating live telemetry, incident flow and field coordination.",
-    left: "70%", top: "46%", speed: 1.0 },
-
-  { kind: "art", src: "assets/cap-cyber.webp",
-    alt: "A classical painted figure wearing a sleek cyber visor",
-    left: "46%", top: "53%", speed: 0.6 },
-
-  { kind: "project", tone: "magenta",
-    name: "Lista Robinson", type: "System", year: "2023",
-    desc: "National opt-out registry modernisation — identity, compliance and high-availability operations.",
-    left: "30%", top: "54%", speed: 1.25 },
-
-  { kind: "project", tone: "lime",
-    name: "Solairis", type: "AI · Data", year: "2025",
-    desc: "Energy-sector analytics product with forecasting models and a governed data layer for operators.",
-    left: "69%", top: "50%", speed: 0.9 },
-
-  { kind: "art", src: "assets/work-portrait.webp",
-    alt: "A classical painted portrait of a woman with an electric scooter",
-    left: "51%", top: "47%", speed: 0.6 },
-
-  { kind: "project", tone: "magenta",
-    name: "Heva", type: "Data · Regulated", year: "2025",
-    desc: "Healthcare data environment enabling regulated research on sovereign, auditable infrastructure.",
-    left: "41%", top: "52%", speed: 1.4 }
-];
-
+const CL_ITEMS = [{
+  kind: "project",
+  tone: "lime",
+  name: "DataLab",
+  type: "Platform",
+  year: "2024",
+  desc: "Internal data platform unifying ingestion, governance and AI model operations for a retail group.",
+  left: "27%",
+  top: "50%",
+  speed: 0.8
+}, {
+  kind: "project",
+  tone: "dark",
+  name: "Securitas Hub",
+  type: "System",
+  year: "2024",
+  desc: "Operational control surface integrating live telemetry, incident flow and field coordination.",
+  left: "70%",
+  top: "46%",
+  speed: 1.0
+}, {
+  kind: "art",
+  src: "assets/cap-cyber.webp",
+  alt: "A classical painted figure wearing a sleek cyber visor",
+  left: "46%",
+  top: "53%",
+  speed: 0.6
+}, {
+  kind: "project",
+  tone: "magenta",
+  name: "Lista Robinson",
+  type: "System",
+  year: "2023",
+  desc: "National opt-out registry modernisation — identity, compliance and high-availability operations.",
+  left: "30%",
+  top: "54%",
+  speed: 1.25
+}, {
+  kind: "project",
+  tone: "lime",
+  name: "Solairis",
+  type: "AI · Data",
+  year: "2025",
+  desc: "Energy-sector analytics product with forecasting models and a governed data layer for operators.",
+  left: "69%",
+  top: "50%",
+  speed: 0.9
+}, {
+  kind: "art",
+  src: "assets/work-portrait.webp",
+  alt: "A classical painted portrait of a woman with an electric scooter",
+  left: "51%",
+  top: "47%",
+  speed: 0.6
+}, {
+  kind: "project",
+  tone: "magenta",
+  name: "Heva",
+  type: "Data · Regulated",
+  year: "2025",
+  desc: "Healthcare data environment enabling regulated research on sovereign, auditable infrastructure.",
+  left: "41%",
+  top: "52%",
+  speed: 1.4
+}];
 function ClPlus() {
-  return (
-    <span className="cl-plus" aria-hidden="true">
-      <span></span><span></span>
-    </span>);
+  return /*#__PURE__*/React.createElement("span", {
+    className: "cl-plus",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement("span", null));
 }
-
-function ClCard({ item }) {
+function ClCard({
+  item
+}) {
   if (item.kind === "art") {
-    return (
-      <div className="cl-card cl-card--art" aria-hidden="true">
-        <img src={window.__asset(item.src)} alt={item.alt} draggable="false" />
-      </div>);
+    return /*#__PURE__*/React.createElement("div", {
+      className: "cl-card cl-card--art",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: window.__asset(item.src),
+      alt: item.alt,
+      draggable: "false"
+    }));
   }
-  return (
-    <article className={`cl-card cl-card--${item.tone}`} role="listitem">
-      <div className="cl-card-top">
-        <div className="cl-card-id">
-          <h3 className="cl-card-name">{item.name}</h3>
-          <p className="cl-card-type">{item.type}</p>
-        </div>
-        <ClPlus />
-      </div>
-      <p className="cl-card-desc">{item.desc}</p>
-      <span className="cl-card-year" aria-hidden="true">{item.year}</span>
-    </article>);
+  return /*#__PURE__*/React.createElement("article", {
+    className: `cl-card cl-card--${item.tone}`,
+    role: "listitem"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cl-card-top"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cl-card-id"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "cl-card-name"
+  }, item.name), /*#__PURE__*/React.createElement("p", {
+    className: "cl-card-type"
+  }, item.type)), /*#__PURE__*/React.createElement(ClPlus, null)), /*#__PURE__*/React.createElement("p", {
+    className: "cl-card-desc"
+  }, item.desc), /*#__PURE__*/React.createElement("span", {
+    className: "cl-card-year",
+    "aria-hidden": "true"
+  }, item.year));
 }
-
 function ClientsSection() {
   const sectionRef = clUseRef(null);
   const slotRefs = clUseRef(CL_ITEMS.map(() => React.createRef()));
@@ -100,22 +142,23 @@ function ClientsSection() {
   // the .is-active class (mobile-only CSS) — same size/position, just on top.
   // Tapping it again clears it. Desktop keeps its :hover behaviour untouched.
   const [activeIndex, setActiveIndex] = React.useState(null);
-
   clUseEffect(() => {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
     if (!gsap || !ScrollTrigger) return;
     gsap.registerPlugin(ScrollTrigger);
-
     const section = sectionRef.current;
-    const slots = slotRefs.current.map((r) => r.current);
-    const anims = animRefs.current.map((r) => r.current);
-
+    const slots = slotRefs.current.map(r => r.current);
+    const anims = animRefs.current.map(r => r.current);
     const ctx = gsap.context(() => {
       const N = CL_ITEMS.length;
 
       // Hide all cards up-front so nothing flashes before the scrub initialises.
-      gsap.set(anims, { autoAlpha: 0, y: 150, scale: 0.92 });
+      gsap.set(anims, {
+        autoAlpha: 0,
+        y: 150,
+        scale: 0.92
+      });
 
       // ── ONE CONTINUOUS MASTER TIMELINE (scrub) ─────────────────────────────
       // The entire section is driven by a single scrubbed timeline. Cards enter
@@ -123,7 +166,9 @@ function ClientsSection() {
       // overlapping, each drifting upward at its OWN speed (parallax). Nothing
       // has its own trigger → motion is continuous, never segmented.
       const master = gsap.timeline({
-        defaults: { ease: "none" },
+        defaults: {
+          ease: "none"
+        },
         scrollTrigger: {
           trigger: section,
           start: "top top",
@@ -137,10 +182,10 @@ function ClientsSection() {
       // title is a PERSISTENT heading — it is never added to this timeline, so
       // its opacity / position / scale stay fixed while the cards animate below.
 
-      const ENTER_GAP = 11;   // timeline units between card entrances
-      const LIFE = 42;        // how long each card stays on stage → big overlap
-      const FADE = 11;        // fade-in / fade-out portion of a card's life
-      const FIRST = 2;        // la primera card entra casi enseguida
+      const ENTER_GAP = 11; // timeline units between card entrances
+      const LIFE = 42; // how long each card stays on stage → big overlap
+      const FADE = 11; // fade-in / fade-out portion of a card's life
+      const FIRST = 2; // la primera card entra casi enseguida
 
       slots.forEach((slot, i) => {
         const item = CL_ITEMS[i];
@@ -148,75 +193,93 @@ function ClientsSection() {
         if (!slot || !anim) return;
 
         // Centre the card on its (left,top) anchor. GSAP owns the transform.
-        gsap.set(slot, { xPercent: -50, yPercent: -50 });
-
-        const at = FIRST + i * ENTER_GAP;            // entrance beat on the timeline
+        gsap.set(slot, {
+          xPercent: -50,
+          yPercent: -50
+        });
+        const at = FIRST + i * ENTER_GAP; // entrance beat on the timeline
 
         // PARALLAX (outer slot): continuous upward drift across the card's whole
         // life. Faster `speed` → longer travel in the same time → reads as nearer
         // and moving faster. Artwork cards (0.6×) glide slowly behind the work.
         const enterY = window.innerHeight * 0.62 * item.speed;
-        const exitY  = -window.innerHeight * 0.62 * item.speed;
-        master.fromTo(slot,
-          { y: enterY },
-          { y: exitY, duration: LIFE }, at);
+        const exitY = -window.innerHeight * 0.62 * item.speed;
+        master.fromTo(slot, {
+          y: enterY
+        }, {
+          y: exitY,
+          duration: LIFE
+        }, at);
 
         // REVEAL (inner anim): fade + scale in as it rises into view…
-        master.fromTo(anim,
-          { autoAlpha: 0, scale: 0.92 },
-          { autoAlpha: 1, scale: 1, duration: FADE, ease: "power2.out" }, at);
+        master.fromTo(anim, {
+          autoAlpha: 0,
+          scale: 0.92
+        }, {
+          autoAlpha: 1,
+          scale: 1,
+          duration: FADE,
+          ease: "power2.out"
+        }, at);
         // …and fade + shrink out as it leaves the top, so later cards take over.
-        master.to(anim,
-          { autoAlpha: 0, scale: 0.95, duration: FADE, ease: "power2.in" },
-          at + LIFE - FADE);
+        master.to(anim, {
+          autoAlpha: 0,
+          scale: 0.95,
+          duration: FADE,
+          ease: "power2.in"
+        }, at + LIFE - FADE);
       });
-
       ScrollTrigger.refresh();
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
-
-  return (
-    <React.Fragment>
-    <section
-      ref={sectionRef}
-      id="work"
-      className="clients"
-      data-header="light"
-      data-screen-label="Selected work"
-      aria-label="Clients — selected work">
-
-      <div className="clients-stage">
-        <div className="clients-bg" aria-hidden="true">
-          <img src={window.__asset("assets/clients-bg.webp")} alt="" draggable="false" />
-        </div>
-        <div className="clients-bg-veil" aria-hidden="true"></div>
-
-        <h2 className="cl-title">
-          <span className="cl-title-a">Selected</span>
-          <span className="cl-title-b">work</span>
-        </h2>
-
-        <div className="cl-canvas" role="list">
-          {CL_ITEMS.map((item, i) => (
-            <div
-              key={i}
-              ref={slotRefs.current[i]}
-              className={"cl-slot" + (activeIndex === i ? " is-active" : "")}
-              onClick={item.kind === "art" ? undefined : () => {
-                if (window.matchMedia && window.matchMedia("(max-width:760px)").matches) setActiveIndex(activeIndex === i ? null : i);
-              }}
-              style={{ left: item.left, top: item.top, zIndex: i + 1 }}>
-              <div ref={animRefs.current[i]} className="cl-slot-anim">
-                <ClCard item={item} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-    </React.Fragment>);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("section", {
+    ref: sectionRef,
+    id: "work",
+    className: "clients",
+    "data-header": "light",
+    "data-screen-label": "Selected work",
+    "aria-label": "Clients \u2014 selected work"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "clients-stage"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "clients-bg",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: window.__asset("assets/clients-bg.webp"),
+    alt: "",
+    draggable: "false"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "clients-bg-veil",
+    "aria-hidden": "true"
+  }), /*#__PURE__*/React.createElement("h2", {
+    className: "cl-title"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cl-title-a"
+  }, "Selected"), /*#__PURE__*/React.createElement("span", {
+    className: "cl-title-b"
+  }, "work")), /*#__PURE__*/React.createElement("div", {
+    className: "cl-canvas",
+    role: "list"
+  }, CL_ITEMS.map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    ref: slotRefs.current[i],
+    className: "cl-slot" + (activeIndex === i ? " is-active" : ""),
+    onClick: item.kind === "art" ? undefined : () => {
+      if (window.matchMedia && window.matchMedia("(max-width:760px)").matches) setActiveIndex(activeIndex === i ? null : i);
+    },
+    style: {
+      left: item.left,
+      top: item.top,
+      zIndex: i + 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    ref: animRefs.current[i],
+    className: "cl-slot-anim"
+  }, /*#__PURE__*/React.createElement(ClCard, {
+    item: item
+  }))))))));
 }
-
-Object.assign(window, { ClientsSection });
+Object.assign(window, {
+  ClientsSection
+});

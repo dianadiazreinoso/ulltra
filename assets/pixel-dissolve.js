@@ -16,7 +16,10 @@
    • Mobile:    DPR capped, block growth ceiling clamped, ScrollTrigger handles
                 touch scrolling for free.
    ========================================================================== */
-const { useEffect, useRef } = React;
+const {
+  useEffect,
+  useRef
+} = React;
 
 /* Deterministic 2D hash → [0, 1). Stable across renders so each block keeps
    the same death-time regardless of how often we redraw. */
@@ -24,24 +27,28 @@ function blockHash(x, y) {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
   return s - Math.floor(s);
 }
-
 function easeOutCubic(t) {
   const u = 1 - t;
   return 1 - u * u * u;
 }
-
 function PixelDissolve({
   src,
   sectionRef,
-  progress,            // optional MotionValue (0..1) — overrides ScrollTrigger
+  progress,
+  // optional MotionValue (0..1) — overrides ScrollTrigger
   className = "",
   style,
   /* tuning */
-  maxBlock = 56,        // largest block size at end of scroll (px, at 1x dpr)
-  startAt = 0.05,       // scroll progress before dissolve begins
-  dissolveOvershoot = 1.18, // > 1 ensures every block reaches alpha 0
-  fadeWindow = 0.22,    // per-block fade duration (in dissolve-progress units)
-  direction = "random", // "random" | "top" | "bottom"
+  maxBlock = 56,
+  // largest block size at end of scroll (px, at 1x dpr)
+  startAt = 0.05,
+  // scroll progress before dissolve begins
+  dissolveOvershoot = 1.18,
+  // > 1 ensures every block reaches alpha 0
+  fadeWindow = 0.22,
+  // per-block fade duration (in dissolve-progress units)
+  direction = "random",
+  // "random" | "top" | "bottom"
   /* ScrollTrigger range — defaults: sharp until the section's bottom reaches
      the viewport bottom (i.e. fully revealed), then dissolves through to
      the section leaving the top of the viewport. */
@@ -55,22 +62,27 @@ function PixelDissolve({
     imgLoaded: false,
     progress: 0,
     lastDrawn: -1,
-    cssW: 0, cssH: 0,
+    cssW: 0,
+    cssH: 0,
     dpr: 1,
     raf: 0,
     scrollTrigger: null,
     offscreen: null,
     offCtx: null
   });
-
   useEffect(() => {
     const wrap = wrapRef.current;
     const canvas = canvasRef.current;
     if (!wrap || !canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext("2d", {
+      alpha: true
+    });
     const state = stateRef.current;
     state.offscreen = document.createElement("canvas");
-    state.offCtx = state.offscreen.getContext("2d", { alpha: true, willReadFrequently: true });
+    state.offCtx = state.offscreen.getContext("2d", {
+      alpha: true,
+      willReadFrequently: true
+    });
     state.dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     // ── Load source image ────────────────────────────────────────────────
@@ -101,7 +113,6 @@ function PixelDissolve({
       canvas.height = Math.round(cssH * state.dpr);
       state.lastDrawn = -1;
     }
-
     const ro = new ResizeObserver(() => {
       resize();
       schedule();
@@ -111,10 +122,9 @@ function PixelDissolve({
     // ── Progress driver: either an external MotionValue, or ScrollTrigger ──
     let st = null;
     let unsubscribeMV = null;
-
     if (progress && typeof progress.on === "function") {
       // External MotionValue — keeps state in sync with whatever drives it
-      const apply = (v) => {
+      const apply = v => {
         state.progress = Math.max(0, Math.min(1, v || 0));
         schedule();
       };
@@ -127,7 +137,7 @@ function PixelDissolve({
         start: scrollStart,
         end: scrollEnd,
         scrub: 0.6,
-        onUpdate: (self) => {
+        onUpdate: self => {
           state.progress = self.progress;
           schedule();
         }
@@ -143,14 +153,12 @@ function PixelDissolve({
         draw();
       });
     }
-
     function draw() {
       if (!state.imgLoaded) return;
       const p = state.progress;
       // Avoid redraw if progress hasn't moved enough (1/512 of range)
       if (Math.abs(p - state.lastDrawn) < 0.002 && state.lastDrawn >= 0) return;
       state.lastDrawn = p;
-
       const W = canvas.width;
       const H = canvas.height;
       ctx.clearRect(0, 0, W, H);
@@ -191,14 +199,12 @@ function PixelDissolve({
       // fillRect with hashed death-time alpha.
       const dissolveProg = t * dissolveOvershoot;
       const inDissolve = blockSize >= 8 || t > 0.18;
-
       if (!inDissolve) {
         ctx.imageSmoothingEnabled = false;
         ctx.globalAlpha = 1;
         ctx.drawImage(off, 0, 0, cols, rows, 0, 0, cols * blockSize, rows * blockSize);
         return;
       }
-
       const data = offCtx.getImageData(0, 0, cols, rows).data;
       ctx.imageSmoothingEnabled = false;
       // Overdraw by 1px on right/bottom to avoid hairline seams between blocks
@@ -206,18 +212,13 @@ function PixelDissolve({
       const bh = blockSize + 1;
 
       // Direction bias for noise threshold
-      const dirBias =
-        direction === "top" ? 0.45 :
-        direction === "bottom" ? -0.45 :
-        0;
-
+      const dirBias = direction === "top" ? 0.45 : direction === "bottom" ? -0.45 : 0;
       for (let y = 0; y < rows; y++) {
         const ny = rows > 1 ? y / (rows - 1) : 0;
         for (let x = 0; x < cols; x++) {
           const i = (y * cols + x) * 4;
           const a = data[i + 3];
           if (a < 4) continue;
-
           const nx = cols > 1 ? x / (cols - 1) : 0;
           // Block dies at this dissolve-progress value
           const n = blockHash(Math.floor(nx * 96) + 0.5, Math.floor(ny * 128) + 0.5);
@@ -226,20 +227,14 @@ function PixelDissolve({
           if (dirBias !== 0) {
             death = death * (1 - Math.abs(dirBias)) + (dirBias > 0 ? ny : 1 - ny) * Math.abs(dirBias);
           }
-
           let alpha;
-          if (dissolveProg <= death) alpha = 1;
-          else if (dissolveProg >= death + fadeWindow) continue;
-          else alpha = 1 - (dissolveProg - death) / fadeWindow;
+          if (dissolveProg <= death) alpha = 1;else if (dissolveProg >= death + fadeWindow) continue;else alpha = 1 - (dissolveProg - death) / fadeWindow;
 
           // Eased local alpha
           alpha = alpha * alpha * (3 - 2 * alpha);
-
-          const finalAlpha = (a / 255) * alpha;
+          const finalAlpha = a / 255 * alpha;
           if (finalAlpha < 0.01) continue;
-
-          ctx.fillStyle =
-            "rgba(" + data[i] + "," + data[i + 1] + "," + data[i + 2] + "," + finalAlpha.toFixed(3) + ")";
+          ctx.fillStyle = "rgba(" + data[i] + "," + data[i + 1] + "," + data[i + 2] + "," + finalAlpha.toFixed(3) + ")";
           ctx.fillRect(x * blockSize, y * blockSize, bw, bh);
         }
       }
@@ -247,7 +242,6 @@ function PixelDissolve({
 
     // Initial paint once layout settles
     schedule();
-
     return () => {
       if (state.raf) cancelAnimationFrame(state.raf);
       ro.disconnect();
@@ -257,12 +251,14 @@ function PixelDissolve({
       state.imgLoaded = false;
     };
   }, [src, sectionRef, progress, maxBlock, startAt, dissolveOvershoot, fadeWindow, direction, scrollStart, scrollEnd]);
-
-  return (
-    <div ref={wrapRef} className={"pd-wrap " + className} style={style} aria-hidden="true">
-      <canvas ref={canvasRef} className="pd-canvas" />
-    </div>);
-
+  return /*#__PURE__*/React.createElement("div", {
+    ref: wrapRef,
+    className: "pd-wrap " + className,
+    style: style,
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("canvas", {
+    ref: canvasRef,
+    className: "pd-canvas"
+  }));
 }
-
 window.PixelDissolve = PixelDissolve;
