@@ -353,19 +353,24 @@ function MenuPanel({ open, onClose, onGetStarted }) {
             onClick={() => { onClose(); setTimeout(onGetStarted, 240); }}>
             Get Started
           </button>
-          <div className="menu-lang" role="group" aria-label="Language selector">
-            {langs.map((l, i) =>
-            <React.Fragment key={l}>
-                {i > 0 && <span className="menu-lang-sep" aria-hidden="true">/</span>}
-                <button
-                type="button"
-                className={"menu-lang-btn" + (lang === l ? " is-active" : "")}
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}>
-                  {l}
-                </button>
-              </React.Fragment>
-            )}
+          <div className="menu-social" aria-label="Social links">
+            <a href="#" className="menu-soc" aria-label="X">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+            <a href="#" className="menu-soc" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            <a href="#" className="menu-soc" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M4.98 3.5a2.5 2.5 0 11-.02 5.001A2.5 2.5 0 014.98 3.5zM3 8.98h4v12.02H3V8.98zM9.5 8.98h3.83v1.64h.05c.53-1 1.84-2.06 3.78-2.06 4.04 0 4.79 2.66 4.79 6.12v6.32h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96v5.7h-4V8.98z" />
+              </svg>
+            </a>
           </div>
         </div>
       </aside>
@@ -380,6 +385,8 @@ function GetStartedDrawer({ open, onClose }) {
   const overlayRef = useRef(null);
   const panelRef = useRef(null);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const gsap = window.gsap;
@@ -424,7 +431,39 @@ function GetStartedDrawer({ open, onClose }) {
     };
   }, [open, onClose]);
 
-  const submit = (e) => { e.preventDefault(); setSent(true); };
+  const submit = async (e) => {
+    e.preventDefault();
+    if (sending) return;
+    const f = e.currentTarget;
+    const val = (n) => ((f.elements[n] && f.elements[n].value) || "").trim();
+    const name = val("name"), company = val("company");
+    const payload = {
+      name,
+      company,
+      email: val("email"),
+      phone: val("phone"),
+      message: val("message"),
+      _subject: "New enquiry from " + (name || "website") + (company ? " \u00b7 " + company : ""),
+      _template: "table",
+      _captcha: "false",
+    };
+    setError(false);
+    setSending(true);
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/hello@ulltra.ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      setSent(true);
+      f.reset();
+    } catch (err) {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <div className="nav-portal" aria-hidden={!open}>
@@ -466,12 +505,18 @@ function GetStartedDrawer({ open, onClose }) {
               <input type="tel" name="phone" autoComplete="tel" />
             </label>
             <label className="gs-field gs-anim">
-              <span className="gs-label">Message</span>
+              <span className="gs-label">Tell us about your project, a bit of context will allow us to connect you to the right team faster:</span>
               <textarea name="message" rows="4"></textarea>
             </label>
 
-            <button type="submit" className="gs-submit gs-anim">
-              {sent ? "Thank you — we'll be in touch" : "Book a discovery call"}
+            <button type="submit" className="gs-submit gs-anim" disabled={sending}>
+              {sent
+                ? "Thank you — we'll be in touch"
+                : sending
+                ? "Sending\u2026"
+                : error
+                ? "Something went wrong — try again"
+                : "Submit"}
             </button>
           </form>
         </div>
@@ -515,118 +560,50 @@ function InfoCards({ baseDelay = 1.7 }) {
 }
 
 /* =============================================================================
-   Background system — scroll-mapped canvas frame sequence (Apple AirPods style)
+   Background system — scroll-scrubbed <video> (Apple-style scroll scrubbing)
    -----------------------------------------------------------------------------
-   The hero now drives an 141-frame JPEG sequence via a canvas. Frames are
-   preloaded in parallel; the current draw index is lerped toward the scroll-
-   derived target each rAF tick so dropped pixels look like motion blur instead
-   of stutter. Cover-fit math centers the 16:9 source inside any viewport.
-   `sectionRef` should be the 400vh hero section element (the sticky parent
-   of the canvas) — we compute progress from its top edge.
+   A single full-bleed, muted, controls-less <video> (object-fit: cover) covers
+   the sticky hero. Instead of *playing*, we map the scroll progress within the
+   tall hero section onto the video's currentTime: scrolling down advances the
+   footage frame-by-frame, scrolling up rewinds it. The target time is lerped
+   toward each rAF tick so the seek feels like a smooth glide rather than a
+   stutter. `sectionRef` should be the tall hero section element (the sticky
+   parent of the video) — progress is computed from its top edge.
    ========================================================================== */
-const HERO_FRAME_COUNT = 51;
-const HERO_FRAME_BASE = "assets/hero-sequence/ezgif-frame-";
-const HERO_FRAME_EXT = ".webp";
+const HERO_VIDEO_SRC = "assets/hero-scroll-video-1920.mp4";
 
-function HeroFrameCanvas({ sectionRef }) {
-  const canvasRef = useRef(null);
+function HeroScrubVideo({ sectionRef }) {
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const video = videoRef.current;
     const section = sectionRef.current;
-    if (!canvas || !section) return;
-    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!video || !section) return;
 
-    // ─── Preload ───────────────────────────────────────────────────────────
-    const images = new Array(HERO_FRAME_COUNT);
-    const pad = (n) => String(n).padStart(3, "0");
-    let firstReady = false;
-    for (let i = 0; i < HERO_FRAME_COUNT; i++) {
-      const img = new Image();
-      img.decoding = "async";
-      img.src = window.__asset(`${HERO_FRAME_BASE}${pad(i + 1)}${HERO_FRAME_EXT}`, "heroFrame" + pad(i + 1));
-      // First frame draws as soon as it's available; remaining frames keep
-      // loading in the background and are picked up on the next draw.
-      if (i === 0) {
-        img.onload = () => {firstReady = true;draw(0);};
-      }
-      images[i] = img;
-    }
-
-    // ─── Sizing (DPR-aware, capped at 2x to keep paint cheap) ──────────────
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      canvas.width = Math.max(1, Math.round(w * dpr));
-      canvas.height = Math.max(1, Math.round(h * dpr));
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      draw(Math.round(state.current));
-    };
-
-    // ─── Draw (background-size: cover equivalent) ──────────────────────────
-    const draw = (idx) => {
-      const clamped = Math.max(0, Math.min(HERO_FRAME_COUNT - 1, idx));
-      const img = images[clamped];
-      if (!img || !img.complete || !img.naturalWidth) {
-        // Fall back to the nearest already-loaded frame so we never blank out.
-        let fallback = null;
-        for (let d = 1; d < HERO_FRAME_COUNT; d++) {
-          const a = images[clamped - d],b = images[clamped + d];
-          if (a && a.complete && a.naturalWidth) {fallback = a;break;}
-          if (b && b.complete && b.naturalWidth) {fallback = b;break;}
-        }
-        if (!fallback) return;
-        return paint(fallback);
-      }
-      paint(img);
-    };
-    const paint = (img) => {
-      const cw = canvas.clientWidth;
-      const ch = canvas.clientHeight;
-      const ratio = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
-      const dw = img.naturalWidth * ratio;
-      const dh = img.naturalHeight * ratio;
-
-      // Focal point of the crop. Desktop + tablet: dead-centre (unchanged).
-      let focalX = 0.5, focalY = 0.5;
-      // MOBILE PORTRAIT ONLY: the subject sits right-of-centre in the 16:9
-      // source, so a centred crop on a narrow viewport pushes him off the right
-      // edge. Re-anchor the crop on the character (face ~0.70 across, face +
-      // upper torso ~0.52 down) — same cover scale, just repositioned framing.
-      if (window.matchMedia &&
-          window.matchMedia("(max-width: 760px) and (orientation: portrait)").matches) {
-        focalX = 0.70;
-        focalY = 0.52;
-      }
-
-      let dx = cw / 2 - focalX * dw;
-      let dy = ch / 2 - focalY * dh;
-      // Clamp so the background edges are never exposed (stays full-bleed cover).
-      dx = Math.min(0, Math.max(cw - dw, dx));
-      dy = Math.min(0, Math.max(ch - dh, dy));
-      dy += 70; // baja la escena para que el obelisco quede por debajo del header
-
-      ctx.fillStyle = "#0A0807";
-      ctx.fillRect(0, 0, cw, ch);
-      ctx.drawImage(img, dx, dy, dw, dh);
-    };
-
-    // ─── Scroll → target frame, with rAF lerp ──────────────────────────────
+    let duration = 0;
+    let objectUrl = null;
+    let disposed = false;
     const state = { current: 0, target: 0, raf: 0 };
-    const LERP = 0.14; // higher = snappier, lower = more cinematic glide
+    const LERP = 0.12; // higher = snappier, lower = more cinematic glide
+
+    const seek = (t) => {
+      const clamped = Math.max(0, Math.min(Math.max(0, duration - 0.04), t));
+      if (typeof video.fastSeek === "function") {
+        try { video.fastSeek(clamped); return; } catch (e) {/* fall through */}
+      }
+      try { video.currentTime = clamped; } catch (e) {/* not seekable yet */}
+    };
 
     const tick = () => {
       state.raf = 0;
       const diff = state.target - state.current;
-      if (Math.abs(diff) < 0.05) {
+      if (Math.abs(diff) < 0.0006) {
         state.current = state.target;
-        draw(Math.round(state.current));
-        return;
+      } else {
+        state.current += diff * LERP;
+        schedule();
       }
-      state.current += diff * LERP;
-      draw(Math.round(state.current));
-      schedule();
+      if (duration > 0) seek(state.current * duration);
     };
     const schedule = () => {
       if (!state.raf) state.raf = requestAnimationFrame(tick);
@@ -638,30 +615,67 @@ function HeroFrameCanvas({ sectionRef }) {
       if (scrollable <= 0) return;
       // -rect.top is how far we've scrolled past the section's top edge.
       const scrolled = Math.max(0, Math.min(scrollable, -rect.top));
-      const p = scrolled / scrollable;
-      state.target = p * (HERO_FRAME_COUNT - 1);
+      state.target = scrolled / scrollable; // 0 → 1 across the runway
       schedule();
     };
 
-    resize();
-    onScroll();
+    const onMeta = () => {
+      duration = video.duration || 0;
+      onScroll();
+    };
+    video.addEventListener("loadedmetadata", onMeta);
+    video.addEventListener("durationchange", onMeta);
+
+    // ─── Source ──────────────────────────────────────────────────────────
+    // Progressive HTTP delivery is often served WITHOUT byte-range support, so
+    // the browser marks the video non-seekable (`seekable` = [0,0]) and every
+    // scrubbed currentTime snaps back to 0. Loading the file into an in-memory
+    // Blob makes the whole timeline seekable. A blob:/data: URL (e.g. from the
+    // standalone-export inliner) is already in memory — use it directly.
+    const resolved = window.__asset(HERO_VIDEO_SRC, "heroVideo");
+    if (/^(blob:|data:)/.test(resolved)) {
+      video.src = resolved;
+    } else {
+      fetch(resolved)
+        .then((r) => r.blob())
+        .then((blob) => {
+          if (disposed) return;
+          objectUrl = URL.createObjectURL(blob);
+          video.src = objectUrl;
+          video.load();
+        })
+        .catch(() => { if (!disposed) { video.src = resolved; } });
+    }
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", resize);
-    // Re-attempt a draw shortly after mount to catch the first decoded frame
-    // even if its onload fires before the listener was attached.
-    const kick = setTimeout(() => {if (firstReady) draw(Math.round(state.current));}, 50);
+    window.addEventListener("resize", onScroll);
+    video.addEventListener("canplay", onScroll);
+    video.addEventListener("loadeddata", onScroll);
 
     return () => {
+      disposed = true;
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onScroll);
+      video.removeEventListener("loadedmetadata", onMeta);
+      video.removeEventListener("durationchange", onMeta);
+      video.removeEventListener("canplay", onScroll);
+      video.removeEventListener("loadeddata", onScroll);
       if (state.raf) cancelAnimationFrame(state.raf);
-      clearTimeout(kick);
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [sectionRef]);
 
   return (
     <div className="bg" aria-hidden="true">
-      <canvas className="hero-canvas" ref={canvasRef} />
+      <video
+        className="hero-video"
+        ref={videoRef}
+        muted
+        playsInline
+        preload="auto"
+        disablePictureInPicture
+        tabIndex={-1} />
+
       <div className="bg-grad" />
       <div className="bg-vignette" />
     </div>);
@@ -707,7 +721,7 @@ function Hero({ tweaks }) {
       data-screen-label="Hero">
 
       <div className="hero-sticky">
-        <HeroFrameCanvas sectionRef={sectionRef} />
+        <HeroScrubVideo sectionRef={sectionRef} />
 
         <motion.div
           className="hero-stage container"
@@ -723,8 +737,6 @@ function Hero({ tweaks }) {
               {tweaks.description}
             </motion.p>
           </div>
-
-          <InfoCards baseDelay={1.85} />
         </motion.div>
 
         {/* scroll affordance is rendered by the section-nav rail (assets/section-nav.js)
@@ -1305,10 +1317,10 @@ function ConsultancyMobile({ sectionRef }) {
       </motion.h2>
       <motion.div className="csm-figures" style={{ opacity: figuresOpacity }} aria-hidden="true">
         <motion.img className="csm-fig csm-fig--l"
-          src={window.__asset("assets/consultancy-left.png", "consultLeft")}
+          src={window.__asset("assets/consultancy-left.webp", "consultLeft")}
           alt="" style={{ x: figLeftX }} />
         <motion.img className="csm-fig csm-fig--r"
-          src={window.__asset("assets/consultancy-right.png", "consultRight")}
+          src={window.__asset("assets/consultancy-right.webp", "consultRight")}
           alt="" style={{ x: figRightX }} />
       </motion.div>
       {CONSULTANCY_CARDS.map((card, i) =>
@@ -1417,7 +1429,7 @@ function ConsultancySection() {
           aria-hidden="true">
 
           <window.PixelDissolve
-            src={window.__asset("assets/consultancy-left.png", "consultLeft")}
+            src={window.__asset("assets/consultancy-left.webp", "consultLeft")}
             progress={dissolveProgress}
             direction="top" />
 
@@ -1430,7 +1442,7 @@ function ConsultancySection() {
           aria-hidden="true">
 
           <window.PixelDissolve
-            src={window.__asset("assets/consultancy-right.png", "consultRight")}
+            src={window.__asset("assets/consultancy-right.webp", "consultRight")}
             progress={dissolveProgress}
             direction="top" />
 
@@ -1476,7 +1488,7 @@ const CONSULTANCY_CARDS = [
   "Lakehouse / Data Mesh",
   "Governance & lineage",
   "Pipelines and integrations",
-  "Databricks implementations"]
+  "Data Strategy Implementation"]
 
 },
 {
@@ -1639,7 +1651,7 @@ const CARD3_ICONS = [
 const APPROACH_CARDS = [
 {
   title: "AOS",
-  bg: "assets/card-1-bg.png",
+  bg: "assets/card-1-bg.webp",
   bgId: "card1bg",
   ink: "#1a1612",
   sub: "#5a5446",
@@ -1864,7 +1876,7 @@ const STACK_CARDS = [
       { icon: "lens", label: "Evaluation" }] },
     { label: "Agentic frameworks", items: [
       { icon: "interop", label: "OpenClaw" }] }],
-  bg: "assets/card-1-bg.png", bgId: "card1bg",
+  bg: "assets/card-1-bg.webp", bgId: "card1bg",
   ink: "#1a1612", sub: "#5a5446", accent: "#2c2620"
 },
 {
@@ -2169,7 +2181,6 @@ function App() {
       <StackSection />
       <window.ClientsSection />
       <window.ClientLogosGrid />
-      <window.OperatingPrinciplesSection />
       <window.FooterCTA />
 
       <SystemOverlay

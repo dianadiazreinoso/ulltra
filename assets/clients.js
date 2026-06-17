@@ -40,7 +40,7 @@ const CL_ITEMS = [
     desc: "Operational control surface integrating live telemetry, incident flow and field coordination.",
     left: "70%", top: "46%", speed: 1.0 },
 
-  { kind: "art", src: "assets/cap-cyber.png",
+  { kind: "art", src: "assets/cap-cyber.webp",
     alt: "A classical painted figure wearing a sleek cyber visor",
     left: "46%", top: "53%", speed: 0.6 },
 
@@ -54,7 +54,7 @@ const CL_ITEMS = [
     desc: "Energy-sector analytics product with forecasting models and a governed data layer for operators.",
     left: "69%", top: "50%", speed: 0.9 },
 
-  { kind: "art", src: "assets/work-portrait.png",
+  { kind: "art", src: "assets/work-portrait.webp",
     alt: "A classical painted portrait of a woman with an electric scooter",
     left: "51%", top: "47%", speed: 0.6 },
 
@@ -189,7 +189,7 @@ function ClientsSection() {
 
       <div className="clients-stage">
         <div className="clients-bg" aria-hidden="true">
-          <img src={window.__asset("assets/clients-bg.png")} alt="" draggable="false" />
+          <img src={window.__asset("assets/clients-bg.webp")} alt="" draggable="false" />
         </div>
         <div className="clients-bg-veil" aria-hidden="true"></div>
 

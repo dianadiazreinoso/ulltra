@@ -2,7 +2,48 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SVRN — Sovereign AI Infrastructure</title>
+<title>Ulltra - Sovereign AI powerhouse</title>
+
+<meta name="description" content="Ulltra designs, builds and operates AI-based systems that automate and transform business processes — the sovereign operating layer for European companies.">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ulltra">
+<meta property="og:title" content="Ulltra — Sovereign AI powerhouse">
+<meta property="og:description" content="AI-based systems that automate and transform business processes, on infrastructure you own and govern.">
+<meta property="og:url" content="https://ulltra.ai/">
+<meta property="og:image" content="https://ulltra.ai/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ulltra — Sovereign AI powerhouse">
+<meta name="twitter:description" content="AI-based systems that automate and transform business processes, on infrastructure you own and govern.">
+<meta name="twitter:image" content="https://ulltra.ai/assets/og-image.jpg">
+
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#100D0E">
+<link rel="canonical" href="https://ulltra.ai/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Ulltra",
+  "url": "https://ulltra.ai/",
+  "description": "Sovereign AI powerhouse — AI-based systems that automate and transform business processes.",
+  "logo": "https://ulltra.ai/assets/og-image.jpg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Plaza de Compostela 23",
+    "addressLocality": "Vigo",
+    "addressCountry": "ES"
+  },
+  "telephone": "+34 886 31 28 25",
+  "email": "hello@ulltra.ai"
+}
+</script>
 
 <!-- ─── Fonts ─────────────────────────────────────────────────────────────── -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -791,8 +832,8 @@
   width: clamp(90px, 8vw, 116px);
   height: clamp(24px, 2.1vw, 30px);
   background-color: #F2EDE1;
-  -webkit-mask: url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.png") left center / contain no-repeat;
-          mask: url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.png") left center / contain no-repeat;
+  -webkit-mask: url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.webp") left center / contain no-repeat;
+          mask: url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.webp") left center / contain no-repeat;
   transition: background-color .5s ease;
 }
 .hdr-actions{ display: flex; align-items: center; gap: 12px; min-width: 0; }
@@ -805,7 +846,7 @@
   background: transparent;
   border: 1px solid #D2FF00;
   font-weight: 500; font-size: 17px; letter-spacing: 0.01em;
-  font-family: var(--ff-mono);
+  font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
   color: #D2FF00; white-space: nowrap; cursor: pointer;
   transition: background-color .45s cubic-bezier(.4,0,.2,1), box-shadow .45s cubic-bezier(.4,0,.2,1), color .45s ease, border-color .45s ease;
 }
@@ -952,6 +993,12 @@
 }
 .menu-lang-btn.is-active, .menu-lang-btn:hover{ color: #EDE5CC; }
 .menu-lang-sep{ color: rgba(237,229,204,0.26); }
+.menu-social{ display: inline-flex; align-items: center; gap: 18px; }
+.menu-soc{
+  display: inline-flex; color: rgba(237,229,204,0.55);
+  transition: color .3s ease, transform .3s ease;
+}
+.menu-soc:hover{ color: #D2FF00; transform: translateY(-2px); }
 
 /* ─── Get Started drawer ─────────────────────────────────────────────────── */
 .gs-drawer{
@@ -1001,7 +1048,7 @@
   margin-top: 10px; height: 54px; width: 100%;
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   background: #1A1612; color: #F4EFE3; border: 0; border-radius: 8px;
-  font-family: var(--ff-mono); font-weight: 500; font-size: 15px;
+  font-family: var(--ff-display); font-weight: 500; font-size: 15px;
   letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
   transition: background-color .4s, transform .4s;
 }
@@ -1051,8 +1098,8 @@
   z-index: var(--z-content);
   display:flex;
   flex-direction:column;
-  justify-content: space-between;
-  padding-top: clamp(140px, 14vw, 220px);
+  justify-content: center;
+  padding-top: clamp(48px, 5vw, 80px);
   padding-bottom: clamp(48px, 5vw, 80px);
   pointer-events: none;
 }
@@ -1063,6 +1110,7 @@
   flex-direction:column;
   gap: clamp(28px, 3vw, 48px);
   max-width: 1180px;
+  transform: translateY(40px);
 }
 
 .hero-h1{
@@ -1216,6 +1264,25 @@
   display:block;
   background: var(--c-bg);
   animation: bgFade 1.6s var(--ease-out-cine) both;
+}
+/* Scroll-scrubbed hero video — full-bleed cover, driven imperatively by
+   HeroScrubVideo (currentTime mapped to scroll progress). Fades up on mount. */
+.hero-video{
+  position:absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  display:block;
+  background: var(--c-bg);
+  pointer-events: none;
+  animation: bgFade 1.6s var(--ease-out-cine) both;
+}
+@media (max-width: 760px) and (orientation: portrait){
+  /* Bias the cover crop toward the seated figure (right-of-centre in the
+     16:9 source) so it stays predominantly in frame on a narrow portrait. */
+  .hero-video{ object-position: 72% center; }
 }
 .bg-parallax{
   position:absolute;
@@ -2000,7 +2067,7 @@
 .ap-bg-img{
   position: absolute;
   inset: 0;
-  background-image: url("assets/software-landscape.png");
+  background-image: url("assets/software-landscape.webp");
   background-size: cover;
   background-position: 50% 90%;
   filter: saturate(0.97) contrast(1.03);
@@ -2030,7 +2097,7 @@
 .ap-figure-img{
   position: absolute;
   inset: 0;
-  background-image: url("assets/software-figure.png");
+  background-image: url("assets/software-figure.webp");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -2152,7 +2219,6 @@
   background: #1a1612;
   color: var(--ac-ink);
   transform: translateZ(0); /* GPU layer */
-  cursor: pointer;
 }
 .ac:hover{}
 .ac-bg{
@@ -2406,6 +2472,10 @@
   color: var(--ac-ink);
 }
 .ac-group-item .ac-ic{ width: 20px; height: 20px; }
+.ac-group-item, .ac-group-item *{
+  cursor: default;
+  user-select: none;
+}
 
 /* — Card footer text */
 .ac-foot{
@@ -2471,17 +2541,33 @@
      held visible almost to the very end (see Hero component) so there is never
      an empty stretch of the painting's dark final frame before Positioning —
      which previously read as a long black gap and broke the section snapping. */
+  /* ── Hero · mobile full-bleed ───────────────────────────────────────────
+     The scrubbed video covers the whole hero (height = 100svh via .hero-sticky)
+     with the text overlaid on top. A narrow portrait cover crop only reveals a
+     vertical slice of the 16:9 footage, so we push object-position toward the
+     seated figure (right-of-centre) — the sea/mountains on the left crop away
+     but the figure + columns stay predominantly in frame. Text sits low over
+     the bottom/left darkening so it reads without hiding the character. */
   .hero{ height: 200vh; }
-  .hero-stage{padding-top: clamp(176px, 32vw, 236px)}
-  .hero-content{max-width: 100%}
-  .hero-h1{line-height: 1.0}
+  .hero-video{
+    object-fit: cover;
+    object-position: 85% center;
+  }
+  .hero-stage{
+    justify-content: flex-end;
+    padding-top: clamp(96px, 22vw, 150px);
+    padding-bottom: clamp(40px, 13vw, 84px);
+  }
+  .hero-content{max-width: 100%; width: 100% !important; transform: none}
+  .hero-h1{line-height: 1.02}
   .cards{grid-template-columns: 1fr}
   .hero-scroll{display:none}
   .bg-img{background-position: 65% 30%}
   .bg-grad{
+    /* dark from the bottom (text) + from the left, leaving the right (figure) clearer */
     background:
-      linear-gradient(180deg, rgba(10,8,7,.65) 0%, rgba(10,8,7,.4) 30%, rgba(10,8,7,.55) 70%, rgba(10,8,7,.92) 100%),
-      radial-gradient(120% 80% at 0% 30%, rgba(10,8,7,.7) 0%, rgba(10,8,7,0) 60%);
+      linear-gradient(180deg, rgba(10,8,7,.5) 0%, rgba(10,8,7,0) 26%, rgba(10,8,7,0) 52%, rgba(10,8,7,.88) 100%),
+      radial-gradient(125% 90% at 0% 65%, rgba(10,8,7,.82) 0%, rgba(10,8,7,0) 58%);
   }
   .ts{padding-block: clamp(80px, 12vh, 140px)}
   .ts-para{font-size: clamp(24px, 6.5vw, 32px); max-width: 100%}
@@ -2816,8 +2902,8 @@
   #boot-poster.is-ready{ opacity:0; }
   #app{ position:relative; z-index:1; }
   @media (max-width: 760px){
-    /* match the canvas's mobile-portrait focal re-anchor (subject right-of-centre) */
-    #boot-poster{ background-position:center, 70% 42%; }
+    /* match the video's mobile-portrait focal re-anchor (subject right-of-centre) */
+    #boot-poster{ background-position:center, 85% 42%; }
   }
 
   /* ── Ulltra branded loader ──────────────────────────────────────────────
@@ -2985,7 +3071,7 @@
     position:absolute;
     inset:0;
     overflow:hidden;
-    will-change:clip-path;
+    will-change:clip-path, transform;
   }
   .reveal-layer--classic{ z-index:2; }
   .reveal-layer--cyber{ z-index:1; }
@@ -3065,6 +3151,64 @@
     opacity:.10;
     mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* Reveal headline — "Future has / ancient roots", left-aligned, vertically
+     centred in the empty left half so it never overlaps the statue on the right.
+     Sits above both images + atmosphere. Exact type sizing per spec. */
+  .reveal-headline{
+    position:absolute;
+    left: clamp(32px, 6vw, 112px);
+    top:50%;
+    transform: translateY(-50%);
+    z-index:9;
+    margin:0;
+    max-width: 52%;
+    color:#F3ECD6;            /* cream / off-white */
+    text-align:left;
+    pointer-events:none;
+    text-shadow: 0 2px 30px rgba(0,0,0,.45);
+  }
+  .reveal-headline .reveal-h-line{ display:block; }
+  .reveal-h-archivo{
+    font-family:"Archivo", ui-sans-serif, system-ui, sans-serif;
+    font-weight:700;
+    font-size:100px;
+    line-height:88px;
+    letter-spacing:-6px;
+  }
+  .reveal-h-ancient{
+    font-family:"Cormorant","Times New Roman",serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:120px;
+    line-height:88px;
+    letter-spacing:-6px;
+  }
+  /* Scale down on narrower viewports so the headline stays clear of the statue. */
+  @media (max-width: 1200px){
+    .reveal-h-archivo{ font-size:76px; line-height:68px; letter-spacing:-4px; }
+    .reveal-h-ancient{ font-size:92px;  line-height:68px; letter-spacing:-4px; }
+  }
+  @media (max-width: 760px){
+    /* Mobile reveal = CSS-sticky scrub (the GSAP pin is desktop-only — see
+       reveal.js matchMedia). The section is a tall runway and .reveal-pin sticks
+       to the viewport while a passive rAF handler drives the clip-path wipe.
+       100svh keeps the maths stable when the URL bar shows/hides. */
+    .reveal{ height: 300svh; }
+    .reveal-pin{
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+    }
+    .reveal-headline{ max-width: 80%; }
+    .reveal-h-archivo{ font-size:52px; line-height:48px; letter-spacing:-2px; }
+    .reveal-h-ancient{ font-size:62px;  line-height:48px; letter-spacing:-2px; }
+    /* The mobile <picture> sources are vertical crops already centred on the
+       bust, so a plain centre cover crop shows it whole. Both layers use the
+       same crop + position, so they stay aligned through the clip-path wipe. */
+    .reveal-img img{ object-position:center; }
   }
 
   /* UI / captions */
@@ -3346,6 +3490,10 @@
   @media (max-width: 760px){
     /* push the section down so the fixed header stops covering the title */
     .caps{ padding-top: clamp(150px, 38vw, 200px); }
+    /* No GSAP pin-spacer on mobile (reveal uses CSS-sticky), so there's no
+       trailing 100vh to compensate — cancel the desktop overlap or Capabilities
+       would sit on top of the reveal. */
+    .caps{ margin-top: 0; }
     .caps-deck{
       display:flex; flex-direction:row;
       height:auto; margin-top:28px;
@@ -3569,7 +3717,7 @@
      ========================================================================== */
   .oc{
     position:relative;
-    background:#0B0B0B url("assets/oc-bg.png") center/cover no-repeat;
+    background:#0B0B0B url("assets/oc-bg.webp") center/cover no-repeat;
     padding:100px 0;
     min-height:280px;
     display:flex; flex-direction:column; justify-content:center;
@@ -3815,7 +3963,7 @@
   }
   .fc-bg{
     position:absolute; left:0; right:0; top:-8%; height:116%; z-index:0;
-    background:url("assets/footer-bg.png") center/cover no-repeat;
+    background:url("assets/footer-bg.webp") center/cover no-repeat;
     will-change:transform;
   }
   .fc-vignette{
@@ -4267,16 +4415,14 @@
   <script type="text/babel" src="assets/tweaks-panel.jsx"></script>
   <script type="text/babel" src="assets/pixel-dissolve.js"></script>
   <script type="text/babel" src="assets/sections.js"></script>
-  <script type="text/babel" src="assets/reveal.js?v=19"></script>
+  <script type="text/babel" src="assets/reveal.js?v=24"></script>
   <script type="text/babel" src="assets/capabilities.js?v=16"></script>
   <script type="text/babel" src="assets/clients.js?v=7"></script>
   <script type="text/babel" src="assets/client-logos.js?v=3"></script>
-  <script type="text/babel" src="assets/operating-principles.js?v=5"></script>
   <script type="text/babel" src="assets/footer-cta.js?v=9"></script>
   <script type="text/babel" src="assets/sculpture-section/sculpture.jsx?v=10"></script>
   <script src="assets/sw-icons-data.js?v=3"></script>
-  <script type="text/babel" src="assets/hero.js?v=46"></script>
-  <script type="module" src="assets/sculpture-section/sculpture-gl.module.js?v=5"></script>
+  <script type="text/babel" src="assets/hero.js?v=49"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 

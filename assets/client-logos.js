@@ -209,13 +209,13 @@ const CLG_CSS = `
     height:clamp(70px,8.8vw,114px); overflow:visible; line-height:1;
     white-space:nowrap; color:#D2FF00; letter-spacing:-0.02em; padding:0 clamp(20px,2.4vw,44px); }
   .clg-it-our{ font-family:"Archivo", ui-sans-serif, system-ui, sans-serif; font-weight:800;
-    font-size:clamp(100px,12.5vw,162px); line-height:1; }
+    font-size:clamp(100px,12.5vw,152px); line-height:1; }
   .clg-it-clients{ font-family:"Cormorant", Georgia, serif; font-weight:700; font-style:italic;
-    font-size:clamp(108px,13.6vw,176px); line-height:1; }
+    font-size:clamp(108px,13.6vw,166px); line-height:1; }
   .clg-row{ display:flex; align-items:center; gap:50px;
     width:max-content; padding:0 clamp(40px,6vw,96px); will-change:transform; }
   /* Uniform fixed height; no max-width so wide wordmarks (eBay, Adigital) stay as tall as Newtral. */
-  .clg-row img{ height:clamp(70px,8.8vw,114px); width:auto; max-width:none;
+  .clg-row img{ height:clamp(49px,6.2vw,80px); width:auto; max-width:none;
     flex:0 0 auto; opacity:.92; user-select:none; -webkit-user-drag:none; }
   .clg-row--m{ display:none; }   /* extra rows: mobile only */
 
@@ -236,7 +236,7 @@ const CLG_CSS = `
     .clg-stage{ gap:60px; }
     .clg-rows{ gap:32px; }
     .clg-row{ gap:50px; }
-    .clg-row img{ height:clamp(48px,12vw,80px); }
+    .clg-row img{ height:clamp(34px,8.4vw,56px); }
     .clg-row--m{ display:flex; }
   }
 `;

@@ -17,11 +17,11 @@
 const CAP_CARDS = [
   {
     kind: "panel", tone: "lime", title: "Data",
-    items: ["Data Platforms — Lakehouse", "Data Governance", "Databricks",
+    items: ["Data Platforms — Lakehouse", "Data Governance",
             "Data Platforms — Data Mesh", "Pipelines & Integrations"]
   },
   {
-    kind: "image", src: "assets/cap-visors.png",
+    kind: "image", src: "assets/cap-visors.webp",
     alt: "A lone figure seated by a still sea, gazing at a luminous sky of glowing screens"
   },
   {
@@ -30,7 +30,7 @@ const CAP_CARDS = [
             "Data Auditing", "Prototyping"]
   },
   {
-    kind: "image", src: "assets/cap-cyber.png",
+    kind: "image", src: "assets/cap-cyber.webp",
     alt: "A classical painted figure wearing a sleek cyber visor"
   },
   {
@@ -311,7 +311,7 @@ function CapabilitiesSection() {
       aria-label="Capabilities">
 
       <div className="caps-bg" aria-hidden="true">
-        <img src={window.__asset("assets/cap-bg.png")} alt="" draggable="false" />
+        <img src={window.__asset("assets/cap-bg.webp")} alt="" draggable="false" />
         <div className="caps-bg-veil"></div>
       </div>
 

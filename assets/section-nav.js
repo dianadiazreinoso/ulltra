@@ -49,7 +49,7 @@
     transition: opacity .6s var(--ease-out-cine, cubic-bezier(.19,1,.22,1)),
                 color .5s ease;
   }
-  .secnav.is-onlight{ color: #1A1612; }
+  .secnav.is-onlight{ color: #EDE5CC; }
   @media (min-width: 900px){
     .secnav.is-ready{ display: block; }
     .secnav.is-ready.is-shown{ opacity: 1; pointer-events: auto; }
@@ -62,10 +62,10 @@
     gap: 3px;
     padding: 7px;
     border-radius: 999px;                       /* navigation capsule */
-    border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
-    background: color-mix(in srgb, currentColor 5%, transparent);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(18,15,12,.50);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    backdrop-filter: blur(8px) saturate(120%);
   }
   .secnav-slot{
     position: relative;
@@ -112,7 +112,7 @@
   }
   /* Over light sections the active blob inverts to dark ink for contrast. */
   .secnav.is-onlight .secnav-blob{
-    background: #1D1A17;
+    background: #D0FF00;
     box-shadow: none;
   }
   .secnav-label{
@@ -265,16 +265,25 @@
 
   // ── Adaptive tint — read data-header of whatever sits behind the rail ──────
   function updateTint() {
-    var x = Math.max(8, window.innerWidth - 96);
-    var el = document.elementFromPoint(x, window.innerHeight * 0.5);
     var mode = null;
+    var idx = computeActive();
+    var el = SECTIONS[idx] ? document.querySelector(SECTIONS[idx].sel) : null;
     while (el && el !== document.body) {
       if (el.hasAttribute && el.hasAttribute("data-header")) {
         mode = el.getAttribute("data-header"); break;
       }
       el = el.parentElement;
     }
-    // light section → dark rail; dark section → light rail
+    if (mode === null) {
+      var x = Math.max(8, window.innerWidth - 96);
+      var hit = document.elementFromPoint(x, window.innerHeight * 0.5);
+      while (hit && hit !== document.body) {
+        if (hit.hasAttribute && hit.hasAttribute("data-header")) {
+          mode = hit.getAttribute("data-header"); break;
+        }
+        hit = hit.parentElement;
+      }
+    }
     nav.classList.toggle("is-onlight", mode === "light");
   }
 

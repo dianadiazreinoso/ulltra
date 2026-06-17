@@ -50,10 +50,7 @@
   width:100%;
   overflow:hidden;
   z-index:1;
-  background:
-    /* teal speckled marble texture supplied by the user (already vignetted) */
-    url("back.png") center / cover no-repeat,
-    #060a0b;
+  background:#100D0E;
   isolation:isolate;
 }
 
@@ -108,16 +105,12 @@
 }
 
 /* ── React-Three-Fiber GL host: the live 3D sculpture mounts here ─────────── */
-.sc-gl{
-  position:absolute;
-  inset:0;
-  z-index:3;
-  pointer-events:none;          /* cursor tracked at window level for tilt */
+.sc-heart{
+  position:absolute; top:0; bottom:0; right:0; left:38%;
+  z-index:3; display:block; pointer-events:none;
 }
-.sc-gl canvas{
-  display:block;
-  width:100% !important;
-  height:100% !important;
+@media (max-width:760px){
+  .sc-heart{ left:0; top:auto; bottom:4vh; height:64vh; }
 }
 
 /* ── Vignette + grain hide canvas frame edges and add film texture ────────── */
@@ -255,12 +248,4 @@
   }
   .sc-cap-head{ font-size:clamp(34px,10vw,52px); }
   .sc-cap-sub{ font-size:clamp(24px,7.5vw,40px); }
-
-  /* Shrink only the 3D bust on mobile (40% of current size), kept centred.
-     .sc-glow / .sc-vignette / .sc-grain are siblings, so they are unaffected,
-     and the ACT II .sc-stage exit animation still runs normally. */
-  .sc-gl{
-    transform: translateY(50px) scale(0.66);
-    transform-origin: 50% 50%;
-  }
 }

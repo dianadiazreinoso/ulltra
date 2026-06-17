@@ -85,6 +85,33 @@ function FooterCTA() {
 
   return (
     <section className="fc" id="footer" ref={ref} data-header="light" data-screen-label="Footer">
+      <style>{`
+  .fc-foot{
+    position:absolute; left:0; right:0; bottom:0; z-index:6;
+    display:flex; align-items:center; justify-content:center;
+    gap:16px;
+    padding: 0 clamp(20px,4vw,60px) calc(clamp(18px,2.8vh,30px) + 50px);
+  }
+  .fc-addr{
+    font-family:"Archivo", ui-sans-serif, system-ui, sans-serif;
+    font-weight:400; font-size:clamp(15px, 1.25vw, 20px);
+    letter-spacing:.01em; line-height:1.55; text-align:center;
+    color:rgba(246,242,234,.82);
+    text-shadow:0 2px 24px rgba(0,0,0,.55);
+  }
+  .fc-social{ position:absolute; top:calc(clamp(18px,2.8vh,30px) + 15px); right:clamp(20px,4vw,60px); z-index:6; display:flex; align-items:center; gap:clamp(14px,1.4vw,20px); }
+  .fc-soc{
+    display:inline-flex; color:rgba(246,242,234,.66);
+    transition:color .25s ease, transform .25s ease;
+  }
+  .fc-soc:hover{ color:#D0FF00; transform:translateY(-2px); }
+  .fc-addr-link{ color:inherit; text-decoration:underline; text-underline-offset:2px; transition:color .25s ease; }
+  .fc-addr-link:hover{ color:#D0FF00; }
+  .fc-soc svg{ width:26px; height:26px; }
+  @media (max-width:680px){
+    .fc-foot{ flex-direction:column; gap:12px; text-align:center; padding-bottom:18px; }
+  }
+`}</style>
       <M.div
         className="fc-card"
         initial={{ opacity: 0, scale: 0.96 }}
@@ -114,7 +141,7 @@ function FooterCTA() {
         <M.div className="fc-top" style={parallax.arm}>
           <M.img
             className="fc-arm fc-arm--human"
-            src={window.__asset("assets/arm-human.png")}
+            src={window.__asset("assets/arm-human.webp")}
             alt="" aria-hidden="true" draggable="false"
             initial={{ x: -520, opacity: 0 }}
             animate={phase >= 4 ? { x: 0, opacity: 1 } : { x: -520, opacity: 0 }}
@@ -122,7 +149,7 @@ function FooterCTA() {
 
           <M.img
             className="fc-arm fc-arm--robot"
-            src={window.__asset("assets/arm-robot.png")}
+            src={window.__asset("assets/arm-robot.webp")}
             alt="" aria-hidden="true" draggable="false"
             initial={{ x: 520, opacity: 0 }}
             animate={phase >= 4 ? { x: 0, opacity: 1 } : { x: 520, opacity: 0 }}
@@ -136,7 +163,7 @@ function FooterCTA() {
 
         {/* BOTTOM ZONE — closing description + CTA only (the headline lives in
             the intro and is gone by the time the arms meet). */}
-        <div className="fc-bottom">
+        <div className="fc-bottom" style={{ paddingBottom: "clamp(120px, 20vh, 200px)" }}>
           <M.p
             className="fc-sub"
             initial={{ opacity: 0, y: 20 }}
@@ -157,6 +184,40 @@ function FooterCTA() {
             Get Started
           </M.button>
         </div>
+
+        <M.div
+          className="fc-foot"
+          initial={{ opacity: 0 }}
+          animate={phase >= 6 ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: dur(0.6), delay: dur(0.25), ease: FC_EASE_OUT }}>
+          <span className="fc-addr">
+            Main Office: Plaza de Compostela 23, Vigo, (Spain)<br />Tel: <a href="tel:+34886312825" className="fc-addr-link">+34 886 31 28 25</a> · <a href="mailto:hello@ulltra.ai" className="fc-addr-link">hello@ulltra.ai</a>
+          </span>
+        </M.div>
+
+        <M.div
+          className="fc-social"
+          initial={{ opacity: 0 }}
+          animate={phase >= 6 ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: dur(0.6), delay: dur(0.25), ease: FC_EASE_OUT }}>
+          <a href="#" className="fc-soc" aria-label="X">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+          <a href="#" className="fc-soc" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+          <a href="#" className="fc-soc" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M4.98 3.5a2.5 2.5 0 11-.02 5.001A2.5 2.5 0 014.98 3.5zM3 8.98h4v12.02H3V8.98zM9.5 8.98h3.83v1.64h.05c.53-1 1.84-2.06 3.78-2.06 4.04 0 4.79 2.66 4.79 6.12v6.32h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96v5.7h-4V8.98z" />
+            </svg>
+          </a>
+        </M.div>
       </M.div>
     </section>);
 }

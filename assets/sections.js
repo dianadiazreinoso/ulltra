@@ -113,7 +113,7 @@ function ApproachSection() {
           n="A · 01"
           title="Diagnose & map"
           desc="Audit current systems, find friction, mark sovereign boundaries."
-          bgSrc="assets/card-1-bg.png"
+          bgSrc="assets/card-1-bg.webp"
           assetSrc="assets/card-1-asset.png"
           variant="cream"
           opacity={c1Op}
@@ -123,7 +123,7 @@ function ApproachSection() {
           n="A · 02"
           title="Compose, don't assemble"
           desc={"Custom systems, not stitched-together SaaS.\nOwned end-to-end."}
-          bgSrc="assets/card-2-bg.png"
+          bgSrc="assets/card-2-bg.webp"
           assetSrc="assets/card-2-asset.png"
           variant="teal"
           opacity={c2Op}
@@ -133,7 +133,7 @@ function ApproachSection() {
           n="A · 03"
           title="Operate, ship, hold"
           desc={"We don't hand it back at launch.\nWe run the system through its life."}
-          bgSrc="assets/card-3-bg.png"
+          bgSrc="assets/card-3-bg.webp"
           assetSrc={null}
           variant="rouge"
           opacity={c3Op}
