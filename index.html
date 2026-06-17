@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8">
+<script>
+  /* Empezar siempre en el hero al cargar o recargar: evita que el navegador
+     restaure el scroll a mitad de página y se salte el hero animado. */
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  window.addEventListener('load', function () { if (!location.hash) window.scrollTo(0, 0); });
+  window.addEventListener('pageshow', function (e) { if (e.persisted && !location.hash) window.scrollTo(0, 0); });
+</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ulltra - Sovereign AI powerhouse</title>
 
