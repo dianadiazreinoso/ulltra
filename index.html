@@ -4420,52 +4420,74 @@
     })();
   </script>
   
-  <script defer src="assets/sw-icons-data.js?v=54"></script>
-  <script defer src="assets/tweaks-panel.jsx?v=54"></script>
-  <script defer src="assets/pixel-dissolve.js?v=54"></script>
-  <script defer src="assets/sections.js?v=54"></script>
-  <script defer src="assets/reveal.js?v=54"></script>
-  <script defer src="assets/capabilities.js?v=54"></script>
-  <script defer src="assets/clients.js?v=54"></script>
-  <script defer src="assets/client-logos.js?v=54"></script>
-  <script defer src="assets/footer-cta.js?v=54"></script>
-  <script defer src="assets/hero.js?v=54"></script>
+  <script defer src="assets/sw-icons-data.js?v=55"></script>
+  <script defer src="assets/tweaks-panel.jsx?v=55"></script>
+  <script defer src="assets/pixel-dissolve.js?v=55"></script>
+  <script defer src="assets/sections.js?v=55"></script>
+  <script defer src="assets/reveal.js?v=55"></script>
+  <script defer src="assets/capabilities.js?v=55"></script>
+  <script defer src="assets/clients.js?v=55"></script>
+  <script defer src="assets/client-logos.js?v=55"></script>
+  <script defer src="assets/footer-cta.js?v=55"></script>
+  <script defer src="assets/hero.js?v=55"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
   <script src="assets/software-equal-cards.js?v=1"></script>
 
-  <!-- Re-measure ScrollTrigger after the intro loader releases the scroll lock,
-       after fonts settle, and after load. On mobile the loader holds the page
-       (html overflow:hidden) while ScrollTrigger first measures section heights,
-       so the metrics are stale until something forces a recalc — which used to
-       require a manual refresh. These passes do that automatically. -->
+  <!-- Mobile first-load fix. On a cold load the web fonts swap in just after first
+       paint and the intro loader holds the page; both shift section heights AFTER
+       the scroll engines (framer-motion, ScrollTrigger) and CSS scroll-snap have
+       already measured. That left a black gap between sections and disengaged the
+       magnetic snap until a manual reload / re-entry. This re-kicks everything once
+       the page has truly settled: re-engages CSS scroll-snap, nudges framer-motion
+       and ScrollTrigger via a resize event, refreshes ScrollTrigger, and forces a
+       layout recompute. All passes are idempotent (same as a manual reload). -->
   <script>
   (function () {
-    function refreshST() {
+    var docEl = document.documentElement;
+    function recalc() {
       try {
+        // Re-engage CSS scroll-snap: iOS sometimes drops it after a layout change.
+        // Turn it off, force a reflow, then revert to the stylesheet value.
+        var prev = docEl.style.scrollSnapType;
+        docEl.style.scrollSnapType = "none";
+        void docEl.offsetHeight;            // force reflow
+        docEl.style.scrollSnapType = prev;  // back to the CSS value ("y proximity")
+        // Nudge scroll-linked libraries (framer-motion useScroll, ScrollTrigger).
+        window.dispatchEvent(new Event("resize"));
         if (window.ScrollTrigger && typeof window.ScrollTrigger.refresh === "function") {
           window.ScrollTrigger.refresh();
         }
+        void docEl.offsetHeight;            // settle layout
       } catch (e) {}
     }
-    function refreshSoon() {
-      requestAnimationFrame(function () { requestAnimationFrame(refreshST); });
-      setTimeout(refreshST, 200);
+    function recalcSoon() {
+      requestAnimationFrame(function () { requestAnimationFrame(recalc); });
+      setTimeout(recalc, 250);
+      setTimeout(recalc, 900);
     }
-    // 1) When the intro loader finishes and the scroll lock is lifted.
-    window.addEventListener("ull-reveal-done", refreshSoon);
-    // 2) In case the loader already finished before this script ran.
-    if (window.__ullRevealDone) refreshSoon();
-    // 3) After web fonts swap in (text-height shifts move section boundaries).
+    // 1) After the intro loader finishes and the scroll lock is lifted.
+    window.addEventListener("ull-reveal-done", recalcSoon);
+    if (window.__ullRevealDone) recalcSoon();
+    // 2) After web fonts swap in (the most likely cold-load trigger).
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { setTimeout(refreshST, 60); });
+      document.fonts.ready.then(function () { recalcSoon(); });
     }
-    // 4) Safety passes after full load + a late pass for the mobile URL-bar settle.
+    // 3) Safety passes after full load + a late pass for the mobile URL-bar settle.
     window.addEventListener("load", function () {
-      setTimeout(refreshST, 300);
-      setTimeout(refreshST, 1200);
+      setTimeout(recalc, 400);
+      setTimeout(recalc, 1500);
     });
+    // 4) One-shot recalc on the first user interaction — iOS frequently only
+    //    re-engages scroll-snap once the page has actually been touched/scrolled.
+    function onceKick() {
+      recalc();
+      window.removeEventListener("touchstart", onceKick);
+      window.removeEventListener("scroll", onceKick);
+    }
+    window.addEventListener("touchstart", onceKick, { passive: true, once: true });
+    window.addEventListener("scroll", onceKick, { passive: true, once: true });
   })();
   </script>
 
