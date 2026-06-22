@@ -4245,9 +4245,15 @@
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       // Lock scroll while the loader is up; restore on done.
+      // NOTE: do NOT use overflow:hidden on <html> here — on iOS Safari that
+      // breaks position:sticky and scroll-snap in the sections below, and they
+      // don't recover after the loader clears (black gaps + dead magnetic snap
+      // on a cold load). touch-action locks the gesture without disturbing them.
       var htmlEl = document.documentElement;
-      var prevOverflow = htmlEl.style.overflow;
-      htmlEl.style.overflow = "hidden";
+      var prevTouchAction = htmlEl.style.touchAction;
+      var prevOverscroll = htmlEl.style.overscrollBehavior;
+      htmlEl.style.touchAction = "none";
+      htmlEl.style.overscrollBehavior = "none";
 
       // ── Vector aperture references + layout ──────────────────────────────
       var svg    = document.getElementById("ull-aperture");
@@ -4318,7 +4324,8 @@
         loader.classList.add("is-clearing");
         setTimeout(function () {
           loader.classList.add("is-done");
-          htmlEl.style.overflow = prevOverflow;
+          htmlEl.style.touchAction = prevTouchAction;
+          htmlEl.style.overscrollBehavior = prevOverscroll;
           [svg, markEl].forEach(function (el) { if (el) el.style.willChange = "auto"; });
           window.__ullRevealDone = true;
           // Release any work (e.g. the WebGL sculpture) deferred behind the reveal.
@@ -4420,16 +4427,16 @@
     })();
   </script>
   
-  <script defer src="assets/sw-icons-data.js?v=52"></script>
-  <script defer src="assets/tweaks-panel.js?v=52"></script>
-  <script defer src="assets/pixel-dissolve.js?v=52"></script>
-  <script defer src="assets/sections.js?v=52"></script>
-  <script defer src="assets/reveal.js?v=52"></script>
-  <script defer src="assets/capabilities.js?v=52"></script>
-  <script defer src="assets/clients.js?v=52"></script>
-  <script defer src="assets/client-logos.js?v=52"></script>
-  <script defer src="assets/footer-cta.js?v=52"></script>
-  <script defer src="assets/hero.js?v=52"></script>
+  <script defer src="assets/sw-icons-data.js?v=53"></script>
+  <script defer src="assets/tweaks-panel.js?v=53"></script>
+  <script defer src="assets/pixel-dissolve.js?v=53"></script>
+  <script defer src="assets/sections.js?v=53"></script>
+  <script defer src="assets/reveal.js?v=53"></script>
+  <script defer src="assets/capabilities.js?v=53"></script>
+  <script defer src="assets/clients.js?v=53"></script>
+  <script defer src="assets/client-logos.js?v=53"></script>
+  <script defer src="assets/footer-cta.js?v=53"></script>
+  <script defer src="assets/hero.js?v=53"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
