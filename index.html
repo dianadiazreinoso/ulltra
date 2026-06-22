@@ -4250,8 +4250,16 @@
 
       // Lock scroll while the loader is up; restore on done.
       var htmlEl = document.documentElement;
-      var prevOverflow = htmlEl.style.overflow;
-      htmlEl.style.overflow = "hidden";
+      // Lock scroll during the intro WITHOUT touching overflow. Setting
+      // overflow:hidden on <html> breaks position:sticky on iOS Safari and the
+      // scroll-scrub sections stay un-pinned after the loader clears — which
+      // showed up as black gaps between sections and a dead scroll-snap on a
+      // cold load (a re-entry, with no loader, was fine). touch-action +
+      // overscroll-behavior lock the gesture without disturbing sticky layout.
+      var prevTouchAction = htmlEl.style.touchAction;
+      var prevOverscroll = htmlEl.style.overscrollBehavior;
+      htmlEl.style.touchAction = "none";
+      htmlEl.style.overscrollBehavior = "none";
 
       // ── Vector aperture references + layout ──────────────────────────────
       var svg    = document.getElementById("ull-aperture");
@@ -4322,7 +4330,8 @@
         loader.classList.add("is-clearing");
         setTimeout(function () {
           loader.classList.add("is-done");
-          htmlEl.style.overflow = prevOverflow;
+          htmlEl.style.touchAction = prevTouchAction;
+          htmlEl.style.overscrollBehavior = prevOverscroll;
           [svg, markEl].forEach(function (el) { if (el) el.style.willChange = "auto"; });
           window.__ullRevealDone = true;
           // Release any work (e.g. the WebGL sculpture) deferred behind the reveal.
@@ -4424,16 +4433,16 @@
     })();
   </script>
   
-  <script defer src="assets/sw-icons-data.js?v=56"></script>
-  <script defer src="assets/tweaks-panel.jsx?v=56"></script>
-  <script defer src="assets/pixel-dissolve.js?v=56"></script>
-  <script defer src="assets/sections.js?v=56"></script>
-  <script defer src="assets/reveal.js?v=56"></script>
-  <script defer src="assets/capabilities.js?v=56"></script>
-  <script defer src="assets/clients.js?v=56"></script>
-  <script defer src="assets/client-logos.js?v=56"></script>
-  <script defer src="assets/footer-cta.js?v=56"></script>
-  <script defer src="assets/hero.js?v=56"></script>
+  <script defer src="assets/sw-icons-data.js?v=57"></script>
+  <script defer src="assets/tweaks-panel.jsx?v=57"></script>
+  <script defer src="assets/pixel-dissolve.js?v=57"></script>
+  <script defer src="assets/sections.js?v=57"></script>
+  <script defer src="assets/reveal.js?v=57"></script>
+  <script defer src="assets/capabilities.js?v=57"></script>
+  <script defer src="assets/clients.js?v=57"></script>
+  <script defer src="assets/client-logos.js?v=57"></script>
+  <script defer src="assets/footer-cta.js?v=57"></script>
+  <script defer src="assets/hero.js?v=57"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
@@ -4460,6 +4469,12 @@
         docEl.style.scrollSnapType = prev;  // back to the CSS value ("y proximity")
         // Nudge scroll-linked libraries (framer-motion useScroll, ScrollTrigger).
         window.dispatchEvent(new Event("resize"));
+        // Tiny scroll nudge at the very top forces iOS to recompute sticky/snap
+        // without visibly moving the page.
+        if ((window.scrollY || window.pageYOffset || 0) < 2) {
+          window.scrollTo(0, 1);
+          window.scrollTo(0, 0);
+        }
         if (window.ScrollTrigger && typeof window.ScrollTrigger.refresh === "function") {
           window.ScrollTrigger.refresh();
         }
