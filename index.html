@@ -1095,7 +1095,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  height: 100dvh;
+  height: 100svh;
   width: 100%;
   overflow: hidden;
 }
@@ -2557,11 +2557,7 @@
      seated figure (right-of-centre) — the sea/mountains on the left crop away
      but the figure + columns stay predominantly in frame. Text sits low over
      the bottom/left darkening so it reads without hiding the character. */
-  /* Mobile has no video scrub (static poster), so the desktop 200vh scrub runway
-     was dead space below the pinned frame — it showed as a full screen of black
-     before the next section on a cold load. One dynamic viewport = the hero fills
-     the screen and the next section follows immediately, with no dead runway. */
-  .hero{ height: 100vh; height: 100dvh; }
+  .hero{ height: 200vh; }
   .hero-video{
     object-fit: cover;
     object-position: 85% center;
@@ -2936,8 +2932,6 @@
     contain: strict;
   }
   #ull-loader.is-done{ display: none; }
-  /* Diagnostic: force the intro loader hidden regardless of JS timing. */
-  #ull-loader{ display: none !important; }
 
   .ull-stack{
     position: relative;
@@ -3215,7 +3209,7 @@
       position: sticky;
       top: 0;
       height: 100vh;
-      height: 100dvh;
+      height: 100svh;
     }
     .reveal-headline{ max-width: 80%; }
     .reveal-h-archivo{ font-size:52px; line-height:48px; letter-spacing:-2px; }
@@ -4247,38 +4241,13 @@
     (function () {
       var loader = document.getElementById("ull-loader");
       if (!loader) return;
-
-      // ── Intro loader DISABLED (diagnostic / temporary) ─────────────────────
-      // The branded intro locks scroll and runs a fullscreen aperture reveal.
-      // On a mobile COLD load this was breaking the layout (black gaps between
-      // sections, dead scroll-snap, lime edges in landscape); a re-entry, which
-      // never runs the loader, is always correct. Skipping the loader makes
-      // every load behave like that correct re-entry. To bring the intro back,
-      // set ULL_LOADER_OFF = false.
-      var ULL_LOADER_OFF = true;
-      if (ULL_LOADER_OFF) {
-        loader.classList.add("is-done");   // display:none — never shown, no scroll lock
-        window.__ullRevealDone = true;
-        try { window.dispatchEvent(new Event("ull-reveal-done")); } catch (e) {}
-        return;
-      }
-      // ───────────────────────────────────────────────────────────────────────
-
       var reduce = window.matchMedia &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       // Lock scroll while the loader is up; restore on done.
       var htmlEl = document.documentElement;
-      // Lock scroll during the intro WITHOUT touching overflow. Setting
-      // overflow:hidden on <html> breaks position:sticky on iOS Safari and the
-      // scroll-scrub sections stay un-pinned after the loader clears — which
-      // showed up as black gaps between sections and a dead scroll-snap on a
-      // cold load (a re-entry, with no loader, was fine). touch-action +
-      // overscroll-behavior lock the gesture without disturbing sticky layout.
-      var prevTouchAction = htmlEl.style.touchAction;
-      var prevOverscroll = htmlEl.style.overscrollBehavior;
-      htmlEl.style.touchAction = "none";
-      htmlEl.style.overscrollBehavior = "none";
+      var prevOverflow = htmlEl.style.overflow;
+      htmlEl.style.overflow = "hidden";
 
       // ── Vector aperture references + layout ──────────────────────────────
       var svg    = document.getElementById("ull-aperture");
@@ -4349,8 +4318,7 @@
         loader.classList.add("is-clearing");
         setTimeout(function () {
           loader.classList.add("is-done");
-          htmlEl.style.touchAction = prevTouchAction;
-          htmlEl.style.overscrollBehavior = prevOverscroll;
+          htmlEl.style.overflow = prevOverflow;
           [svg, markEl].forEach(function (el) { if (el) el.style.willChange = "auto"; });
           window.__ullRevealDone = true;
           // Release any work (e.g. the WebGL sculpture) deferred behind the reveal.
@@ -4452,81 +4420,20 @@
     })();
   </script>
   
-  <script defer src="assets/sw-icons-data.js?v=60"></script>
-  <script defer src="assets/tweaks-panel.jsx?v=60"></script>
-  <script defer src="assets/pixel-dissolve.js?v=60"></script>
-  <script defer src="assets/sections.js?v=60"></script>
-  <script defer src="assets/reveal.js?v=60"></script>
-  <script defer src="assets/capabilities.js?v=60"></script>
-  <script defer src="assets/clients.js?v=60"></script>
-  <script defer src="assets/client-logos.js?v=60"></script>
-  <script defer src="assets/footer-cta.js?v=60"></script>
-  <script defer src="assets/hero.js?v=60"></script>
+  <script defer src="assets/sw-icons-data.js?v=52"></script>
+  <script defer src="assets/tweaks-panel.jsx?v=52"></script>
+  <script defer src="assets/pixel-dissolve.js?v=52"></script>
+  <script defer src="assets/sections.js?v=52"></script>
+  <script defer src="assets/reveal.js?v=52"></script>
+  <script defer src="assets/capabilities.js?v=52"></script>
+  <script defer src="assets/clients.js?v=52"></script>
+  <script defer src="assets/client-logos.js?v=52"></script>
+  <script defer src="assets/footer-cta.js?v=52"></script>
+  <script defer src="assets/hero.js?v=52"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
   <script src="assets/software-equal-cards.js?v=1"></script>
 
-  <!-- Mobile first-load fix. On a cold load the web fonts swap in just after first
-       paint and the intro loader holds the page; both shift section heights AFTER
-       the scroll engines (framer-motion, ScrollTrigger) and CSS scroll-snap have
-       already measured. That left a black gap between sections and disengaged the
-       magnetic snap until a manual reload / re-entry. This re-kicks everything once
-       the page has truly settled: re-engages CSS scroll-snap, nudges framer-motion
-       and ScrollTrigger via a resize event, refreshes ScrollTrigger, and forces a
-       layout recompute. All passes are idempotent (same as a manual reload). -->
-  <script>
-  (function () {
-    var docEl = document.documentElement;
-    function recalc() {
-      try {
-        // Re-engage CSS scroll-snap: iOS sometimes drops it after a layout change.
-        // Turn it off, force a reflow, then revert to the stylesheet value.
-        var prev = docEl.style.scrollSnapType;
-        docEl.style.scrollSnapType = "none";
-        void docEl.offsetHeight;            // force reflow
-        docEl.style.scrollSnapType = prev;  // back to the CSS value ("y proximity")
-        // Nudge scroll-linked libraries (framer-motion useScroll, ScrollTrigger).
-        window.dispatchEvent(new Event("resize"));
-        // Tiny scroll nudge at the very top forces iOS to recompute sticky/snap
-        // without visibly moving the page.
-        if ((window.scrollY || window.pageYOffset || 0) < 2) {
-          window.scrollTo(0, 1);
-          window.scrollTo(0, 0);
-        }
-        if (window.ScrollTrigger && typeof window.ScrollTrigger.refresh === "function") {
-          window.ScrollTrigger.refresh();
-        }
-        void docEl.offsetHeight;            // settle layout
-      } catch (e) {}
-    }
-    function recalcSoon() {
-      requestAnimationFrame(function () { requestAnimationFrame(recalc); });
-      setTimeout(recalc, 250);
-      setTimeout(recalc, 900);
-    }
-    // 1) After the intro loader finishes and the scroll lock is lifted.
-    window.addEventListener("ull-reveal-done", recalcSoon);
-    if (window.__ullRevealDone) recalcSoon();
-    // 2) After web fonts swap in (the most likely cold-load trigger).
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { recalcSoon(); });
-    }
-    // 3) Safety passes after full load + a late pass for the mobile URL-bar settle.
-    window.addEventListener("load", function () {
-      setTimeout(recalc, 400);
-      setTimeout(recalc, 1500);
-    });
-    // 4) One-shot recalc on the first user interaction — iOS frequently only
-    //    re-engages scroll-snap once the page has actually been touched/scrolled.
-    function onceKick() {
-      recalc();
-      window.removeEventListener("touchstart", onceKick);
-      window.removeEventListener("scroll", onceKick);
-    }
-    window.addEventListener("touchstart", onceKick, { passive: true, once: true });
-    window.addEventListener("scroll", onceKick, { passive: true, once: true });
-  })();
-  </script>
 
 </body></html>

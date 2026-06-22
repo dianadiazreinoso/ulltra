@@ -1,11 +1,9 @@
-# Siempre revalidar el HTML para que cada deploy se vea al instante
-# (esto evita que el navegador/Netlify sirva una versión antigua cacheada).
+# Revalidar siempre el HTML para que cada deploy se vea al instante.
 /
   Cache-Control: no-cache
 /index.html
   Cache-Control: no-cache
 
-# Los archivos estáticos sí se pueden cachear: cuando cambian, su ?v= o su
-# nombre cambia, así que el navegador baja la versión nueva igualmente.
+# Estáticos cacheables (cuando cambian, su ?v= o su nombre cambia).
 /assets/*
   Cache-Control: public, max-age=86400
