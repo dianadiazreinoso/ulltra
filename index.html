@@ -4245,6 +4245,23 @@
     (function () {
       var loader = document.getElementById("ull-loader");
       if (!loader) return;
+
+      // ── Intro loader DISABLED (diagnostic / temporary) ─────────────────────
+      // The branded intro locks scroll and runs a fullscreen aperture reveal.
+      // On a mobile COLD load this was breaking the layout (black gaps between
+      // sections, dead scroll-snap, lime edges in landscape); a re-entry, which
+      // never runs the loader, is always correct. Skipping the loader makes
+      // every load behave like that correct re-entry. To bring the intro back,
+      // set ULL_LOADER_OFF = false.
+      var ULL_LOADER_OFF = true;
+      if (ULL_LOADER_OFF) {
+        loader.classList.add("is-done");   // display:none — never shown, no scroll lock
+        window.__ullRevealDone = true;
+        try { window.dispatchEvent(new Event("ull-reveal-done")); } catch (e) {}
+        return;
+      }
+      // ───────────────────────────────────────────────────────────────────────
+
       var reduce = window.matchMedia &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -4433,16 +4450,16 @@
     })();
   </script>
   
-  <script defer src="assets/sw-icons-data.js?v=57"></script>
-  <script defer src="assets/tweaks-panel.jsx?v=57"></script>
-  <script defer src="assets/pixel-dissolve.js?v=57"></script>
-  <script defer src="assets/sections.js?v=57"></script>
-  <script defer src="assets/reveal.js?v=57"></script>
-  <script defer src="assets/capabilities.js?v=57"></script>
-  <script defer src="assets/clients.js?v=57"></script>
-  <script defer src="assets/client-logos.js?v=57"></script>
-  <script defer src="assets/footer-cta.js?v=57"></script>
-  <script defer src="assets/hero.js?v=57"></script>
+  <script defer src="assets/sw-icons-data.js?v=58"></script>
+  <script defer src="assets/tweaks-panel.jsx?v=58"></script>
+  <script defer src="assets/pixel-dissolve.js?v=58"></script>
+  <script defer src="assets/sections.js?v=58"></script>
+  <script defer src="assets/reveal.js?v=58"></script>
+  <script defer src="assets/capabilities.js?v=58"></script>
+  <script defer src="assets/clients.js?v=58"></script>
+  <script defer src="assets/client-logos.js?v=58"></script>
+  <script defer src="assets/footer-cta.js?v=58"></script>
+  <script defer src="assets/hero.js?v=58"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
