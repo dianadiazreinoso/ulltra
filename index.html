@@ -4420,20 +4420,53 @@
     })();
   </script>
   
-  <script defer src="assets/sw-icons-data.js?v=53"></script>
-  <script defer src="assets/tweaks-panel.jsx?v=53"></script>
-  <script defer src="assets/pixel-dissolve.js?v=53"></script>
-  <script defer src="assets/sections.js?v=53"></script>
-  <script defer src="assets/reveal.js?v=53"></script>
-  <script defer src="assets/capabilities.js?v=53"></script>
-  <script defer src="assets/clients.js?v=53"></script>
-  <script defer src="assets/client-logos.js?v=53"></script>
-  <script defer src="assets/footer-cta.js?v=53"></script>
-  <script defer src="assets/hero.js?v=53"></script>
+  <script defer src="assets/sw-icons-data.js?v=54"></script>
+  <script defer src="assets/tweaks-panel.jsx?v=54"></script>
+  <script defer src="assets/pixel-dissolve.js?v=54"></script>
+  <script defer src="assets/sections.js?v=54"></script>
+  <script defer src="assets/reveal.js?v=54"></script>
+  <script defer src="assets/capabilities.js?v=54"></script>
+  <script defer src="assets/clients.js?v=54"></script>
+  <script defer src="assets/client-logos.js?v=54"></script>
+  <script defer src="assets/footer-cta.js?v=54"></script>
+  <script defer src="assets/hero.js?v=54"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
   <script src="assets/software-equal-cards.js?v=1"></script>
 
+  <!-- Re-measure ScrollTrigger after the intro loader releases the scroll lock,
+       after fonts settle, and after load. On mobile the loader holds the page
+       (html overflow:hidden) while ScrollTrigger first measures section heights,
+       so the metrics are stale until something forces a recalc — which used to
+       require a manual refresh. These passes do that automatically. -->
+  <script>
+  (function () {
+    function refreshST() {
+      try {
+        if (window.ScrollTrigger && typeof window.ScrollTrigger.refresh === "function") {
+          window.ScrollTrigger.refresh();
+        }
+      } catch (e) {}
+    }
+    function refreshSoon() {
+      requestAnimationFrame(function () { requestAnimationFrame(refreshST); });
+      setTimeout(refreshST, 200);
+    }
+    // 1) When the intro loader finishes and the scroll lock is lifted.
+    window.addEventListener("ull-reveal-done", refreshSoon);
+    // 2) In case the loader already finished before this script ran.
+    if (window.__ullRevealDone) refreshSoon();
+    // 3) After web fonts swap in (text-height shifts move section boundaries).
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { setTimeout(refreshST, 60); });
+    }
+    // 4) Safety passes after full load + a late pass for the mobile URL-bar settle.
+    window.addEventListener("load", function () {
+      setTimeout(refreshST, 300);
+      setTimeout(refreshST, 1200);
+    });
+  })();
+  </script>
 
 </body></html>
