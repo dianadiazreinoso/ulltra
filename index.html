@@ -2557,7 +2557,11 @@
      seated figure (right-of-centre) — the sea/mountains on the left crop away
      but the figure + columns stay predominantly in frame. Text sits low over
      the bottom/left darkening so it reads without hiding the character. */
-  .hero{ height: 200vh; }
+  /* Mobile has no video scrub (static poster), so the desktop 200vh scrub runway
+     was dead space below the pinned frame — it showed as a full screen of black
+     before the next section on a cold load. One dynamic viewport = the hero fills
+     the screen and the next section follows immediately, with no dead runway. */
+  .hero{ height: 100vh; height: 100dvh; }
   .hero-video{
     object-fit: cover;
     object-position: 85% center;
@@ -4420,16 +4424,16 @@
     })();
   </script>
   
-  <script defer src="assets/sw-icons-data.js?v=55"></script>
-  <script defer src="assets/tweaks-panel.jsx?v=55"></script>
-  <script defer src="assets/pixel-dissolve.js?v=55"></script>
-  <script defer src="assets/sections.js?v=55"></script>
-  <script defer src="assets/reveal.js?v=55"></script>
-  <script defer src="assets/capabilities.js?v=55"></script>
-  <script defer src="assets/clients.js?v=55"></script>
-  <script defer src="assets/client-logos.js?v=55"></script>
-  <script defer src="assets/footer-cta.js?v=55"></script>
-  <script defer src="assets/hero.js?v=55"></script>
+  <script defer src="assets/sw-icons-data.js?v=56"></script>
+  <script defer src="assets/tweaks-panel.jsx?v=56"></script>
+  <script defer src="assets/pixel-dissolve.js?v=56"></script>
+  <script defer src="assets/sections.js?v=56"></script>
+  <script defer src="assets/reveal.js?v=56"></script>
+  <script defer src="assets/capabilities.js?v=56"></script>
+  <script defer src="assets/clients.js?v=56"></script>
+  <script defer src="assets/client-logos.js?v=56"></script>
+  <script defer src="assets/footer-cta.js?v=56"></script>
+  <script defer src="assets/hero.js?v=56"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
