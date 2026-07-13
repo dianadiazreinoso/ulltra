@@ -2217,6 +2217,49 @@
    overriding the narrower global --container (1480) for these two sections. */
 .ap-cards.container{ width: min(1760px, 100vw - 64px); }
 
+/* Tech & AI Stack — three equal-height cards in a row. The first card
+   (Agentic AI) has the most content, so on desktop it is clamped to the same
+   height as its neighbours and reveals the rest via a "Ver más" button that
+   expands it downward. Heights are equalised by stack-expand.js. Mobile keeps
+   the sticky stacked layout defined further down. */
+@media (min-width: 761px){
+  #stack .ap-cards .ac:first-child{ position: relative; }
+  /* fade at the bottom of the collapsed long card, in its own cream tone */
+  #stack .ap-cards .ac:first-child.ac--collapsible:not(.is-expanded)::after{
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 132px;
+    background: linear-gradient(180deg, rgba(247,243,232,0) 0%, #F7F3E8 78%);
+    pointer-events: none;
+    z-index: 4;
+  }
+  /* room so the button never sits on top of the last line when expanded */
+  #stack .ap-cards .ac:first-child.is-expanded .ac-detail{ padding-bottom: 72px; }
+  /* the reveal button, full width at the bottom of the long card */
+  #stack .ap-cards .ac-more{
+    position: absolute;
+    left: clamp(28px, 2.4vw, 44px);
+    right: clamp(28px, 2.4vw, 44px);
+    bottom: clamp(24px, 2vw, 34px);
+    z-index: 5;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 15px 22px;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--ac-ink) 32%, transparent);
+    background: color-mix(in srgb, var(--ac-ink) 4%, #F7F3E8);
+    color: var(--ac-ink);
+    font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    font-size: 15px; font-weight: 500; letter-spacing: 0;
+    cursor: pointer; white-space: nowrap;
+    transition: background-color .25s ease, border-color .25s ease;
+  }
+  #stack .ap-cards .ac-more:hover{
+    background: color-mix(in srgb, var(--ac-ink) 10%, #F7F3E8);
+    border-color: color-mix(in srgb, var(--ac-ink) 55%, transparent);
+  }
+}
+
 
 /* — Card */
 .ac{
@@ -4462,6 +4505,8 @@
   <script src="assets/section-nav.js?v=11"></script>
 
   <script src="assets/software-equal-cards.js?v=1"></script>
+
+  <script src="assets/stack-expand.js?v=1"></script>
 
 
 </body></html>
