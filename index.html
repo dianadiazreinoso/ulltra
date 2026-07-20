@@ -3675,7 +3675,8 @@
     will-change:transform;
     /* centred on its (left,top) anchor; GSAP composes xPercent/yPercent + y */
   }
-  .cl-slot-anim{ will-change:transform, opacity; }
+  .cl-slot{ pointer-events:none; }
+  .cl-slot-anim{ will-change:transform, opacity; pointer-events:auto; }
   /* Hover lifts a card above all others so it can be read whole — eased with a
      gentle scale + shadow so the z-index change feels smooth, not abrupt */
   .cl-card{ transition: transform .5s cubic-bezier(.22,.61,.36,1), box-shadow .5s ease; }
