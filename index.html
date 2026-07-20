@@ -3679,6 +3679,7 @@
   /* Hover lifts a card above all others so it can be read whole — eased with a
      gentle scale + shadow so the z-index change feels smooth, not abrupt */
   .cl-card{ transition: transform .5s cubic-bezier(.22,.61,.36,1), box-shadow .5s ease; }
+  .cl-card--link{ text-decoration:none; cursor:pointer; }
   .cl-slot:hover{ z-index:999 !important; }
   .cl-slot:hover .cl-card{
     transform: scale(0.92);

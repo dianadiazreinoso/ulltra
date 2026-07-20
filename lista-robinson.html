@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lista Robinson — Exclusión publicitaria que preserva la privacidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Cormorant:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0807;
+    --bg-alt:#100D0B;
+    --ink:#EDE5CC;
+    --ink-2:#B8AD93;
+    --line:#26231D;
+    --lime:#D2FF00;
+    --magenta:#318BFF;
+    --blue:#D2FF00;
+    --ff-display:"Archivo", ui-sans-serif, system-ui, sans-serif;
+    --ff-serif:"Cormorant", Georgia, serif;
+    --ff-mono:"JetBrains Mono", ui-monospace, monospace;
+    --maxw:1480px;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--ff-display);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  a{ color:var(--blue); text-decoration:none; }
+  a:hover{ color:var(--ink); }
+  .wrap{ width:min(var(--maxw), 100vw - 48px); margin-inline:auto; }
+  section{ position:relative; }
+
+  /* ── Header pill ─────────────────────────────────────────────────────── */
+  .hdr{
+    position:fixed;
+    top:clamp(12px, 1.5vw, 20px);
+    left:0; right:0; margin-inline:auto;
+    width:min(1480px, 100vw - 32px);
+    height:85px;
+    z-index:50;
+    border-radius:13px;
+    background:rgba(48,48,48,0.40);
+    border:1px solid rgba(255,255,255,0.08);
+    -webkit-backdrop-filter:blur(14px) saturate(125%); backdrop-filter:blur(14px) saturate(125%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+    transition:background-color .5s ease, border-color .5s ease, box-shadow .5s ease;
+  }
+  .hdr-inner{ display:flex; align-items:center; justify-content:space-between; height:100%; padding-inline:clamp(18px, 2.2vw, 32px); gap:clamp(14px, 2vw, 28px); }
+  .hdr-logo{ display:inline-flex; align-items:center; flex:0 0 auto; }
+  .hdr-logo-mark{ display:block; width:clamp(90px, 8vw, 116px); height:clamp(24px, 2.1vw, 30px); background-color:#F2EDE1; -webkit-mask:url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.png") left center / contain no-repeat; mask:url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.png") left center / contain no-repeat; transition:background-color .5s ease; }
+  .hdr-actions{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .btn-getstarted{
+    height:41px; padding:0 22px; flex:0 0 auto;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:transparent; border:1px solid var(--blue);
+    font-weight:500; font-size:16px; letter-spacing:0.01em;
+    font-family:var(--ff-display); color:var(--blue); white-space:nowrap; cursor:pointer;
+    transition:background-color .6s cubic-bezier(.19,1,.22,1), box-shadow .6s, color .5s, border-color .5s;
+  }
+  .btn-getstarted:hover{ background:rgba(49,139,255,0.10); box-shadow:0 0 0 1px rgba(49,139,255,0.22), 0 6px 24px -12px rgba(49,139,255,0.4); }
+  .btn-menu{ width:41px; height:41px; flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; background:transparent; border:1px solid rgba(255,255,255,0.9); color:#fff; cursor:pointer; transition:background-color .35s, border-color .35s; }
+  .btn-menu:hover{ background:rgba(255,255,255,0.10); }
+  .btn-menu-icon{ display:flex; flex-direction:column; gap:4px; width:18px; }
+  .btn-menu-icon span{ display:block; height:1.5px; width:100%; background:#fff; border-radius:2px; transition:transform .35s, background-color .4s ease; }
+  .btn-menu:hover .btn-menu-icon span:nth-child(1){ transform:translateX(2px); }
+  .btn-menu:hover .btn-menu-icon span:nth-child(3){ transform:translateX(-2px); }
+  /* Header over a light section: frosted-light pill with dark contents. */
+  body.hdr-light .hdr{ background:rgba(255,255,255,0.55); border-color:rgba(26,22,18,0.12); box-shadow:inset 0 1px 0 rgba(255,255,255,0.6); }
+  body.hdr-light .hdr-logo-mark{ background-color:#1A1612; }
+  body.hdr-light .btn-menu{ border-color:rgba(26,22,18,0.9); }
+  body.hdr-light .btn-getstarted{ border-color:#1A1612; color:#1A1612; }
+  body.hdr-light .btn-getstarted:hover{ background:rgba(26,22,18,0.08); box-shadow:none; }
+  body.hdr-light .btn-menu-icon span{ background:#1A1612; }
+
+  /* ── Hero ────────────────────────────────────────────────────────────── */
+  .hero{ min-height:100vh; display:flex; align-items:center; padding:150px 0 80px; position:relative; }
+  #bg-fixed{ display:none; }
+  .hero{ z-index:1; background:linear-gradient(180deg, rgba(10,8,7,0.32) 0%, rgba(10,8,7,0.12) 40%, rgba(10,8,7,0.4) 100%), #758C81; }
+  .hero-figures{ position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
+  .hero-figures .fig-wrap{ position:absolute; bottom:0; will-change:transform; }
+  .hero-figures .fig-wrap.w-vr{ left:30%; width:min(44%, 540px); z-index:2; }
+  .hero-figures .fig-wrap.w-elder{ left:56%; width:min(58%, 700px); z-index:1; }
+  .hero-figures .fig{ display:block; width:100%; height:auto; opacity:0; }
+  .hero-figures .px-cv{ position:absolute; inset:0; width:100%; height:auto; display:block; z-index:2; }
+  @media (max-width:920px){ .hero-figures .fig-wrap.w-vr{ left:14%; width:min(66%, 440px); } .hero-figures .fig-wrap.w-elder{ left:46%; width:min(82%, 540px); } }
+  .hero-grid{ display:grid; grid-template-columns:1fr; gap:56px; align-items:center; width:100%; position:relative; z-index:2; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:10px; font-family:var(--ff-mono); font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-2); }
+  .eyebrow::before{ content:""; width:9px; height:9px; background:var(--blue); display:inline-block; }
+  .hero h1{ margin:22px 0 0; font-family:var(--ff-display); font-weight:700; font-size:clamp(38px, 4.4vw, 76px); line-height:1.02; letter-spacing:-0.04em; color:var(--ink); }
+  .hero h1 .line{ display:block; overflow:hidden; }
+  .hero h1 .line > span{ display:block; }
+  .hero h1 .em{ font-style:italic; font-weight:400; color:var(--blue); letter-spacing:-0.03em; }
+  .hero p.lede{ margin:30px 0 0; max-width:44ch; font-family:var(--ff-serif); font-style:italic; font-weight:400; font-size:clamp(24px,2.4vw,34px); line-height:1.12; color:var(--ink-2); }
+  .hero-cta{ display:flex; flex-wrap:wrap; gap:14px; margin-top:38px; }
+  .btn{ font-family:var(--ff-display); font-size:17px; font-weight:500; display:inline-flex; align-items:center; justify-content:center; height:52px; padding:0 28px; border:1px solid transparent; cursor:pointer; transition:background-color .6s cubic-bezier(.19,1,.22,1), color .5s, border-color .5s, transform .4s ease; }
+  .btn-solid{ background:var(--blue); color:#0A0807; }
+  .btn-solid:hover{ transform:translateY(-1px); }
+  .btn-ghost{ background:transparent; color:var(--ink); border-color:var(--blue); }
+  .btn-ghost:hover{ background:rgba(49,139,255,0.10); }
+
+  /* ZK diagram frame */
+  /* ZK diagram frame — Ulltra consultancy-card aesthetic (cream body, black header) */
+  .zk-frame{ position:relative; border:3px solid #0E0B08; background:rgba(247,243,232,0.55); -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15); padding:0; border-radius:20px; overflow:hidden; box-shadow:0 30px 70px -40px rgba(0,0,0,0.5); }
+  .zk-frame::before{ content:none; }
+  .zk-head{ background:#0E0B08; padding:20px clamp(20px,2.2vw,30px); }
+  .zk-head-title{ display:block; font-family:var(--ff-display); font-weight:700; font-size:clamp(17px,1.4vw,21px); letter-spacing:-0.005em; color:#F2EBD4; }
+  .zk-body{ padding:clamp(12px,1.4vw,20px) clamp(16px,1.8vw,26px) clamp(30px,3vw,42px); }
+  .zk-frame svg{ display:block; width:100%; height:auto; }
+  .zk-code{ position:absolute; right:clamp(16px,1.6vw,24px); bottom:clamp(12px,1.2vw,18px); font-family:var(--ff-mono); font-size:clamp(11px,0.8vw,12px); letter-spacing:0.14em; text-transform:uppercase; color:rgba(14,11,8,0.7); }
+  .zk-frame #arr path{ fill:var(--blue); }
+  .zk-box{ fill:#FFFDF7; stroke:rgba(14,11,8,0.4); stroke-width:1.2; }
+  .zk-box.hot{ stroke:var(--blue); fill:#0E0B08; }
+  .zk-label.hot{ fill:#F2EBD4; }
+  .zk-label{ font-family:var(--ff-display); font-weight:500; font-size:11px; fill:#1A1612; text-anchor:middle; }
+  .zk-sub{ font-family:var(--ff-display); font-weight:400; font-size:9px; fill:rgba(14,11,8,0.6); text-anchor:middle; }
+  .zk-sub.hot{ fill:var(--blue); }
+  .zk-arrow{ stroke:var(--blue); stroke-width:1.4; marker-end:url(#arr); }
+  .zk-arrow.hot{ stroke:var(--blue); stroke-dasharray:90; stroke-dashoffset:90; }
+  .in .zk-arrow.hot{ animation:draw 2.2s ease forwards; }
+  .zk-cross{ stroke:#e0634a; stroke-width:1.6; }
+  .pulse{ animation:pulse 2.6s ease-in-out infinite; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  @keyframes pulse{ 0%,100%{ opacity:.55; } 50%{ opacity:1; } }
+
+  /* ── KPI stat band (white + grid) ────────────────────────────────────── */
+  .kpis{ position:relative; isolation:isolate; background:#FFFFFF; min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:clamp(72px,10vh,120px) 0; border-top:1px solid rgba(26,22,18,0.08); }
+  .kpis::before{ content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-image:linear-gradient(to right, rgba(26,22,18,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(26,22,18,0.06) 1px, transparent 1px);
+    background-size:120px 120px; }
+  .kpis > .wrap{ position:relative; z-index:1; }
+  .kpis .eyebrow{ color:#4A443A; }
+  .kpis .eyebrow::before{ background:var(--blue); }
+  .kpi-head{ font-family:var(--ff-display); font-weight:700; font-size:clamp(40px,5vw,80px); line-height:1.02; letter-spacing:-0.03em; color:#14110C; margin:18px 0 0; max-width:none; }
+  .kpi-head em{ font-family:var(--ff-display); font-style:italic; font-weight:400; }
+  .kpi-row{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:0; margin-top:clamp(30px,4vw,56px); }
+  .kpi{ display:flex; flex-direction:column; gap:12px; padding:clamp(24px,2.4vw,38px) clamp(20px,2vw,36px); border-right:1px solid rgba(26,22,18,0.1); }
+  .kpi:last-child{ border-right:none; }
+  .kpi-num{ font-family:var(--ff-display); font-weight:800; font-size:clamp(58px,7vw,120px); line-height:0.86; letter-spacing:calc(-0.06em - 1px); color:#14110C; font-variant-numeric:tabular-nums; }
+  .kpi-num--accent{ color:#6f8a00; }
+  .kpi-label{ font-family:var(--ff-display); font-weight:500; font-size:16px; letter-spacing:0.02em; color:#4A443A; max-width:18ch; position:relative; top:-2px; }
+  @media (max-width:900px){ .kpi-row{ grid-template-columns:repeat(2,1fr); } .kpi:nth-child(2){ border-right:none; } .kpi:nth-child(1),.kpi:nth-child(2){ border-bottom:1px solid rgba(26,22,18,0.1); } }
+  @media (max-width:520px){ .kpi-row{ grid-template-columns:1fr; } .kpi{ border-right:none; border-bottom:1px solid rgba(26,22,18,0.1); } .kpi:last-child{ border-bottom:none; } }
+
+  /* ── Cream service section ───────────────────────────────────────────── */
+  .cream{ background:#efecdf; color:#191c0f; padding:clamp(80px,11vh,140px) 0; position:relative; overflow:hidden; isolation:isolate; }
+  .cream > .wrap{ position:relative; z-index:1; }
+  .cream-contours{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 90%, transparent 100%);
+            mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 90%, transparent 100%); }
+  .cream-contours svg{ position:absolute; inset:-10%; width:120%; height:120%; display:block; transform-origin:center; animation:contourDrift 40s ease-in-out infinite; will-change:transform; }
+  @keyframes contourDrift{ 0%,100%{ transform:translate3d(-1.5%,-1%,0) scale(1.02) rotate(-0.4deg); } 50%{ transform:translate3d(1.5%,1.2%,0) scale(1.05) rotate(0.4deg); } }
+  @media (prefers-reduced-motion: reduce){ .cream-contours svg{ animation:none; } }
+  .cream .eyebrow{ color:#5b5f49; }
+  .cream .eyebrow::before{ background:var(--blue); }
+  .sec-h2{ font-family:var(--ff-display); font-weight:700; font-size:clamp(30px,3.5vw,54px); line-height:1.04; letter-spacing:-0.03em; margin:16px 0 20px; text-wrap:balance; }
+  .cream .sec-h2 em{ font-family:var(--ff-display); font-style:italic; font-weight:400; }
+  .sec-lede{ max-width:46ch; font-family:var(--ff-display); font-weight:300; font-size:clamp(17px,1.35vw,21px); line-height:1.55; color:#4a4d3a; text-wrap:pretty; }
+  .prose-grid{ margin-top:clamp(40px,5vw,64px); display:grid; grid-template-columns:1fr 1fr; gap:clamp(32px,4vw,64px); }
+  .prose-grid h3{ font-family:var(--ff-display); font-weight:700; font-size:clamp(19px,1.5vw,24px); letter-spacing:-0.02em; margin:0 0 12px; }
+  .prose-grid p{ font-family:var(--ff-display); font-weight:300; font-size:clamp(15px,1.1vw,18px); line-height:1.6; color:#4a4d3a; }
+  @media (max-width:820px){ .prose-grid{ grid-template-columns:1fr; } }
+
+  /* ── Dark cryptography / guarantees section ──────────────────────────── */
+  .dark{ background:var(--bg); padding:clamp(80px,11vh,140px) 0; border-top:1px solid var(--line); position:relative; overflow:hidden; isolation:isolate; }
+  .dark > .wrap{ position:relative; z-index:1; }
+  .dark .prose-grid h3{ color:var(--ink); }
+  .dark .prose-grid p{ color:var(--ink-2); }
+  .dark .eyebrow{ color:var(--ink-2); }
+  .dark .cream-contours g{ stroke:#EDE5CC; stroke-opacity:0.10; }
+  .dark .sec-h2{ color:var(--ink); }
+  .dark .sec-h2 em{ font-family:var(--ff-display); font-style:italic; font-weight:400; color:var(--blue); }
+  .dark .sec-lede{ color:var(--ink-2); }
+
+  .pipeline{ margin-top:clamp(44px,5vw,64px); display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); background:var(--bg-alt); }
+  .stage{ padding:30px 26px; border-right:1px solid var(--line); position:relative; }
+  .stage:last-child{ border-right:none; }
+  .stage .s-label{ font-family:var(--ff-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--blue); }
+  .stage h4{ font-family:var(--ff-display); font-weight:700; font-size:clamp(17px,1.3vw,20px); letter-spacing:-0.02em; margin:12px 0 8px; }
+  .stage p{ font-family:var(--ff-display); font-weight:300; font-size:14.5px; line-height:1.55; color:var(--ink-2); }
+  .stage::after{ content:"→"; position:absolute; right:-8px; top:28px; font-family:var(--ff-mono); color:var(--blue); background:var(--bg-alt); z-index:2; padding:2px 2px; }
+  .stage:last-child::after{ content:none; }
+  @media (max-width:820px){ .pipeline{ grid-template-columns:1fr; } .stage{ border-right:none; border-bottom:1px solid var(--line); } .stage:last-child{ border-bottom:none; } .stage::after{ content:"↓"; right:auto; left:26px; top:auto; bottom:-9px; } }
+
+  .code-note{ margin-top:22px; font-family:var(--ff-mono); font-size:13px; color:var(--ink-2); padding:18px 22px; border:1px dashed var(--line); }
+  .code-note b{ color:var(--blue); font-weight:500; }
+
+  /* ── Cripto · pinned, scrubbed intro → roadmap ────────────────────── */
+  .cripto-pin{ position:relative; min-height:100vh; overflow:hidden; }
+  .cripto-inner{ position:relative; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .cripto-head{ position:relative; z-index:3; max-width:920px; margin-inline:auto; }
+  .cripto-eyebrow{ display:inline-block; margin-bottom:20px; color:var(--ink-2); font-family:var(--ff-mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; }
+  .cripto-h2{ font-family:var(--ff-display); font-weight:700; font-size:clamp(30px,4.4vw,60px); letter-spacing:-0.03em; line-height:1.04; }
+  .cripto-h2 em{ color:var(--blue); font-style:normal; }
+  .cripto-lede{ font-family:var(--ff-display); font-weight:300; font-size:clamp(16px,1.45vw,21px); line-height:1.6; color:var(--ink-2); max-width:700px; margin:24px auto 0; }
+  .cripto-road{ position:absolute; left:50%; top:calc(52% + 60px); transform:translate(-50%,-50%); width:min(var(--maxw),100vw - 48px); display:flex; align-items:stretch; justify-content:center; z-index:2; }
+  .cr-card{ flex:1 1 0; min-width:0; border:1px solid var(--line); background:var(--bg-alt); padding:26px 22px; text-align:left; display:flex; flex-direction:column; border-radius:14px; }
+  .cr-icon{ display:flex; align-items:center; justify-content:flex-start; min-height:clamp(76px,7vw,96px); padding-bottom:22px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+  .cr-icon-slot{ width:clamp(48px,4.4vw,64px); height:clamp(48px,4.4vw,64px); border:1px dashed color-mix(in oklab, var(--blue) 45%, transparent); border-radius:4px; display:block; flex:0 0 auto; }
+  .cr-icon-box{ display:inline-flex; align-items:center; justify-content:center; padding:8px; background:transparent; border-radius:8px; flex:0 0 auto; }
+  .cr-icon-svg{ display:block; width:clamp(48px,4.4vw,64px); height:clamp(48px,4.4vw,64px); object-fit:contain; }
+  .cr-idx{ font-family:var(--ff-display); font-weight:400; font-size:15px; letter-spacing:0.06em; color:#fff; opacity:.8; margin-bottom:14px; }
+  .cr-card .s-label{ font-family:var(--ff-display); font-weight:600; font-size:14px; letter-spacing:0.06em; text-transform:uppercase; color:var(--blue); }
+  .cr-card h4{ font-family:var(--ff-display); font-weight:700; font-size:clamp(15px,1.15vw,18px); letter-spacing:-0.02em; margin:8px 0 10px; }
+  .cr-card p{ font-family:var(--ff-display); font-weight:300; font-size:16px; line-height:1.5; color:var(--ink-2); margin:0; }
+  .cr-arrow{ flex:0 0 clamp(40px,4vw,64px); display:flex; align-items:center; justify-content:center; }
+  .cr-arrow svg{ width:100%; height:26px; overflow:visible; }
+  .cr-line,.cr-tip{ stroke:var(--blue); stroke-width:1.5; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+  .cripto-note{ position:absolute; left:50%; bottom:7vh; transform:translateX(-50%); width:min(920px,92vw); text-align:center; z-index:2; margin:0; border:none; padding:0; font-family:var(--ff-display); font-weight:400; font-size:16px; line-height:1.7; color:var(--ink); }
+  .cripto-note b{ color:inherit; font-weight:600; }
+  .cripto-hl{ position:relative; display:inline; background-image:linear-gradient(#D2FF00,#D2FF00); background-repeat:no-repeat; background-position:0 center; background-size:var(--hlw,0%) 100%; box-decoration-break:clone; -webkit-box-decoration-break:clone; padding:2px 4px; }
+
+  /* ── Garantías · centered head + photo-topped cards ───────────────── */
+  #garantias .sec-h2{ text-align:center; max-width:none; margin-inline:auto; }
+  #garantias .cards{ margin-top:clamp(64px,8vw,104px); }
+  #garantias .gar-em{ font-style:italic; font-weight:400; color:var(--blue); }
+  #garantias .card{ display:flex; flex-direction:column; padding:0; overflow:hidden; border-radius:12px 12px 0 0; }
+  #garantias .card-photo{ aspect-ratio:16/9; width:100%; margin:0 0 clamp(18px,1.6vw,24px); border:none; border-radius:12px 12px 0 0; background:var(--bg-alt); overflow:hidden; }
+  #garantias .card-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+  #garantias .card > .c-label, #garantias .card > h4, #garantias .card > p{ padding-inline:clamp(24px,2.2vw,32px); }
+  #garantias .card > p{ padding-bottom:clamp(26px,2.6vw,34px); }
+  @media (max-width:920px){
+    .cripto-pin{ min-height:0; overflow:visible; }
+    .cripto-inner{ min-height:0; display:block; padding:clamp(72px,12vw,120px) 0; }
+    .cripto-road{ position:static; transform:none; width:auto; flex-direction:column; margin-top:clamp(36px,7vw,56px); }
+    .cr-card{ text-align:left; }
+    .cr-arrow{ flex:none; height:34px; transform:rotate(90deg); }
+    .cripto-note{ position:static; transform:none; width:auto; margin-top:26px; }
+  }
+
+  .cards{ margin-top:clamp(44px,5vw,64px); display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .card{ border:1px solid var(--line); background:transparent; padding:clamp(26px,2.6vw,36px); }
+  .card .c-label{ font-family:var(--ff-mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--blue); }
+  .card h4{ font-family:var(--ff-display); font-weight:700; font-size:clamp(18px,1.4vw,22px); letter-spacing:-0.02em; margin:14px 0 10px; }
+  .card p{ font-family:var(--ff-display); font-weight:300; font-size:15px; line-height:1.6; color:var(--ink-2); }
+  @media (max-width:820px){ .cards{ grid-template-columns:1fr; } }
+
+  /* ── Closing banner ──────────────────────────────────────────────────── */
+  .close{ background:var(--bg); padding:0; }
+  .close-card{ position:relative; width:min(var(--maxw), 100vw - 32px); margin:0 auto; min-height:640px; overflow:hidden; border-radius:22px 22px 0 0; display:flex; align-items:center; justify-content:center; }
+  .close-bg{ position:absolute; inset:0; z-index:0; }
+  .close-bg img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .close-veil{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(8,7,6,0.6) 0%, rgba(8,7,6,0.82) 100%); }
+  .close-inner{ position:relative; z-index:2; text-align:center; max-width:820px; padding:clamp(48px,7vw,90px) clamp(20px,4vw,40px); }
+  .close-title{ margin:0; font-family:var(--ff-display); font-weight:600; font-size:clamp(36px,4.8vw,74px); line-height:0.98; letter-spacing:-0.03em; color:var(--ink); text-wrap:balance; }
+  .close-title .serif{ font-family:var(--ff-display); font-style:italic; font-weight:400; color:var(--blue); }
+  .close-lede{ margin:clamp(20px,2.2vw,30px) auto 0; max-width:calc(56ch + 50px); font-family:"Bricolage Grotesque", var(--ff-display); font-weight:300; font-size:clamp(16px,1.25vw,20px); line-height:1.55; color:var(--ink-2); }
+  .close-btn{ display:inline-flex; align-items:center; justify-content:center; margin-top:clamp(28px,3.2vw,42px); height:54px; padding:0 30px; border:1px solid var(--blue); color:var(--blue); background:transparent; font-family:var(--ff-display); font-weight:500; font-size:17px; cursor:pointer; transition:background-color .5s, box-shadow .5s; }
+  .close-btn:hover{ background:rgba(49,139,255,0.12); box-shadow:0 0 0 1px rgba(49,139,255,0.28), 0 8px 30px -10px rgba(49,139,255,0.55); }
+  .foot{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; padding:26px 0 34px; font-family:var(--ff-mono); font-size:12px; letter-spacing:0.06em; color:var(--ink-2); }
+  .foot a{ color:var(--ink-2); } .foot a:hover{ color:var(--ink); }
+
+  /* ── Reveals ─────────────────────────────────────────────────────────── */
+  .reveal-line > span{ transform:translateY(110%); opacity:0; transition:transform 1.05s cubic-bezier(.19,1,.22,1), opacity 1.05s cubic-bezier(.19,1,.22,1); }
+  .in .reveal-line > span{ transform:translateY(0); opacity:1; }
+  .fade-up{ opacity:0; transform:translateY(24px); transition:opacity .8s cubic-bezier(.19,1,.22,1), transform .8s cubic-bezier(.19,1,.22,1); }
+  .fade-up.in{ opacity:1; transform:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal-line > span, .fade-up{ transition:none; transform:none; opacity:1; }
+    .zk-arrow.hot{ animation:none; stroke-dashoffset:0; } .pulse{ animation:none; }
+  }
+  @media (max-width:920px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-visual{ order:-1; }
+  }
+  /* ── ZK flow · pinned, scrubbed step-by-step build ────────────────── */
+  .zkflow{ position:relative; background:var(--bg); border-top:1px solid var(--line); }
+  .zkflow-pin{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:clamp(90px,12vh,140px) 0; }
+  .zkflow-inner{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:110px; }
+  .zkflow-inner .eyebrow{ color:var(--ink-2); }
+  .zkflow-h2{ font-family:var(--ff-display); font-weight:700; font-size:clamp(38px,4.6vw,72px); line-height:1.02; letter-spacing:-0.03em; color:var(--ink); margin:0; text-wrap:balance; max-width:18ch; }
+  .zkflow-h2 em{ font-family:var(--ff-display); font-style:italic; font-weight:400; color:var(--blue); }
+  .zkflow-frame{ width:min(760px, 92vw); background:transparent; -webkit-backdrop-filter:none; backdrop-filter:none; }
+  .zkflow-frame svg{ overflow:visible; }
+  /* arrows are drawn by JS via stroke-dashoffset; disable the CSS keyframe here */
+  .zkflow-frame .zk-arrow{ animation:none !important; }
+  .zkflow-frame .zf-underline{ stroke:#D2FF00; stroke-width:16; stroke-opacity:1; stroke-linecap:butt; }
+  .zkflow-frame .zf-cap{ fill:var(--ink-2); }
+  .zkflow-frame .zk-box{ fill:transparent; stroke:#EDE5CC; stroke-width:2; }
+  .zkflow-frame .zk-box.hot{ fill:#0E0B08; stroke:var(--blue); }
+  .zkflow-frame .zk-label{ fill:var(--ink); }
+  .zkflow-frame .zk-label.hot{ fill:#F2EBD4; }
+  .zkflow-frame .zk-sub{ fill:var(--ink-2); }
+  .zkflow-frame .zk-sub.hot{ fill:var(--blue); }
+  /* ── ZK flow · 5 step cards with an arrow threading behind ─────────── */
+  .zf-steps{ position:relative; width:min(1480px, 100vw - 32px); }
+  .zf-track{ position:absolute; left:0; top:50%; width:100%; height:34px; transform:translateY(-50%); z-index:0; overflow:visible; pointer-events:none; }
+  .zf-track .zf-rail{ fill:none; stroke:var(--blue); stroke-width:2.4; stroke-linecap:round; }
+  .zf-track .zf-head path{ stroke:var(--blue); stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+  .zf-row{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(5,1fr); gap:clamp(10px,1.1vw,18px); align-items:stretch; }
+  .zf-card{ position:relative; z-index:1; border:1px solid var(--line); background:var(--bg-alt); border-radius:14px; padding:clamp(26px,2vw,34px) clamp(20px,1.7vw,26px); display:flex; flex-direction:column; text-align:left; }
+  .zf-row .zf-card:nth-child(2){ border-color:transparent; }
+  .zf-dash{ position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; overflow:visible; }
+  .zf-dash rect{ fill:none; stroke:var(--line); stroke-width:1.5; stroke-dasharray:16 11; vector-effect:non-scaling-stroke; }
+  .zf-top{ display:flex; align-items:baseline; gap:9px; }
+  .zf-idx{ font-family:var(--ff-display); font-weight:400; font-size:15px; letter-spacing:0.06em; color:#fff; opacity:.8; }
+  .zf-card .s-label{ font-family:var(--ff-display); font-weight:600; font-size:14px; letter-spacing:0.06em; text-transform:uppercase; color:var(--blue); }
+  .zf-card h4{ font-family:var(--ff-display); font-weight:700; font-size:clamp(15px,1.15vw,18px); letter-spacing:-0.02em; margin:8px 0 0; color:var(--ink); }
+  .zf-slot{ display:flex; align-items:center; justify-content:center; height:clamp(56px,4.6vw,72px); margin:clamp(78px,6.2vw,98px) 0; }
+  .zf-slot img{ height:100%; width:auto; max-width:100%; object-fit:contain; display:block; transform:scale(3.12); transform-origin:center; }
+  .zf-card p{ font-family:var(--ff-display); font-weight:300; font-size:16px; line-height:1.5; color:var(--ink-2); margin:0; position:relative; top:-4px; }
+  @media (max-width:920px){
+    .zkflow-pin{ min-height:0; }
+    .zf-steps{ width:100%; }
+    .zf-row{ grid-template-columns:1fr; gap:14px; }
+    .zf-track{ display:none; }
+  }
+  /* ── Servicio · pinned scrollytelling (DataLab-style) ──────────────── */
+  .eco{ position:relative; background:var(--bg); border-top:1px solid var(--line); }
+  .eco-pin{ position:relative; height:100vh; overflow:hidden; }
+  .scy-progress{ display:none; }
+  .scy-progress span{ display:block; height:100%; width:0; background:var(--blue); }
+  .scy-layer{ position:absolute; inset:0; display:flex; align-items:center; }
+  .scy-layer > .wrap{ max-width:none; width:min(var(--maxw), 100vw - 32px); margin-inline:auto; position:relative; }
+  .scy-intro > .wrap{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:clamp(56px,6vw,104px); align-items:start; will-change:transform,opacity; }
+  .scy-title{ margin:0; font-family:var(--ff-display); font-weight:800; font-size:clamp(32px,3.6vw,64px); line-height:1.03; letter-spacing:-0.03em; color:var(--ink); opacity:0; will-change:transform,opacity; max-width:16ch; }
+  .scy-title .arch-em{ font-style:italic; font-weight:400; color:var(--blue); }
+  .tw-caret{ display:inline-block; width:3px; height:0.82em; margin-left:3px; background:var(--blue); vertical-align:-0.06em; animation:twblink 1s steps(1) infinite; }
+  @keyframes twblink{ 50%{ opacity:0; } }
+  .scy-lede{ margin:0; max-width:46ch; font-family:var(--ff-display); font-weight:300; font-size:clamp(17px,1.4vw,20px); line-height:1.55; color:var(--ink-2); opacity:0; will-change:transform,opacity; }
+  .scy-features > .wrap{ min-height:66vh; }
+  .scy-feat{ position:absolute; top:50%; left:0; right:0; transform:translateY(-50%); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(36px,4vw,88px); align-items:center; }
+  .scy-feat-media{ position:relative; aspect-ratio:16/11; opacity:0; overflow:hidden; border-radius:14px; border:1px solid var(--line); will-change:transform,opacity; }
+  .scy-feat-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; will-change:transform; }
+  .scy-feat-body{ opacity:0; will-change:transform,opacity; }
+  .scy-eyebrow{ display:block; font-family:var(--ff-display); font-weight:600; font-size:14px; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink-2); margin:0 0 clamp(16px,1.8vw,24px); }
+  .scy-eyebrow i{ color:var(--blue); font-style:normal; }
+  .scy-feat h3{ margin:0 0 clamp(14px,1.4vw,20px); font-family:var(--ff-display); font-weight:700; font-size:clamp(26px,3vw,46px); line-height:1.04; letter-spacing:-0.02em; color:var(--ink); }
+  .scy-feat h3 em{ font-style:italic; font-weight:400; color:var(--blue); }
+  .scy-feat p{ margin:0; max-width:66ch; font-family:var(--ff-display); font-weight:300; font-size:clamp(16px,1.2vw,19px); line-height:1.6; color:var(--ink-2); }
+  @media (max-width:920px){
+    .eco-pin{ position:static; height:auto; overflow:visible; }
+    .scy-progress{ display:none; }
+    .scy-layer{ position:static; display:block; padding:clamp(80px,10vh,120px) 0; }
+    .scy-intro > .wrap{ grid-template-columns:1fr; }
+    .scy-title{ opacity:1 !important; transform:none !important; max-width:none; }
+    .tw-caret{ display:none; }
+    .scy-lede{ opacity:1 !important; margin-top:24px; }
+    .scy-features > .wrap{ min-height:0; }
+    .scy-feat{ position:static; transform:none; grid-template-columns:1fr; gap:24px; margin-bottom:clamp(56px,8vh,96px); }
+    .scy-feat:last-child{ margin-bottom:0; }
+    .scy-feat-media, .scy-feat-body{ opacity:1 !important; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#0A0807"/><circle cx="50" cy="50" r="22" fill="none" stroke="#318BFF" stroke-width="4"/><text x="50" y="57" font-family="Archivo, sans-serif" font-size="20" font-weight="800" fill="#EDE5CC" text-anchor="middle">LR</text></svg>
+  </template>
+
+  <div id="bg-fixed" aria-hidden="true"></div>
+
+  <header class="hdr">
+    <div class="hdr-inner">
+      <a class="hdr-logo" href="#top"><span class="hdr-logo-mark" role="img" aria-label="Ulltra"></span></a>
+      <div class="hdr-actions">
+        <button class="btn-getstarted" type="button">Agendar reunión</button>
+        <button class="btn-menu" type="button" aria-label="Menú"><span class="btn-menu-icon" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- SECTION 1 · HERO -->
+    <section class="hero" id="hero" data-screen-label="Hero">
+      <div class="hero-figures" aria-hidden="true"><span class="fig-wrap w-elder"><img class="fig fig-elder" src="assets/lr-figure-elder.png" alt=""></span><span class="fig-wrap w-vr"><img class="fig fig-vr" src="assets/lr-figure-vr.png" alt=""></span></div>
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow fade-up" style="transition-delay:.05s; display:none;">Lista Robinson · con Adigital y la AEPD</span>
+            <h1 aria-label="Exclusión publicitaria a escala nacional, sin revelar un solo dato">
+              <span class="line reveal-line" style="--d:.10s"><span style="color:#fff;">Exclusión publicitaria</span></span>
+              <span class="line reveal-line" style="--d:.22s"><span style="color:#fff;">a escala nacional.</span></span>
+              <span class="line reveal-line" style="--d:.34s"><span class="em">Sin revelar un solo dato.</span></span>
+            </h1>
+            <p class="lede fade-up" style="transition-delay:.55s; color:#fff;">Reconstruimos el servicio nacional de exclusión publicitaria como un conjunto de APIs. Ninguna empresa ve jamás un dato personal.</p>
+            <div class="hero-cta">
+              <button class="btn btn-solid fade-up" style="transition-delay:.68s" type="button">Agendar una reunión</button>
+              <a class="btn btn-ghost fade-up" style="transition-delay:.78s" href="#cripto">Cómo funciona la criptografía</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1b · ZK FLOW (pinned, scrubbed) -->
+    <section class="zkflow" id="zkflow" data-screen-label="Verificación ZK">
+      <div class="zkflow-pin">
+        <div class="wrap zkflow-inner">
+          <h2 class="zkflow-h2" id="zk-head"><span class="scr" data-text="Así se verifica ">Así se verifica </span><em class="scr" data-text="sin revelar datos">sin revelar datos</em>.</h2>
+          <div class="zf-steps" id="zf-steps">
+            <svg class="zf-track" viewBox="0 0 1000 34" preserveAspectRatio="none" aria-hidden="true">
+              <path class="zf-rail" d="M4 17 H958"/>
+              <g class="zf-head"><path d="M948 7 L968 17 L948 27"/></g>
+            </svg>
+            <div class="zf-row">
+              <div class="zf-card">
+                <div class="zf-top"><span class="zf-idx">01</span><span class="s-label">Empresa</span></div>
+                <h4>Lista de campaña</h4>
+                <span class="zf-slot" aria-hidden="true"><img src="uploads/ChatGPT Image 20 jul 2026, 10_25_02.png" alt=""></span>
+                <p>La empresa parte de sus contactos para una campaña de marketing directo.</p>
+              </div>
+              <div class="zf-card">
+                <svg class="zf-dash" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect x="0.75" y="0.75" width="98.5" height="98.5" rx="10"/></svg>
+                <div class="zf-top"><span class="zf-idx">02</span><span class="s-label">Hash</span></div>
+                <h4>Identificadores</h4>
+                <span class="zf-slot" aria-hidden="true"><img src="uploads/ChatGPT Image 20 jul 2026, 10_42_15.png" alt=""></span>
+                <p>Cada contacto se transforma en un hash criptográfico antes de salir de su sistema.</p>
+              </div>
+              <div class="zf-card">
+                <div class="zf-top"><span class="zf-idx">03</span><span class="s-label">Consulta</span></div>
+                <h4>Robinson API</h4>
+                <span class="zf-slot" aria-hidden="true"><img src="uploads/pasted-1784537562188-0.png" alt=""></span>
+                <p>Los hashes se comparan contra los 6M de entradas criptográficas de la lista.</p>
+              </div>
+              <div class="zf-card">
+                <div class="zf-top"><span class="zf-idx">04</span><span class="s-label">Respuesta</span></div>
+                <h4>Sí o no</h4>
+                <span class="zf-slot" aria-hidden="true"><img src="uploads/ChatGPT Image 20 jul 2026, 10_55_04.png" alt=""></span>
+                <p>La API devuelve solo un booleano por contacto: se puede contactar, o no.</p>
+              </div>
+              <div class="zf-card">
+                <div class="zf-top"><span class="zf-idx">05</span><span class="s-label">Registro</span></div>
+                <h4>Prueba legal</h4>
+                <span class="zf-slot" aria-hidden="true"><img src="uploads/ChatGPT Image 20 jul 2026, 10_25_02-22d043ad.png" alt=""></span>
+                <p>Cada consulta deja una entrada de auditoría verificable — nadie ve un solo dato.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 · KPI STAT BAND -->
+    <section class="kpis" id="indicadores" data-screen-label="Indicadores">
+      <div class="wrap">
+        <span class="eyebrow fade-up" style="display:none;">En producción</span>
+        <h2 class="kpi-head fade-up" id="kpi-head" style="transition-delay:.08s"><span class="scr" data-text="Una lista a la que responde">Una lista a la que responde</span><br><em class="scr" data-text="toda la industria">toda la industria</em>.</h2>
+        <div class="kpi-row">
+          <div class="kpi fade-up" style="transition-delay:.05s">
+            <span class="kpi-num" data-target="6" data-prefix="" data-suffix="M">6M</span>
+            <span class="kpi-label" style="top:-5px">Consumidores registrados</span>
+          </div>
+          <div class="kpi fade-up" style="transition-delay:.13s">
+            <span class="kpi-num" data-target="12" data-suffix="%">12%</span>
+            <span class="kpi-label">De la población española</span>
+          </div>
+          <div class="kpi fade-up" style="transition-delay:.21s">
+            <span class="kpi-num" data-target="1.5" data-decimals="1" data-suffix="M">1.5M</span>
+            <span class="kpi-label">Consultas al día</span>
+          </div>
+          <div class="kpi fade-up" style="transition-delay:.29s">
+            <span class="kpi-num kpi-num--accent" data-target="0">0</span>
+            <span class="kpi-label" style="top:-5px">Registros personales expuestos</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 · SERVICE (cream) -->
+    <section class="eco" id="servicio" data-screen-label="El servicio">
+      <div class="cream-contours" id="svc-contours" aria-hidden="true">
+        <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <g fill="none" stroke="#C4BCB1" stroke-width="1.5" stroke-opacity="0.55" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10">
+            <path d="M0.459229 437.925C12.8552 433.676 24.9069 427.935 37.6472 425.524C54.2899 422.424 71.3918 421.506 88.3789 420.817C110.301 419.783 132.453 420.817 154.261 419.209C181.693 417.257 207.862 410.483 228.522 390.274C242.755 376.381 251.248 358.814 258.594 340.672C265.596 323.334 272.023 305.767 279.713 288.773C284.878 277.291 292.224 266.843 303.013 259.494C313.113 252.72 323.788 251.686 335.266 255.705C351.564 261.446 363.96 272.928 376.356 284.41C390.244 297.27 403.443 310.934 417.791 323.219C453.831 353.991 494.692 360.421 539.57 346.757C567.116 338.376 592.597 325.401 618.651 313.345C647.92 299.796 677.762 288.773 709.785 283.377C764.534 274.191 820.316 299.452 848.436 347.217C866.456 377.759 873.343 410.712 870.244 445.847C866.801 486.838 855.897 525.877 835.581 561.931C822.267 585.584 803.673 604.185 779.914 616.7C756.614 628.986 732.855 640.238 708.752 650.802C658.938 672.618 608.895 694.089 558.508 714.757C529.354 726.698 498.938 735.195 467.719 739.673C416.184 747.021 369.584 734.85 328.494 702.471C302.898 682.377 282.009 657.691 262.267 632.086C249.068 614.978 235.868 597.87 221.865 581.565C212.453 570.657 200.631 562.16 185.825 559.634C162.41 555.501 144.735 574.561 150.588 597.64C155.065 615.322 165.969 629.215 178.365 641.846C196.729 660.561 216.012 678.359 233.917 697.419C254.577 719.464 271.449 744.151 281.205 773.2C289.354 797.542 285.337 818.899 267.547 837.729C250.674 855.526 230.244 868.616 210.273 882.509C176.987 905.588 143.128 927.978 110.875 952.32C69.3258 983.666 33.1708 1020.75 1.83656 1062.55C1.49223 1063.01 1.03312 1063.35 0.688784 1063.81"/>
+            <path d="M1919.54 876.538C1894.06 861.382 1876.96 838.877 1865.6 812.124C1855.04 786.978 1846.54 761.029 1836.21 735.769C1812.8 678.129 1770.44 642.649 1709.61 629.904C1684.94 624.737 1660.03 620.719 1635.24 616.241C1594.26 609.007 1568.32 584.665 1555.47 545.741C1548.58 525.073 1542.73 504.061 1536.07 483.279C1519.54 432.643 1484.07 401.756 1434.03 386.37C1396.5 374.774 1358.16 371.214 1319.14 373.281C1283.44 375.118 1248.55 380.744 1214.92 393.145C1186.57 403.593 1160.98 418.405 1141.12 441.943C1121.61 465.137 1110.7 492.12 1107.03 522.088C1103.59 549.3 1106 576.054 1117.47 601.314C1125.97 619.915 1138.59 634.842 1159.71 638.171C1172.11 640.123 1185.31 639.779 1197.82 638.057C1232.25 633.349 1266.34 626 1301.35 627.378C1339 628.871 1374.81 636.794 1406.48 658.495C1428.75 673.766 1443.9 694.778 1455.61 718.66C1471.56 751.269 1481.78 785.83 1486.71 821.769C1489.35 841.174 1491.19 860.923 1491.19 880.557C1491.19 927.059 1474.55 967.361 1442.18 1001.12C1424.05 1020.06 1406.14 1039.12 1388.58 1058.53C1382.96 1064.84 1378.94 1072.65 1374.23 1079.77"/>
+            <path d="M737.331 1079.77C740.086 1065.42 744.103 1051.07 745.251 1036.6C748.465 998.133 736.987 963.458 715.753 931.652C693.486 898.24 662.726 874.931 627.489 856.904C615.782 850.934 603.845 845.193 592.597 838.418C587.547 835.433 582.956 830.725 579.971 825.673C574.692 816.487 578.135 807.532 583.644 799.379C593.859 784.223 608.092 773.085 622.669 762.637C656.758 738.295 693.946 719.694 733.314 705.686C768.321 693.17 803.902 682.148 839.369 671.01C870.244 661.25 899.053 648.391 920.976 623.36C938.881 603.037 951.851 579.843 961.722 554.812C975.38 520.021 982.611 484.083 980.43 446.766C977.676 399.23 962.181 355.713 936.471 315.871C906.973 270.287 868.407 234.463 820.545 208.973C782.095 188.535 741.004 179.235 697.389 182.22C669.727 184.172 643.558 192.209 617.733 202.199C598.795 209.547 579.397 215.518 558.967 216.551C513.63 218.733 479.311 198.869 454.519 161.897C438.565 138.129 430.646 111.376 427.317 83.13C423.989 55.2286 426.399 27.9014 433.286 0.688965"/>
+            <path d="M1919.54 148.577C1887.75 154.318 1856.3 161.208 1825.77 172.116C1790.76 184.631 1758.51 203.002 1726.14 220.914C1692.4 239.63 1658.08 257.083 1620.43 267.187C1588.75 275.569 1556.61 281.539 1523.9 281.654C1475.12 281.884 1426.46 280.621 1377.68 279.932C1355.52 279.587 1333.37 279.013 1311.1 278.324C1274.61 277.176 1238.11 276.372 1201.95 270.631C1151.79 262.594 1106.57 242.96 1067.43 210.81C1030.47 180.498 994.778 148.692 958.967 117.117C920.287 82.7854 881.951 48.2245 843.615 13.7784C838.91 9.64486 834.778 4.93722 830.301 0.459229"/>
+            <path d="M966.887 0.459229C1011.99 62.2326 1067.09 111.605 1139.97 138.358C1169.81 149.381 1200.92 153.974 1232.6 155.122C1268.18 156.385 1303.64 153.515 1339 149.955C1408.55 142.951 1478.11 135.947 1547.78 128.943C1585.77 125.154 1623.87 122.169 1661.29 113.787C1713.97 102.075 1757.47 74.8628 1793.97 35.7091C1804.53 24.4567 1814.18 12.2857 1824.16 0.459229"/>
+            <path d="M794.72 1079.77C798.967 1063.58 804.247 1047.51 807.116 1030.97C812.855 998.248 809.297 965.639 800.803 933.833C795.294 913.166 787.834 893.072 781.291 872.749C776.585 857.937 772.224 843.125 773.716 827.28C776.011 802.364 789.211 784.567 809.986 772.052C829.842 759.996 851.994 755.058 874.835 752.532C924.189 747.136 972.511 753.91 1020.26 765.737C1056.76 774.807 1079.02 798.92 1090.04 834.284C1100.26 866.893 1100.83 900.191 1097.27 933.719C1094.06 964.72 1089.47 995.607 1087.63 1026.61C1086.6 1044.18 1089.7 1061.97 1090.96 1079.77"/>
+            <path d="M1919.54 1016.62C1916.67 1013.63 1913.69 1010.76 1910.93 1007.66C1891.99 986.077 1868.01 971.839 1842.53 959.439C1827.26 951.975 1812.22 943.938 1798.22 934.408C1778.36 920.859 1764.94 901.454 1754.26 880.098C1745.31 862.186 1737.16 843.815 1727.75 826.132C1723.73 818.439 1718.11 811.321 1712.02 805.12C1688.72 781.467 1656.7 780.893 1631.91 803.168C1612.97 820.162 1604.02 842.322 1600.8 866.664C1598.85 881.591 1598.62 896.747 1598.97 911.788C1599.66 948.875 1598.05 985.618 1585.42 1020.98C1578.54 1040.5 1568.55 1058.18 1555.93 1074.49C1554.66 1076.1 1553.51 1077.93 1552.25 1079.54"/>
+            <path d="M1919.54 707.753C1910.24 696.959 1899.8 686.97 1891.76 675.373C1883.16 662.858 1876.5 648.965 1869.27 635.531C1848.49 596.147 1816.47 570.887 1773.89 558.601C1766.77 556.534 1759.77 553.779 1753.11 550.564C1727.17 538.393 1714.55 517.151 1713.06 489.135C1711.22 456.066 1723.96 427.935 1744.05 402.675C1770.9 368.918 1806.37 347.446 1846.2 332.405C1867.66 324.253 1889.81 318.512 1912.65 315.526C1914.95 315.182 1917.25 315.297 1919.43 315.182"/>
+            <path d="M994.433 1079.77C995.351 1064.15 996.614 1048.54 997.303 1032.81C998.91 997.444 999.598 962.08 989.842 927.519C985.71 912.707 979.397 898.814 969.412 886.872C961.377 877.227 951.621 869.994 939.569 866.319C916.27 859.201 894.577 872.06 886.542 897.436C881.951 911.903 881.836 926.715 881.951 941.756C882.41 976.317 882.984 1010.99 882.869 1045.55C882.869 1056.92 880.803 1068.4 879.656 1079.77"/>
+            <path d="M0.459229 566.523C13.1995 582.943 25.1364 600.166 39.0245 615.552C59.2254 638.056 80.8036 659.183 101.808 680.884C115.926 695.467 129.699 710.278 140.373 727.731C158.164 756.896 157.245 786.06 140.373 815.224C126.37 839.451 107.202 859.086 86.1981 877.112C58.7663 900.651 30.7605 923.385 2.86956 946.464C2.18089 947.038 1.26267 947.382 0.459229 947.727"/>
+            <path d="M0.459229 315.067C44.3043 317.249 87.0016 311.508 128.436 296.925C164.247 284.18 187.891 258.575 202.353 224.014C213.027 198.639 218.996 172.23 221.98 145.018C225.653 111.49 227.948 77.6185 240.459 45.8133C246.657 30.3125 254.806 15.6155 262.152 0.459229"/>
+            <path d="M386.112 1079.77C416.528 1020.18 462.209 979.073 528.78 964.491C564.361 956.683 598.221 961.965 627.145 985.618C656.298 1009.62 665.94 1040.73 657.561 1077.47C657.446 1078.16 657.217 1078.97 657.102 1079.77"/>
+            <path d="M110.646 0.459229C101.004 24.227 89.2971 46.7318 73.6873 67.2847C55.0934 91.7414 32.7117 111.376 3.21389 121.595C2.29567 121.939 1.37745 121.939 0.459229 122.054"/>
+            <path d="M471.277 617.044C477.245 616.356 488.723 615.667 499.971 613.829C540.258 607.17 578.02 592.932 614.175 574.216C648.838 556.304 681.09 534.948 707.948 506.243C718.967 494.416 728.608 481.786 734.232 466.285C742.496 443.436 733.199 424.72 710.014 418.061C693.486 413.238 676.729 414.272 659.971 416.568C630.129 420.702 601.779 430.806 573.544 440.68C528.78 456.296 483.328 460.889 436.499 451.933C418.479 448.488 400.459 445.388 382.209 443.206C356.04 440.106 336.987 455.148 332.166 480.982C326.657 510.147 334.806 536.096 351.334 559.519C379.11 599.018 418.135 616.815 471.277 617.044Z"/>
+          </g>
+        </svg>
+      </div>
+      <div class="eco-pin">
+        <div class="scy-progress" aria-hidden="true"><span></span></div>
+
+        <!-- Phase 1 · intro -->
+        <div class="scy-layer scy-intro">
+          <div class="wrap">
+            <h2 class="scy-title" aria-label="Una sola lista que toda la industria debe consultar"><span class="scr" data-text="Una sola lista que "></span><span class="scr arch-em" data-text="toda la industria"></span><span class="scr" data-text=" debe consultar."></span></h2>
+            <p class="scy-lede">La Lista Robinson es el servicio de exclusión publicitaria de Adigital: los consumidores se registran una vez para dejar de recibir llamadas y correos comerciales, y toda empresa de marketing directo que opera en España está legalmente obligada a consultarla antes de cada campaña. Con seis millones de personas registradas —el doce por ciento del país— es una de las listas de exclusión más exitosas del mundo.</p>
+          </div>
+        </div>
+
+        <!-- Phase 3 · features -->
+        <div class="scy-layer scy-features">
+          <div class="wrap">
+            <article class="scy-feat" data-i="0">
+              <div class="scy-feat-media"><img src="uploads/divinizeglue_I_want_a_Renaissance_oil_painting_with_a_more_mi_0dd4c9a8-af0e-464b-a654-7582847227f9_1.png" alt="El problema del modelo antiguo"></div>
+              <div class="scy-feat-body">
+                <span class="scy-eyebrow"><i>01</i> — El reto</span>
+                <h3>El problema del <em>modelo antiguo</em></h3>
+                <p>Una lista nacional de exclusión es una paradoja: para proteger los datos de las personas, se construye la base de datos de marketing más sensible del país — y luego se deja que miles de empresas la consulten. Cada consulta era una posible exposición; la confianza descansaba en la política, no en las matemáticas.</p>
+              </div>
+            </article>
+            <article class="scy-feat" data-i="1">
+              <div class="scy-feat-media"><img src="uploads/divinizeglue_I_want_a_Renaissance_oil_painting_with_a_more_mi_36e65aad-1106-4dad-a29f-d4b2b50547ea_3.png" alt="La reconstrucción"></div>
+              <div class="scy-feat-body">
+                <span class="scy-eyebrow"><i>02</i> — La solución</span>
+                <h3>La <em>reconstrucción</em></h3>
+                <p>Rediseñamos el servicio como un conjunto de APIs donde la exposición es imposible por construcción. Las empresas comprueban sus listas de campaña contra identificadores criptográficos y reciben un sí o un no — nada más. La seguridad y la fiabilidad mejoraron para todos: consumidores, empresas y regulador.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 · CRYPTOGRAPHY (dark) -->
+    <section class="dark cripto" id="cripto" data-screen-label="La criptografía" style="border-top:none; padding:0;">
+      <div class="cripto-pin">
+        <div class="wrap cripto-inner">
+          <div class="cripto-head" id="cripto-head">
+            <h2 class="cripto-h2" id="cripto-h2"><span class="scr" data-text="La lista responde preguntas. Nunca ">La lista responde preguntas. Nunca </span><em class="scr" data-text="revela personas.">revela personas.</em></h2>
+            <p class="cripto-lede" id="cripto-lede">Lista Robinson es uno de los proyectos de criptografía aplicada más relevantes construidos en España. Un modelo zero-knowledge permite a las empresas verificar la pertenencia a la lista sin acceder jamás a los datos personales que hay detrás.</p>
+          </div>
+          <div class="cripto-road" id="cripto-road">
+            <div class="cr-card">
+              <div class="cr-icon" aria-hidden="true"><span class="cr-icon-box"><svg class="cr-icon-svg" width="64" height="64" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="#C8FF00" stroke-width="4" stroke-linecap="round"><line x1="42" y1="34" x2="34" y2="88"/><line x1="66" y1="34" x2="58" y2="88"/><line x1="22" y1="50" x2="78" y2="50"/><line x1="18" y1="70" x2="74" y2="70"/></g><g fill="#6E6A67" font-family="var(--ff-mono), monospace" font-size="16" font-weight="500" letter-spacing="1"><text x="88" y="46">01</text><text x="88" y="66">101</text><text x="88" y="86">011</text></g></svg></span></div>
+              <div class="cr-idx">01</div><div class="s-label">Hash</div>
+              <h4>Identificadores criptográficos</h4>
+              <p>Los datos de contacto se transforman en hashes antes de tocar el servicio. La identidad en claro nunca cruza la red.</p>
+            </div>
+            <div class="cr-arrow" aria-hidden="true"><svg viewBox="0 0 60 26" fill="none"><path class="cr-line" pathLength="1" d="M2 13 H50"/><path class="cr-tip" pathLength="1" d="M42 6 L52 13 L42 20"/></svg></div>
+            <div class="cr-card">
+              <div class="cr-icon" aria-hidden="true"><span class="cr-icon-box"><svg class="cr-icon-svg" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="#C8FF00" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="64" y1="18" x2="64" y2="110"/><line x1="18" y1="64" x2="110" y2="64"/><line x1="28" y1="32" x2="48" y2="32"/><line x1="38" y1="22" x2="38" y2="42"/><line x1="82" y1="32" x2="102" y2="32"/><line x1="30" y1="82" x2="46" y2="98"/><line x1="46" y1="82" x2="30" y2="98"/><line x1="82" y1="84" x2="102" y2="84"/><line x1="82" y1="96" x2="102" y2="96"/></g></svg></span></div>
+              <div class="cr-idx">02</div><div class="s-label">Match</div>
+              <h4>Comprobación matemática</h4>
+              <p>Una operación matemática compara el hash con las entradas criptográficas de la lista. Sin tabla de consulta, sin camino inverso.</p>
+            </div>
+            <div class="cr-arrow" aria-hidden="true"><svg viewBox="0 0 60 26" fill="none"><path class="cr-line" pathLength="1" d="M2 13 H50"/><path class="cr-tip" pathLength="1" d="M42 6 L52 13 L42 20"/></svg></div>
+            <div class="cr-card">
+              <div class="cr-icon" aria-hidden="true"><span class="cr-icon-box"><svg class="cr-icon-svg" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="#C8FF00" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="34" cy="64" r="24"/><path d="M34 51 C39 51 43 54 43 59 C43 63 40 65 36 68 C34 69 34 71 34 73" fill="none"/><circle cx="34" cy="81" r="2.5" fill="#C8FF00" stroke="none"/><line x1="54" y1="50" x2="78" y2="30"/><circle cx="98" cy="24" r="18"/><path d="M90 24 L96 30 L107 18"/><line x1="54" y1="78" x2="78" y2="98"/><circle cx="98" cy="104" r="18"/><line x1="91" y1="97" x2="105" y2="111"/><line x1="105" y1="97" x2="91" y2="111"/></g></svg></span></div>
+              <div class="cr-idx">03</div><div class="s-label">Respuesta</div>
+              <h4>Sí o no</h4>
+              <p>La API devuelve un booleano: esta persona está en la lista, o no lo está. Anonimato preservado; obligación cumplida.</p>
+            </div>
+            <div class="cr-arrow" aria-hidden="true"><svg viewBox="0 0 60 26" fill="none"><path class="cr-line" pathLength="1" d="M2 13 H50"/><path class="cr-tip" pathLength="1" d="M42 6 L52 13 L42 20"/></svg></div>
+            <div class="cr-card">
+              <div class="cr-icon" aria-hidden="true"><span class="cr-icon-box"><svg class="cr-icon-svg" viewBox="0 0 64 64" fill="none" stroke="#C4F82A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M15 11 H36 L43 18 V53 H15 Z"></path><path d="M36 11 V18 H43"></path><line x1="21" y1="22" x2="31" y2="22"></line><line x1="21" y1="29" x2="37" y2="29"></line><line x1="21" y1="36" x2="35" y2="36"></line><line x1="21" y1="43" x2="30" y2="43"></line><path d="M44 29 L55 33 V43 C55 50 50 55 44 58 C38 55 33 50 33 43 V33 Z" fill="var(--bg,#0f0d0b)"></path><path d="M39 43 L43 47 L49.5 39"></path></svg></span></div>
+              <div class="cr-idx">04</div><div class="s-label">Registro</div>
+              <h4>Entrada de auditoría</h4>
+              <p>Cada consulta escribe un registro — prueba legal de que la empresa cumplió su obligación. Ambas partes protegidas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 · GUARANTEES (dark) -->
+    <section class="dark" id="garantias" data-screen-label="Garantías" style="border-top:none; padding-top:0;">
+      <div class="wrap">
+        <span class="eyebrow fade-up" style="display:none;">Diseñado para la confianza</span>
+        <h2 class="sec-h2 fade-up" id="gar-head" style="transition-delay:.06s"><em class="scr gar-em" data-text="Protección ">Protección </em><span class="scr" data-text="para cada ">para cada </span><span class="scr" data-text="actor del sistema.">actor del sistema.</span></h2>
+        <div class="cards">
+          <div class="card fade-up" style="transition-delay:.05s">
+            <div class="card-photo"><img src="assets/gar-anonimato.png" alt="Anonimato por matemáticas"></div>
+            <div class="c-label">Consumidores</div>
+            <h4>Anonimato por matemáticas</h4>
+            <p>Las identidades registradas existen solo como entradas criptográficas. Ninguna empresa que consulte la lista puede extraer, enumerar ni reconstruir quién está en ella.</p>
+          </div>
+          <div class="card fade-up" style="transition-delay:.13s">
+            <div class="card-photo"><img src="assets/gar-cumplimiento.png" alt="Cumplimiento con prueba"></div>
+            <div class="c-label">Empresas</div>
+            <h4>Cumplimiento con prueba</h4>
+            <p>Cada consulta genera una entrada de auditoría — evidencia legal verificable de que la comprobación se realizó antes de lanzar la campaña.</p>
+          </div>
+          <div class="card fade-up" style="transition-delay:.21s">
+            <div class="card-photo"><img src="assets/gar-escala.png" alt="Serverless + Docker"></div>
+            <div class="c-label">Escala</div>
+            <h4>Serverless + Docker</h4>
+            <p>Una arquitectura serverless con servicios en contenedores absorbe 1,5 millones de consultas al día y escala con la demanda — uno de los sistemas más escalables que hemos construido para España.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 · CLOSING BANNER -->
+    <section class="close" id="cierre" data-screen-label="Cierre">
+      <div class="close-card">
+        <div class="close-bg"><img src="assets/lr-footer.png" alt=""></div>
+        <div class="close-veil"></div>
+        <div class="close-inner">
+          <h2 class="close-title fade-up"><span style="white-space:nowrap">Infraestructura que</span><br><span style="white-space:nowrap">preserva la privacidad</span><br><span class="serif" style="white-space:nowrap">a escala de país.</span></h2>
+          <p class="close-lede fade-up" style="transition-delay:.12s">Si tu organización necesita demostrar cumplimiento sin exponer datos — registros, listas de exclusión, sistemas de consentimiento, intercambio regulado de datos — esta arquitectura es la plantilla.</p>
+          <button class="close-btn fade-up" style="transition-delay:.2s" type="button">Agendar una reunión</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+  (function(){
+    "use strict";
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Scramble/decode ("hacker") reveal for section headlines.
+    function makeScramble(head){
+      var targets = [].slice.call(head.querySelectorAll(".scr"));
+      if (!targets.length) return null;
+      var GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789/#@$%&";
+      if (reduce){ targets.forEach(function(el){ el.textContent = el.dataset.text; }); return { run: function(){}, fill: function(){ targets.forEach(function(el){ el.textContent = el.dataset.text; }); } }; }
+      function scramble(el){
+        var target = el.dataset.text, len = target.length, frame = 0;
+        var SPEED = 1.6, CHURN = 10;
+        function tick(){
+          var out = "", done = 0;
+          for (var i = 0; i < len; i++){
+            var start = i * CHURN * 0.35;
+            if (frame >= start + CHURN){ out += target[i]; done++; }
+            else if (frame >= start){ out += target[i] === " " ? " " : GLYPHS[(Math.random() * GLYPHS.length) | 0]; }
+            else { out += target[i] === " " ? " " : ""; }
+          }
+          el.textContent = out;
+          frame += SPEED;
+          if (done < len){ requestAnimationFrame(tick); } else { el.textContent = target; }
+        }
+        tick();
+      }
+      return {
+        run: function(){ targets.forEach(function(el, i){ setTimeout(function(){ scramble(el); }, i * 260); }); },
+        fill: function(){ targets.forEach(function(el){ el.textContent = el.dataset.text; }); }
+      };
+    }
+    ["kpi-head", "zk-head", "gar-head"].forEach(function(headId){
+      var head = document.getElementById(headId);
+      if (!head) return;
+      var s = makeScramble(head);
+      if (!s) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if (en.isIntersecting){ io.disconnect(); s.run(); }
+        });
+      }, { threshold: 0.4 });
+      io.observe(head);
+    });
+    window.__criptoScramble = (function(){ var h = document.getElementById("cripto-h2"); return h ? makeScramble(h) : null; })();
+
+    // Move the drifting contour field down into the cryptography section.
+    (function(){
+      var src = document.getElementById("svc-contours");
+      var dst = document.getElementById("cripto");
+      if (src && dst){ dst.insertBefore(src, dst.firstChild); }
+    })();
+
+    // Servicio · pinned scrollytelling: intro (title → lede) then image-left/text-right features.
+    (function(){
+      var eco = document.getElementById("servicio");
+      if (!eco) return;
+      var intro = eco.querySelector(".scy-intro");
+      var titleEl = intro.querySelector(".scy-title");
+      var ledeEl = intro.querySelector(".scy-lede");
+      var tws = [].slice.call(eco.querySelectorAll(".scr"));
+      var caret = eco.querySelector(".tw-caret");
+      var bar = eco.querySelector(".scy-progress span");
+      var feats = [].slice.call(eco.querySelectorAll(".scy-feat"));
+      var medias = feats.map(function(f){ return f.querySelector(".scy-feat-media"); });
+      var bodies = feats.map(function(f){ return f.querySelector(".scy-feat-body"); });
+      var mimgs = medias.map(function(m){ return m.querySelector("img"); });
+      var titleScramble = makeScramble(titleEl);
+
+      function typewrite(){ if (titleScramble) titleScramble.run(); }
+      function fillNow(){ if (titleScramble) titleScramble.fill(); }
+
+      if (reduce || !window.gsap || !window.ScrollTrigger){
+        fillNow();
+        [titleEl, ledeEl].concat(medias).concat(bodies).forEach(function(el){ el.style.opacity = "1"; el.style.visibility = "visible"; });
+        return;
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+      var mm = gsap.matchMedia();
+
+      mm.add("(min-width: 921px)", function(){
+        var typed = false;
+        gsap.set([titleEl, ledeEl], { autoAlpha: 0, y: 0 });
+        medias.forEach(function(m){ gsap.set(m, { autoAlpha: 0, yPercent: 0 }); });
+        mimgs.forEach(function(im){ gsap.set(im, { yPercent: 100 }); });
+        bodies.forEach(function(b){ gsap.set(b, { autoAlpha: 0, yPercent: 0, y: 0 }); });
+
+        var SNAP = [0.22, 0.60, 0.80];
+
+        var tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: eco,
+            start: "top top",
+            end: "+=4800",
+            pin: ".eco-pin",
+            refreshPriority: 1,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            snap: { snapTo: SNAP, duration: { min: 0.3, max: 0.8 }, ease: "power2.inOut" },
+            refreshInit: function(){ gsap.set([titleEl, ledeEl], { autoAlpha: 0 }); },
+            onUpdate: function(self){ if (bar) bar.style.width = (self.progress * 100).toFixed(1) + "%"; },
+            onEnter: function(){ if (!typed){ typed = true; typewrite(); } },
+            onEnterBack: function(){ if (!typed){ typed = true; typewrite(); } },
+            onLeave: function(){ gsap.set([titleEl, ledeEl].concat(medias).concat(bodies), { autoAlpha: 0 }); },
+            onLeaveBack: function(){ gsap.set([titleEl, ledeEl].concat(medias).concat(bodies), { autoAlpha: 0 }); }
+          }
+        });
+
+        // Phase 1 · intro — Solairis "A rooftop" behaviour.
+        var LEAD = 0.3;
+        var LBIG = Math.round(window.innerHeight * 0.55), UP = Math.round(window.innerHeight * 0.62);
+        gsap.set(ledeEl, { y: LBIG });
+        tl.fromTo(titleEl, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.7 }, LEAD);
+        tl.to(ledeEl, { autoAlpha: 1, y: 0, ease: "power1.out", duration: 1.4 }, LEAD + 0.9);   // paragraph rises from far below, opacity lands early
+        tl.to(titleEl, { autoAlpha: 0, y: -UP, ease: "power1.in", duration: 1.0 }, LEAD + 2.4);  // title exits up first
+        tl.to(ledeEl,  { autoAlpha: 0, y: -UP, ease: "power1.in", duration: 1.4 }, LEAD + 3.0);  // then the paragraph, slower
+
+        // Phase 2 · features: image slides up into a fixed frame, text follows.
+        var FSTART = LEAD + 4.6, SEG = 3.4, IMG = 1.1, TXTD = 0.6, TXT = 0.8;
+        var END = FSTART + (feats.length - 1) * SEG + 2.6;
+
+        tl.set(medias[0], { autoAlpha: 1 }, FSTART);
+        tl.fromTo(mimgs[0], { yPercent: 100 }, { yPercent: 0, duration: IMG }, FSTART);
+        tl.fromTo(bodies[0], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: TXT }, FSTART + TXTD);
+
+        for (var i = 1; i < feats.length; i++){
+          var p = FSTART + i * SEG;
+          tl.set(medias[i], { autoAlpha: 1 }, p);
+          tl.fromTo(mimgs[i], { yPercent: 100 }, { yPercent: 0, duration: IMG }, p);
+          tl.set(medias[i - 1], { autoAlpha: 0 }, p + IMG);
+          tl.to(bodies[i - 1], { autoAlpha: 0, y: -16, duration: 0.7 }, p + 0.2);
+          tl.fromTo(bodies[i], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: TXT }, p + TXTD);
+        }
+
+        // Micro-parallax on the text column only.
+        for (var j = 0; j < feats.length; j++){
+          var ws = FSTART + j * SEG;
+          var we = j === feats.length - 1 ? END : FSTART + (j + 1) * SEG;
+          tl.fromTo(bodies[j], { yPercent: 10 }, { yPercent: -10, duration: we - ws, immediateRender: false }, ws);
+        }
+        // Brief final rest, no blackout; hiding on the way out is handled by onLeave.
+        tl.to({}, { duration: 0.1 }, END);
+
+        return function(){
+          if (bar) bar.style.width = "0%";
+          gsap.set([titleEl, ledeEl].concat(medias).concat(mimgs).concat(bodies), { clearProps: "all" });
+        };
+      });
+    })();
+
+    // Cripto · pinned scrollytelling: centered intro → roadmap paints in with drawn arrows.
+    (function(){
+      var sec = document.getElementById("cripto");
+      if (!sec) return;
+      var head = document.getElementById("cripto-head");
+      var lede = document.getElementById("cripto-lede");
+      var road = document.getElementById("cripto-road");
+      var note = document.getElementById("cripto-note");
+      var cards = [].slice.call(road.querySelectorAll(".cr-card"));
+      var arrowSvgs = [].slice.call(road.querySelectorAll(".cr-arrow svg"));
+      var arrows = [].slice.call(road.querySelectorAll(".cr-arrow svg path"));
+      var noteHl = note ? note.querySelector(".cripto-hl") : null;
+
+      function showAll(){
+        [head, lede, road].forEach(function(el){ el.style.opacity = 1; el.style.visibility = "visible"; });
+        cards.forEach(function(c){ c.style.opacity = 1; });
+        arrows.forEach(function(p){ p.style.strokeDasharray = "none"; p.style.strokeDashoffset = 0; });
+        if (noteHl) noteHl.style.setProperty("--hlw", "100%");
+        if (noteHl) noteHl.style.color = "#0E0B08";
+        if (window.__criptoScramble) window.__criptoScramble.fill();
+      }
+      if (reduce || !window.gsap || !window.ScrollTrigger){ showAll(); return; }
+
+      gsap.registerPlugin(ScrollTrigger);
+      arrows.forEach(function(p){ p.style.strokeDasharray = 1; p.style.strokeDashoffset = 1; });
+      var mm = gsap.matchMedia();
+
+      // Desktop: pin + scrub. Phase 1 intro centered, Phase 2 roadmap builds.
+      mm.add("(min-width: 921px)", function(){
+        var crScrambled = false;
+        gsap.set(lede, { autoAlpha: 0, y: 22 });
+        gsap.set(road, { autoAlpha: 1 });
+        if (note) gsap.set(note, { autoAlpha: 0 });
+        gsap.set(cards, { autoAlpha: 0, y: 22 });
+        gsap.set(arrows, { strokeDashoffset: 1 });
+        gsap.set(head, { y: 0, scale: 1, transformOrigin: "center top" });
+
+        // Safe resting position for the lifted title: just below the real header.
+        function headSafeY(){
+          var hdr = document.querySelector(".hdr");
+          var hb = hdr ? hdr.getBoundingClientRect().bottom : 72;
+          var centeredTop = (window.innerHeight - head.offsetHeight) / 2;
+          return (hb + 32) - centeredTop;
+        }
+
+        var tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: sec,
+            start: "top top",
+            end: "+=3800",
+            pin: ".cripto-pin",
+            refreshPriority: 0,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onEnter: function(){ if (window.__criptoScramble && !crScrambled){ crScrambled = true; window.__criptoScramble.run(); } },
+            onEnterBack: function(){ if (window.__criptoScramble && !crScrambled){ crScrambled = true; window.__criptoScramble.run(); } }
+          }
+        });
+
+        // Phase 1 · centered intro: title, then lede.
+        tl.fromTo(head, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.8 }, 0.3);
+        tl.fromTo(lede, { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 1.1);
+        // hold
+        tl.to({}, { duration: 0.8 });
+
+        // Phase 2 · lede leaves, title lifts up + shrinks, roadmap paints.
+        var P2 = 3.0;
+        tl.to(lede, { autoAlpha: 0, y: -26, duration: 0.6 }, P2);
+        tl.to(head, { y: headSafeY, scale: 0.82, duration: 0.9 }, P2);
+
+        var RS = P2 + 0.8, C = 0.7, A = 0.5, STEP = C + A;
+        tl.fromTo(cards[0], { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: C }, RS);
+        for (var i = 1; i < cards.length; i++){
+          var t = RS + i * STEP;
+          tl.to(arrowSvgs[i - 1].querySelectorAll("path"), { strokeDashoffset: 0, duration: A }, t - A);
+          tl.fromTo(cards[i], { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: C }, t);
+        }
+        var noteAt = RS + cards.length * STEP;
+        if (note) tl.fromTo(note, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6 }, noteAt);
+        if (noteHl) tl.fromTo(noteHl, { "--hlw": "0%" }, { "--hlw": "100%", duration: 0.7 }, noteAt + 0.4);
+        if (noteHl) tl.to(noteHl, { color: "#0E0B08", duration: 0.7 }, noteAt + 0.4);
+        tl.to({}, { duration: 0.8 });
+
+        return function(){
+          gsap.set([head, lede, road].concat(cards), { clearProps: "all" });
+          arrows.forEach(function(p){ p.style.strokeDashoffset = 1; });
+        };
+      });
+
+      // Mobile: no pin — simple fade-in on enter, arrows drawn.
+      mm.add("(max-width: 920px)", function(){
+        gsap.set([lede, road], { autoAlpha: 0 });
+        if (note) gsap.set(note, { autoAlpha: 0 });
+        gsap.set(cards, { autoAlpha: 0, y: 18 });
+        gsap.set(head, { autoAlpha: 0, y: 18 });
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            if (!en.isIntersecting) return;
+            io.disconnect();
+            if (window.__criptoScramble) window.__criptoScramble.run();
+            gsap.to(head, { autoAlpha: 1, y: 0, duration: 0.6 });
+            gsap.to(lede, { autoAlpha: 1, duration: 0.6, delay: 0.15 });
+            gsap.to(road, { autoAlpha: 1, duration: 0.4, delay: 0.2 });
+            if (note) gsap.to(note, { autoAlpha: 1, duration: 0.5, delay: 0.6 });
+            if (noteHl) gsap.fromTo(noteHl, { "--hlw": "0%" }, { "--hlw": "100%", duration: 0.7, delay: 0.9 });
+            if (noteHl) gsap.to(noteHl, { color: "#0E0B08", duration: 0.7, delay: 0.9 });
+            cards.forEach(function(c, i){ gsap.to(c, { autoAlpha: 1, y: 0, duration: 0.5, delay: 0.25 + i * 0.12 }); });
+            arrows.forEach(function(p, i){ gsap.to(p, { strokeDashoffset: 0, duration: 0.4, delay: 0.35 + Math.floor(i/2) * 0.12 }); });
+          });
+        }, { threshold: 0.25 });
+        io.observe(sec);
+        return function(){ io.disconnect(); gsap.set([head, lede, road].concat(cards), { clearProps: "all" }); };
+      });
+    })();
+
+    // Smooth scroll (Lenis) — coherent with the DataLab page.
+    if (window.Lenis && !reduce){
+      var lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+      window.__lenis = lenis;
+      if (window.gsap && window.ScrollTrigger){
+        gsap.registerPlugin(ScrollTrigger);
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add(function(t){ lenis.raf(t * 1000); });
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        function raf(t){ lenis.raf(t); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+      }
+    }
+
+    // ZK flow · 5 step cards reveal on scroll while an arrow threads behind them.
+    (function(){
+      var sec = document.getElementById("zkflow");
+      if (!sec) return;
+      var cards = [].slice.call(sec.querySelectorAll(".zf-card"));
+      var rail  = sec.querySelector(".zf-rail");
+      var head  = sec.querySelector(".zf-head");
+      if (!cards.length) return;
+
+      var rlen = rail && rail.getTotalLength ? rail.getTotalLength() : 954;
+      if (rail){ rail.style.strokeDasharray = rlen; rail.style.strokeDashoffset = rlen; }
+
+      if (reduce || !window.gsap || !window.ScrollTrigger){
+        cards.forEach(function(c){ c.style.opacity = 1; });
+        if (rail) rail.style.strokeDashoffset = 0;
+        if (head) head.style.opacity = 1;
+        return;
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+      var mm = gsap.matchMedia();
+
+      // Desktop: pin the block; the rail draws left→right and each card pops
+      // in as the leading edge threads past it.
+      mm.add("(min-width: 921px)", function(){
+        gsap.set(cards, { autoAlpha: 0, y: 26 });
+        gsap.set(rail, { strokeDashoffset: rlen });
+        gsap.set(head, { autoAlpha: 0 });
+
+        var tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: sec,
+            start: "top top",
+            end: "+=2400",
+            pin: ".zkflow-pin",
+            refreshPriority: 2,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true
+          }
+        });
+
+        // Rail draws across the whole timeline; cards land as the front reaches them.
+        tl.to(rail, { strokeDashoffset: 0, duration: 5 }, 0);
+        var spots = [0.15, 1.15, 2.15, 3.15, 4.15];
+        cards.forEach(function(c, i){
+          tl.fromTo(c, { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" }, spots[i]);
+        });
+        tl.fromTo(head, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 4.7);
+        tl.to({}, { duration: 0.8 });
+
+        return function(){
+          gsap.set(cards, { clearProps: "all" });
+          if (rail) rail.style.strokeDashoffset = 0;
+          if (head) head.style.opacity = 1;
+        };
+      });
+
+      // Mobile: no pin — cards fade/rise in sequence on enter.
+      mm.add("(max-width: 920px)", function(){
+        gsap.set(cards, { autoAlpha: 0, y: 20 });
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            if (!en.isIntersecting) return;
+            io.disconnect();
+            gsap.to(cards, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.14, ease: "power2.out" });
+          });
+        }, { threshold: 0.2 });
+        io.observe(sec);
+        return function(){ io.disconnect(); gsap.set(cards, { clearProps: "all" }); };
+      });
+    })();
+
+    // KPI band · pin centered on arrival, with magnetic snap (like the servicio section).
+    (function(){
+      var sec = document.getElementById("indicadores");
+      if (!sec || reduce || !window.gsap || !window.ScrollTrigger) return;
+      gsap.registerPlugin(ScrollTrigger);
+      var mm = gsap.matchMedia();
+      mm.add("(min-width: 921px)", function(){
+        var st = ScrollTrigger.create({
+          trigger: sec, start: "top top", end: "+=900",
+          pin: true, anticipatePin: 1, invalidateOnRefresh: true,
+          snap: { snapTo: [0, 1], duration: { min: 0.2, max: 0.5 }, ease: "power2.inOut" }
+        });
+        return function(){ st.kill(); };
+      });
+    })();
+
+    // Hero line + fade reveals; count-up on the KPI band.
+    function countUp(el){
+      var target = parseFloat(el.getAttribute("data-target"));
+      var dec = parseInt(el.getAttribute("data-decimals") || "0", 10);
+      var pre = el.getAttribute("data-prefix") || "";
+      var suf = el.getAttribute("data-suffix") || "";
+      if (reduce){ el.textContent = pre + target.toFixed(dec) + suf; return; }
+      var t0 = null, DUR = 1400;
+      function step(ts){
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / DUR);
+        var e = 1 - Math.pow(1 - p, 3);
+        el.textContent = pre + (target * e).toFixed(dec) + suf;
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = pre + target.toFixed(dec) + suf;
+      }
+      requestAnimationFrame(step);
+    }
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        en.target.classList.add("in");
+        en.target.querySelectorAll && en.target.querySelectorAll(".kpi-num[data-target]").forEach(function(n){
+          if (!n.__done){ n.__done = true; countUp(n); }
+        });
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.18 });
+
+    // Observe reveal targets. Hero reveals fire immediately on load.
+    document.querySelectorAll(".fade-up, .reveal-line, .kpis, .zk-frame").forEach(function(el){ io.observe(el); });
+    var hero = document.getElementById("hero");
+    if (hero){
+      hero.querySelectorAll(".fade-up, .reveal-line").forEach(function(el){ el.classList.add("in"); io.unobserve(el); });
+      hero.classList.add("in");
+    }
+    // KPI band: also watch the .kpi cells for count-up.
+    document.querySelectorAll(".kpi").forEach(function(el){ io.observe(el); });
+
+    // Pixel-resolve · big crisp square cells fill in one by one (reusable).
+    function pixelResolve(container, img, opts){
+      opts = opts || {};
+      var cover = !!opts.cover;
+      var DUR = opts.dur || 3000;
+      function run(){
+        var iw = img.naturalWidth, ih = img.naturalHeight;
+        if (!iw || !ih){ img.addEventListener("load", run, { once:true }); return; }
+        var box = container.getBoundingClientRect();
+        var sx = 0, sy = 0, sw = iw, sh = ih;
+        if (cover && box.width && box.height){
+          var scale = Math.max(box.width / iw, box.height / ih);
+          sw = box.width / scale; sh = box.height / scale;
+          sx = (iw - sw) / 2; sy = (ih - sh) / 2;
+        }
+        var cv = document.createElement("canvas");
+        cv.className = "px-cv";
+        cv.width = Math.round(sw); cv.height = Math.round(sh);
+        var ctx = cv.getContext("2d");
+        container.appendChild(cv);
+        var dispW = box.width || sw;
+        var cellNat = Math.max(20, Math.round(48 * sw / dispW));
+        var cols = Math.ceil(sw / cellNat), rows = Math.ceil(sh / cellNat);
+        var cells = [];
+        for (var ry = 0; ry < rows; ry++){
+          for (var cx = 0; cx < cols; cx++){ cells.push({ x: cx * cellNat, y: ry * cellNat }); }
+        }
+        for (var i = cells.length - 1; i > 0; i--){
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = cells[i]; cells[i] = cells[j]; cells[j] = tmp;
+        }
+        var total = cells.length, drawn = 0, t0 = null;
+        function ease(x){ return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; }
+        function frame(ts){
+          if (t0 === null) t0 = ts;
+          var p = Math.min(1, (ts - t0) / DUR);
+          var target = Math.floor(ease(p) * total);
+          for (; drawn < target; drawn++){
+            var c = cells[drawn];
+            var w = Math.min(cellNat, sw - c.x), h = Math.min(cellNat, sh - c.y);
+            ctx.drawImage(img, sx + c.x, sy + c.y, w, h, c.x, c.y, w, h);
+          }
+          if (p < 1){ requestAnimationFrame(frame); }
+          else { img.style.opacity = "0.96"; cv.remove(); }
+        }
+        requestAnimationFrame(frame);
+      }
+      run();
+    }
+
+    // Hero figures: pixel-resolve entrance + independent parallax speeds.
+    var wVr = document.querySelector(".hero-figures .w-vr");
+    var wEl = document.querySelector(".hero-figures .w-elder");
+    var figList = [
+      { wrap: wEl, img: wEl && wEl.querySelector("img"), speed: 0.10, dx: 26 },
+      { wrap: wVr, img: wVr && wVr.querySelector("img"), speed: 0.26, dx: -20 }
+    ];
+    if (reduce){
+      figList.forEach(function(f){ if (f.img){ f.img.style.opacity = "0.96"; } });
+    } else {
+      figList.forEach(function(f, i){
+        if (!f.wrap || !f.img) return;
+        f.img.style.transform = "translateY(30px)";
+        setTimeout(function(){
+          f.img.style.transition = "opacity 1.1s cubic-bezier(.19,1,.22,1), transform 1.2s cubic-bezier(.19,1,.22,1)";
+          f.img.style.opacity = "0.96";
+          f.img.style.transform = "translateY(0)";
+        }, 220 + i * 320);
+      });
+      window.addEventListener("scroll", function(){
+        var y = window.scrollY;
+        figList.forEach(function(f){
+          if (f.wrap){ f.wrap.style.transform = "translate3d(" + f.dx + "px," + (y * f.speed).toFixed(1) + "px,0)"; }
+        });
+      }, { passive:true });
+    }
+
+    // Header turns light over the white KPI band.
+    var kpis = document.getElementById("indicadores");
+    function over(el){ if (!el) return false; var r = el.getBoundingClientRect(); return r.top < 90 && r.bottom > 30; }
+    function upd(){ document.body.classList.toggle("hdr-light", over(kpis)); }
+    window.addEventListener("scroll", upd, { passive:true });
+    upd();
+  })();
+  </script>
+</body>
+</html>
