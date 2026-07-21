@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataLab — Espacio de datos para el ecommerce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Cormorant:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+  :root{
+    --bg:#0A0807;
+    --bg-alt:#100D0B;
+    --ink:#EDE5CC;
+    --ink-2:#B8AD93;
+    --line:#26231D;
+    --lime:#D2FF00;
+    --magenta:#318BFF;
+    --ff-display:"Archivo", ui-sans-serif, system-ui, sans-serif;
+    --ff-serif:"Cormorant", Georgia, serif;
+    --ff-mono:"JetBrains Mono", ui-monospace, monospace;
+    --maxw:1480px;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; overflow-x:hidden; max-width:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--ff-display);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  a{ color:var(--lime); text-decoration:none; }
+  a:hover{ color:var(--ink); }
+  .wrap{ width:min(var(--maxw), 100vw - 48px); margin-inline:auto; }
+
+  /* ── 3D glass ring (Three.js) — fixed, travels from hero to manifesto ───── */
+  #ring-stage{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    transition:opacity .5s ease;
+  }
+  body.kpis-visible #ring-stage{ opacity:0; }
+  #ring-canvas{ width:100vw; height:100vh; display:block; }
+
+  /* ── Header pill (project header) ────────────────────────────────────── */
+  .hdr{
+    position:fixed;
+    top:clamp(12px, 1.5vw, 20px);
+    left:0; right:0;
+    margin-inline:auto;
+    width:min(1480px, 100vw - 32px);
+    z-index:50;
+    height:85px;
+    border-radius:13px;
+    background:rgba(48,48,48,0.40);
+    -webkit-backdrop-filter:blur(14px) saturate(125%);
+    backdrop-filter:blur(14px) saturate(125%);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .hdr-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    height:100%;
+    padding-inline:clamp(18px, 2.2vw, 32px);
+    gap:clamp(14px, 2vw, 28px);
+  }
+  .hdr-logo{ display:inline-flex; align-items:center; flex:0 0 auto; }
+  .hdr-logo-mark{
+    display:block;
+    width:clamp(90px, 8vw, 116px);
+    height:clamp(24px, 2.1vw, 30px);
+    background-color:#F2EDE1;
+    -webkit-mask:url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.png") left center / contain no-repeat;
+            mask:url("assets/c5f9bd75-684b-4ac0-8abc-bf41ae6e1b69.png") left center / contain no-repeat;
+    transition:background-color .5s ease;
+  }
+  .hdr-actions{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .btn-getstarted{
+    width:286px; height:41px;
+    flex:0 1 286px; min-width:0;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:transparent;
+    border:1px solid #D2FF00;
+    font-weight:500; font-size:17px; letter-spacing:0.01em;
+    font-family:"Archivo", ui-sans-serif, system-ui, sans-serif;
+    color:#D2FF00; white-space:nowrap; cursor:pointer;
+    transition:background-color 1.2s cubic-bezier(.19,1,.22,1), box-shadow 1.2s cubic-bezier(.19,1,.22,1), color 1.2s cubic-bezier(.19,1,.22,1), border-color 1.2s cubic-bezier(.19,1,.22,1);
+  }
+  .btn-getstarted:hover{
+    background:rgba(210,255,0,0.10);
+    box-shadow:0 0 0 1px rgba(210,255,0,0.22), 0 6px 24px -12px rgba(210,255,0,0.4);
+  }
+  .btn-getstarted:focus-visible{ outline:2px solid #D2FF00; outline-offset:3px; }
+  .btn-menu{
+    width:41px; height:41px; flex:0 0 auto;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.9);
+    color:#fff; cursor:pointer;
+    transition:background-color .35s cubic-bezier(.4,0,.2,1), opacity .35s, border-color .35s, color .35s ease;
+  }
+  .btn-menu:hover{ background:rgba(255,255,255,0.10); opacity:.92; }
+  .btn-menu:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+  .btn-menu-icon{ display:flex; flex-direction:column; gap:4px; width:18px; }
+  .btn-menu-icon span{
+    display:block; height:1.5px; width:100%;
+    background:#fff; border-radius:2px;
+    transition:transform .35s cubic-bezier(.4,0,.2,1), background-color .4s ease;
+  }
+  .btn-menu:hover .btn-menu-icon span:nth-child(1){ transform:translateX(2px); }
+  .btn-menu:hover .btn-menu-icon span:nth-child(3){ transform:translateX(-2px); }
+
+  /* ── Section shells ──────────────────────────────────────────────────── */
+  section{ position:relative; }
+
+  /* ── Hero ────────────────────────────────────────────────────────────── */
+  .hero{
+    min-height:100vh;
+    display:flex; align-items:center;
+    padding:150px 0 90px;
+    position:relative;
+  }
+  /* Fixed hero backdrop image (lighter veil); stays put behind hero + manifesto
+     and is covered once the opaque KPIs section scrolls up. */
+  #bg-fixed{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:linear-gradient(90deg, rgba(10,8,7,0.4) 0%, rgba(10,8,7,0.16) 45%, rgba(10,8,7,0.02) 100%),
+               linear-gradient(180deg, rgba(10,8,7,0.12) 0%, rgba(10,8,7,0) 40%, rgba(10,8,7,0.16) 100%),
+               #0A0807 url("assets/hero-bg.png") center / cover no-repeat;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);
+    gap:48px;
+    align-items:center;
+    width:100%;
+    position:relative;
+    z-index:2;
+  }
+  .hero-brand{
+    display:block;
+    position:relative;
+    width:clamp(150px, 15vw, 210px);
+    height:auto;
+    margin:0 0 38px;
+  }
+  .hero-brand-img{
+    display:block;
+    width:100%;
+    height:auto;
+    transition:opacity 1.4s cubic-bezier(.19,1,.22,1);
+  }
+  .hero-brand-blue{ position:absolute; inset:0; opacity:0; }
+  body.accent-blue .hero-brand-white{ opacity:0; }
+  body.accent-blue .hero-brand-blue{ opacity:1; }
+  .hero h1{
+    margin:0;
+    font-family:var(--ff-display);
+    font-weight:700;
+    font-size:clamp(40px, 4.6vw, 78px);
+    line-height:1.02;
+    letter-spacing:-0.04em;
+    color:var(--ink);
+  }
+  .hero h1 .line{ display:block; overflow:hidden; white-space:nowrap; }
+  .hero h1 .line > span{ display:block; }
+  .hero h1 .em{
+    font-family:var(--ff-display);
+    font-style:italic;
+    font-weight:400;
+    letter-spacing:-0.03em;
+    color:var(--ink);
+  }
+  .hero p.lede{
+    margin:34px 0 0;
+    max-width:44ch;
+    font-family:var(--ff-serif);
+    font-style:italic;
+    font-weight:400;
+    font-size:40px;
+    line-height:1.08;
+    color:var(--ink-2);
+  }
+  .hero-cta{ display:flex; flex-wrap:wrap; gap:14px; margin-top:40px; }
+  .btn{
+    font-family:var(--ff-mono);
+    font-size:13px; letter-spacing:0.02em;
+    display:inline-flex; align-items:center; justify-content:center;
+    height:40px; padding:0 20px;
+    border-radius:999px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:background-color 1.2s cubic-bezier(.19,1,.22,1), color 1.2s cubic-bezier(.19,1,.22,1), border-color 1.2s cubic-bezier(.19,1,.22,1), transform .4s ease;
+  }
+  .btn-solid{ background:var(--lime); color:#0A0807; font-weight:500; }
+  .btn-solid:hover{ transform:translateY(-1px); }
+  .btn-ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--ink-2); color:var(--ink); }
+  .hero-cta .btn{ height:52px; padding:0 28px; font-size:17px; border-radius:0; font-family:"Archivo", ui-sans-serif, system-ui, sans-serif; font-weight:500; letter-spacing:0; }
+  .hero-cta .btn-ghost{ border:1px solid #D2FF00; }
+  /* After a few seconds the hero CTAs shift to blue (see script). */
+  body.accent-blue .hero-cta .btn-solid{ background:#318BFF; color:#EDE5CC; }
+  body.accent-blue .hero-cta .btn-ghost{ border-color:#318BFF; color:#318BFF; }
+  body.accent-blue .btn-getstarted{ border-color:#318BFF; color:#318BFF; }
+  body.accent-blue .btn-getstarted:hover{ background:rgba(49,139,255,0.10); box-shadow:0 0 0 1px rgba(49,139,255,0.22), 0 6px 24px -12px rgba(49,139,255,0.4); }
+  /* Header over a light section (KPIs, gobernanza): light frosted-glass pill
+     with dark logo / button / menu so they stay legible. */
+  body.hdr-light .hdr{ background:rgba(255,255,255,0.55); border-color:rgba(26,22,18,0.12); box-shadow:inset 0 1px 0 rgba(255,255,255,0.6); }
+  body.hdr-light .btn-getstarted{ border-color:#1A1612; color:#1A1612; }
+  body.hdr-light .btn-getstarted:hover{ background:rgba(26,22,18,0.08); box-shadow:none; }
+  body.hdr-light .btn-menu{ border-color:rgba(26,22,18,0.9); }
+  body.hdr-light .btn-menu-icon span{ background:#1A1612; }
+  body.hdr-light .hdr-logo-mark{ background-color:#1A1612; }
+  .hero-copy{ position:relative; z-index:2; }
+  .hero-visual{ display:flex; align-items:center; justify-content:center; position:relative; z-index:1; min-height:60vh; }
+  #rosco-float{
+    position:fixed; top:50%; left:50%;
+    z-index:1; pointer-events:none;
+    animation:roscoFloat 5.5s ease-in-out infinite;
+  }
+  @keyframes roscoFloat{
+    0%, 100%{ transform:translate(-50%, -50%) translateY(-10px) rotate(-1deg); }
+    50%{ transform:translate(-50%, -50%) translateY(10px) rotate(1deg); }
+  }
+  @media (prefers-reduced-motion: reduce){ #rosco-float{ animation:none; } }
+  #rosco{
+    width:min(680px, 52vw); aspect-ratio:1 / 1;
+    transform:scale(1);
+    background-image:url("assets/rosco_sprite60.webp");
+    background-repeat:no-repeat;
+    background-size:600% 1000%;   /* 6 columns x 10 rows */
+    background-position:0% 0%;
+    will-change:background-position, transform;
+    filter:hue-rotate(115deg) drop-shadow(0 24px 40px rgba(0,0,0,.45));
+  }
+  #rosco.to-blue{
+    filter:hue-rotate(115deg) drop-shadow(0 24px 40px rgba(0,0,0,.45));
+  }
+  .hero-visual .hint{
+    position:absolute; left:0; bottom:8px;
+    font-family:var(--ff-mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--ink-2);
+    opacity:.55;
+  }
+
+  /* ── Manifesto ───────────────────────────────────────────────────────── */
+  .manifesto{
+    min-height:100vh;
+    background:transparent;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    padding:120px 0;
+  }
+  .manifesto::before{
+    content:"";
+    position:absolute; inset:0;
+    background:transparent;
+    z-index:-1;
+  }
+  .manifesto .wrap{ max-width:1180px; position:relative; z-index:2; }
+  /* ── Ecosistema · pinned scrollytelling ──────────────────────────────── */
+  /* Lenis smooth-scroll recommended styles */
+  html.lenis, html.lenis body{ height:auto; }
+  .lenis.lenis-smooth{ scroll-behavior:auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent]{ overscroll-behavior:contain; }
+  .lenis.lenis-stopped{ overflow:hidden; }
+  .eco{ background:var(--bg); position:relative; min-height:100vh; }
+  .eco::before{ display:none; }
+  .eco-pin{ position:relative; top:0; height:100vh; overflow:hidden; }
+  .scy-progress{ position:absolute; top:0; left:0; right:0; height:2px; background:color-mix(in oklab, var(--ink) 12%, transparent); z-index:6; }
+  .scy-progress span{ display:block; height:100%; width:0; background:var(--magenta); }
+  .scy-layer{ position:absolute; inset:0; display:flex; align-items:center; }
+  .scy-layer > .wrap{ max-width:none; width:min(1480px, 100vw - 32px); margin-inline:auto; padding-inline:clamp(18px, 2.2vw, 32px); position:relative; }
+
+  /* Phase 1 — intro */
+  .scy-intro > .wrap{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:clamp(56px, 6vw, 104px); align-items:start; will-change:transform, opacity; }
+  .scy-title{
+    margin:0;
+    font-family:var(--ff-display); font-weight:800;
+    font-size:clamp(34px, 3.7vw, 68px); line-height:1.02; letter-spacing:-0.03em;
+    color:var(--ink); white-space:nowrap;
+    opacity:0; will-change:transform, opacity;
+  }
+  .scy-title .arch-em{ font-style:italic; font-weight:700; color:#318BFF; }
+  .tw-caret{ display:inline-block; width:3px; height:0.82em; margin-left:3px; background:var(--magenta); vertical-align:-0.06em; animation:twblink 1s steps(1) infinite; }
+  @keyframes twblink{ 50%{ opacity:0; } }
+  .scy-lede{
+    margin:0; max-width:46ch;
+    font-family:var(--ff-display); font-weight:300;
+    font-size:clamp(18px, 1.4vw, 20px); line-height:1.55; color:var(--ink-2);
+    opacity:0; will-change:transform, opacity;
+  }
+
+  /* Phase 3 — features */
+  .scy-features > .wrap{ min-height:66vh; }
+  .scy-feat{
+    position:absolute; top:50%; left:clamp(18px,2.2vw,32px); right:clamp(18px,2.2vw,32px);
+    transform:translateY(-50%);
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,0.82fr);
+    gap:clamp(36px, 4vw, 88px); align-items:center;
+  }
+  .scy-feat-media{ position:relative; aspect-ratio:16 / 11; opacity:0; overflow:hidden; border-radius:14px; will-change:transform, opacity; }
+  .scy-feat-media.px-run img{ opacity:0; }
+  .scy-feat-media canvas.px-cv{ position:absolute; inset:0; width:100%; height:100%; image-rendering:auto; z-index:2; }
+  .scy-feat-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; will-change:transform; }
+  .scy-feat-body{ opacity:0; will-change:transform, opacity; }
+  .scy-eyebrow{ display:block; font-family:var(--ff-display); font-weight:600; font-size:14px; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink-2); margin:0 0 clamp(18px,2vw,26px); }
+  .scy-eyebrow i{ color:var(--magenta); font-style:normal; }
+  .scy-feat h3{ margin:0 0 clamp(14px,1.4vw,20px); font-family:var(--ff-display); font-weight:700; font-size:clamp(30px,3.4vw,52px); line-height:1.02; letter-spacing:-0.02em; color:var(--ink); }
+  .scy-feat p{ margin:0; max-width:34ch; font-family:var(--ff-display); font-weight:300; font-size:clamp(16px,1.25vw,20px); line-height:1.55; color:var(--ink-2); }
+
+  /* ── Infraestructura · central-node vertical timeline (pinned) ─────────── */
+  .tml{ background:var(--bg); position:relative; }
+  .tml-pin{ height:100vh; overflow:hidden; display:flex; flex-direction:column; position:relative; }
+  .tml-wrap{ display:flex; flex-direction:column; height:100%; padding-block:clamp(140px,15vh,172px) clamp(30px,4vh,56px); }
+  .tml-title{ margin:0 auto clamp(26px,4vh,52px); font-family:var(--ff-display); font-weight:800; font-size:clamp(32px,3.9vw,66px); line-height:1.04; letter-spacing:-0.03em; max-width:22ch; text-wrap:balance; text-align:center; }
+  .tml-title em{ font-family:var(--ff-display); font-style:italic; font-weight:500; letter-spacing:-0.03em; color:#318BFF; }
+  .tml-stage{ position:relative; flex:1 1 auto; min-height:0; }
+  .tml-track{ position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); height:min(60vh, 560px); }
+  .tml-rail{ position:absolute; left:50%; top:0; bottom:0; width:2px; transform:translateX(-50%); z-index:1;
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+            mask-image:linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%); }
+  .tml-line{ position:absolute; inset:0; width:2px; color:var(--ink); background-image:repeating-linear-gradient(to bottom, currentColor 0 3px, transparent 3px 10px); opacity:.2; }
+  .tml-progress{ position:absolute; left:0; top:0; width:2px; height:100%; transform:scaleY(0); transform-origin:top; background:#1E6BFF; opacity:.85; filter:drop-shadow(0 0 5px rgba(30,107,255,.45)); z-index:2; will-change:transform, opacity, filter; }
+  .tml-node{ display:none; position:absolute; left:50%; top:0; width:13px; height:13px; margin-left:-6.5px; border-radius:0; background:#F3EEDD; z-index:4; will-change:transform; }
+  .tml-cardsview{ position:absolute; inset:0; z-index:3; overflow:hidden;
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 110px, #000 100%);
+            mask-image:linear-gradient(to bottom, transparent 0, #000 110px, #000 100%); }
+  .tml-cards{ list-style:none; margin:0; padding:0; position:absolute; top:0; left:0; right:0; display:flex; flex-direction:column; gap:clamp(44px,8vh,104px); will-change:transform; }
+  .tml-card{
+    position:relative; box-sizing:border-box;
+    width:min(48%, 560px); height:clamp(320px, 52vh, 520px); max-height:calc(100vh - 200px);
+    display:flex; flex-direction:column; overflow:hidden;
+    background:var(--bg);
+    border:1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+    border-radius:0;
+  }
+  .tml-card.tml-right{ margin-left:calc(50% + 46px); margin-right:auto; }
+  .tml-card.tml-left{ margin-right:calc(50% + 46px); margin-left:auto; }
+  /* L-shaped connector from the central line to the card's number box */
+  .tml-card::before{ content:""; position:absolute; top:24px; width:46px; height:1px; background:color-mix(in oklab, var(--ink) 22%, transparent); }
+  .tml-card::after{ content:""; position:absolute; top:24px; width:1px; height:13px; background:color-mix(in oklab, var(--ink) 22%, transparent); }
+  .tml-card.tml-right::before{ right:100%; }
+  .tml-card.tml-right::after{ right:calc(100% + 45px); }
+  .tml-card.tml-left::before{ left:100%; }
+  .tml-card.tml-left::after{ left:calc(100% + 45px); }
+  .tml-card-head{ flex:0 0 auto; display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid color-mix(in oklab, var(--ink) 16%, transparent); }
+  .tml-num{ font-family:var(--ff-display); font-style:italic; font-weight:700; font-size:14px; letter-spacing:-0.01em; color:var(--magenta); border:1px solid color-mix(in oklab, var(--ink) 22%, transparent); border-radius:0; padding:5px 8px; line-height:1; }
+  .tml-htitle{ font-family:var(--ff-display); font-style:normal; font-weight:700; font-size:19px; letter-spacing:-0.01em; color:var(--ink); }
+  .tml-illus{ position:relative; flex:1 1 auto; min-height:0; background:var(--bg); border-bottom:1px solid color-mix(in oklab, var(--ink) 16%, transparent); }
+  .tml-illus video{ display:block; width:100%; height:100%; object-fit:cover; }
+  .tml-illus img{ display:block; width:100%; height:100%; object-fit:cover; }
+  .tml-illus--contain{ background:var(--bg); }
+  .tml-illus--contain video, .tml-illus--contain img{ object-fit:contain; }
+  .tml-card-foot{ flex:0 0 auto; display:flex; align-items:flex-start; gap:12px; padding:16px; }
+  .tml-ico{ flex:0 0 auto; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border:1px solid color-mix(in oklab, var(--ink) 22%, transparent); border-radius:0; color:var(--ink-2); font-family:var(--ff-mono); font-size:13px; line-height:1; }
+  .tml-card-foot p{ margin:0; font-family:var(--ff-display); font-weight:300; font-size:clamp(16px,1.1vw,19px); line-height:1.45; letter-spacing:-0.01em; color:var(--ink-2); text-wrap:pretty; }
+
+  /* ── Gobernanza · cream grid beat ────────────────────────────────────── */
+  .gov{ position:relative; background:#FFFFFF; color:#1A1612; min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:clamp(90px,12vh,150px) 0; overflow:clip; isolation:isolate; }
+  .gov-grid{ position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-image:linear-gradient(to right, rgba(26,22,18,0.06) 1px, transparent 1px),
+                     linear-gradient(to bottom, rgba(26,22,18,0.06) 1px, transparent 1px);
+    background-size:120px 120px; }
+  .gov .wrap{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,0.92fr); column-gap:clamp(32px,5vw,80px); align-items:end; }
+  .gov-copy{ align-self:center; }
+  .gov-title{ margin:0; max-width:20ch; font-family:var(--ff-display); font-weight:700; font-size:clamp(30px,3.8vw,58px); line-height:1.02; letter-spacing:-0.03em; color:#1A1612; text-wrap:balance; }
+  .gov-title em{ font-family:var(--ff-display); font-style:italic; font-weight:400; }
+  .gov-lede{ margin:clamp(20px,2.2vw,30px) 0 0; max-width:52ch; font-family:var(--ff-display); font-weight:300; font-size:clamp(16px,1.3vw,20px); line-height:1.6; color:#4A4237; text-wrap:pretty; }
+  .gov-tiles{ list-style:none; margin:clamp(48px,7vw,88px) 0 0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .gov-tile{ display:flex; align-items:center; gap:14px; padding:22px 22px; border:none; background:#F4F5F7; }
+  .gov-tile .dot{ flex:0 0 auto; width:11px; height:11px; background:var(--magenta); }
+  .gov-tile span{ font-family:var(--ff-display); font-weight:500; font-size:clamp(15px,1.15vw,18px); letter-spacing:-0.01em; color:#1A1612; }
+  .gov-shot{ align-self:end; position:relative; }
+  .gov-shot img{ display:block; width:100%; height:auto; }
+  .gov-shot.px-run img{ opacity:0; }
+  .gov-shot canvas{ position:absolute; inset:0; width:100%; height:100%; image-rendering:auto; }
+  @media (max-width:900px){ .gov .wrap{ grid-template-columns:1fr; row-gap:36px; } .gov-tiles{ grid-template-columns:repeat(2,1fr); } .gov-shot{ align-self:stretch; } }
+  @media (max-width:560px){ .gov-tiles{ grid-template-columns:repeat(2,1fr); } }
+
+  /* ── Closing banner ──────────────────────────────────────────────────── */
+  .close{ background:#FFFFFF; padding:0; }
+  .close-card{ position:relative; width:min(1480px, 100vw - 32px); margin:0 auto; min-height:660px; border-radius:22px 22px 0 0; overflow:hidden; display:flex; align-items:center; justify-content:center; will-change:transform, opacity; }
+  .close-bg{ position:absolute; inset:0; z-index:0; }
+  .close-bg img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .close-veil{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(8,7,6,0.55) 0%, rgba(8,7,6,0.8) 100%); }
+  .close-inner{ position:relative; z-index:2; text-align:center; max-width:820px; padding:clamp(48px,7vw,90px) clamp(20px,4vw,40px); }
+  .close-title{ margin:0; font-family:var(--ff-display); font-weight:600; font-size:clamp(38px,5.1vw,81px); line-height:0.98; letter-spacing:-0.03em; color:var(--ink); text-wrap:balance; }
+  .close-title span{ display:block; }
+  .close-title .serif{ font-family:var(--ff-display); font-style:italic; font-weight:500; letter-spacing:-0.03em; color:#318BFF; }
+  .close-lede{ margin:clamp(22px,2.4vw,32px) auto 0; max-width:58ch; font-family:"Bricolage Grotesque", var(--ff-display); font-weight:300; font-size:clamp(16px,1.3vw,20px); line-height:1.55; color:var(--ink-2); }
+  .close-btn{ display:inline-flex; align-items:center; justify-content:center; margin-top:clamp(30px,3.4vw,44px); height:54px; padding:0 30px; border:1px solid #318BFF; color:#318BFF; background:transparent; border-radius:0; font-family:"Bricolage Grotesque", var(--ff-display); font-weight:500; font-size:16px; letter-spacing:0.01em; cursor:pointer; transition:background-color .45s cubic-bezier(.19,1,.22,1), box-shadow .45s cubic-bezier(.19,1,.22,1), color .3s ease; }
+  .close-btn:hover{ background:rgba(49,139,255,0.12); box-shadow:0 0 0 1px rgba(49,139,255,0.28), 0 8px 30px -10px rgba(49,139,255,0.55); }
+  @media (max-width:900px){
+    .close-card{ min-height:600px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .eco{ min-height:0; }
+    .eco-pin{ position:static; height:auto; overflow:visible; }
+    .scy-progress{ display:none; }
+    .scy-layer{ position:static; display:block; padding:clamp(80px,10vh,120px) 0; }
+    .scy-intro > .wrap{ grid-template-columns:1fr; }
+    .scy-title{ white-space:normal; opacity:1 !important; transform:none !important; }
+    .tw-caret{ display:none; }
+    .scy-lede{ opacity:1 !important; margin-top:24px; }
+    .scy-features > .wrap{ min-height:0; }
+    .scy-feat{ position:static; transform:none; margin-bottom:clamp(56px,8vh,96px); }
+    .scy-feat-media, .scy-feat-body{ opacity:1 !important; transform:none !important; }
+    .tml-pin{ height:auto; overflow:visible; display:block; }
+    .tml-wrap{ height:auto; }
+    .tml-stage{ position:relative; padding-left:30px; }
+    .tml-track{ position:static; height:auto; transform:none; }
+    .tml-rail{ left:8px; }
+    .tml-node{ display:none; }
+    .tml-progress{ transform:scaleY(1) !important; }
+    .tml-cardsview{ position:static; overflow:visible; -webkit-mask-image:none; mask-image:none; }
+    .tml-cards{ position:static; display:flex; flex-direction:column; gap:26px; }
+    .tml-card{ position:static !important; margin:0 !important; align-self:stretch; width:auto; height:auto; }
+    .tml-card::before, .tml-card::after{ display:none; }
+    .tml-illus{ min-height:180px; }
+  }
+  @media (max-width:900px){
+    .eco{ min-height:0; }
+    .eco-pin{ position:static; height:auto; overflow:visible; }
+    .scy-progress{ display:none; }
+    .scy-layer{ position:static; display:block; padding:clamp(100px,13vh,150px) 0; }
+    .scy-intro > .wrap{ grid-template-columns:1fr; }
+    .scy-title{ white-space:normal; opacity:1 !important; transform:none !important; }
+    .tw-caret{ display:none; }
+    .scy-lede{ opacity:1 !important; margin-top:24px; }
+    .scy-features > .wrap{ min-height:0; }
+    .scy-feat{ position:static; transform:none; grid-template-columns:1fr; gap:24px; margin-bottom:clamp(56px,8vh,96px); }
+    .scy-feat:last-child{ margin-bottom:0; }
+    .scy-feat-media, .scy-feat-body{ opacity:1 !important; transform:none !important; }
+    .tml-pin{ height:auto; overflow:visible; display:block; }
+    .tml-wrap{ height:auto; }
+    .tml-stage{ position:relative; padding-left:30px; }
+    .tml-track{ position:static; height:auto; transform:none; }
+    .tml-rail{ left:8px; }
+    .tml-node{ display:none; left:8px; top:0; margin-left:-6.5px; }
+    .tml-progress{ transform:scaleY(0); }
+    .tml-cardsview{ position:static; overflow:visible; -webkit-mask-image:none; mask-image:none; }
+    .tml-cards{ position:static; display:flex; flex-direction:column; gap:26px; }
+    .tml-card{ position:static !important; margin:0 auto !important; align-self:center; width:100%; max-width:340px; height:auto; opacity:0; transform:translateY(16px); transition:opacity .7s cubic-bezier(.19,1,.22,1), transform .7s cubic-bezier(.19,1,.22,1); }
+    .tml-card::before, .tml-card::after{ display:none; }
+    .tml-card.in{ opacity:1; transform:translateY(0); }
+    .tml-illus{ min-height:140px; }
+    .tml-card{ position:static !important; width:100%; max-width:340px; margin-inline:auto !important; text-align:left !important; left:auto !important; right:auto !important; transform:translateY(16px); opacity:0; transition:opacity .7s cubic-bezier(.19,1,.22,1), transform .7s cubic-bezier(.19,1,.22,1); }
+    .tml-card.in{ opacity:1; transform:translateY(0); }
+    .tml-card.tml-left .rule{ margin-left:0; }
+  }
+  .manifesto .tag{
+    font-family:var(--ff-mono); font-size:12px; letter-spacing:0.24em; text-transform:uppercase;
+    color:var(--ink-2);
+    margin:0 0 40px;
+  }
+  .manifesto h2{
+    margin:0;
+    font-family:var(--ff-display);
+    font-weight:800;
+    font-size:100px;
+    line-height:1.06;
+    letter-spacing:-0.025em;
+    color:var(--ink);
+  }
+  .manifesto h2 .w{ display:inline-block; }
+  .manifesto h2 .em{
+    font-family:var(--ff-display);
+    font-style:italic; font-weight:400;
+    font-size:1em;
+    color:var(--ink);
+  }
+
+  /* ── KPIs ────────────────────────────────────────────────────────────── */
+  .kpis{
+    position:relative;
+    isolation:isolate;
+    background:#FFFFFF;
+    min-height:100vh;
+    padding:clamp(72px, 10vh, 130px) 0;
+  }
+  .kpis::before{
+    content:"";
+    position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-image:linear-gradient(to right, rgba(26,22,18,0.06) 1px, transparent 1px),
+                     linear-gradient(to bottom, rgba(26,22,18,0.06) 1px, transparent 1px);
+    background-size:120px 120px;
+  }
+  .kpis > .wrap{ position:relative; z-index:1; }
+  .kpi-busto{ position:relative; z-index:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-height:0; pointer-events:none; }
+  .kpi-busto img{ display:block; height:auto; will-change:transform; }
+  .kpi-busto .kb-rosco{ width:clamp(100px, 10vw, 150px); mix-blend-mode:screen; }
+  .kpi-busto .kb-busto{ width:clamp(200px, 22vw, 340px); margin-top:-8px; mix-blend-mode:screen; }
+  @media (max-width:900px){ .kpi-busto{ display:none; } }
+  .kpi-row{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:0;
+    margin-top:clamp(24px, 4vw, 60px);
+  }
+  .kpi{
+    display:flex;
+    flex-direction:column;
+    gap:clamp(14px, 1.4vw, 22px);
+    padding:clamp(28px, 3vw, 46px) clamp(24px, 2.6vw, 48px);
+    position:relative; z-index:1; background:transparent;
+  }
+  .kpi-label{
+    font-family:var(--ff-display);
+    font-weight:500;
+    font-size:13px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:#4A443A;
+  }
+  .kpi-num{
+    font-family:var(--ff-display);
+    font-weight:800;
+    font-size:150px;
+    line-height:0.9;
+    letter-spacing:calc(-0.06em - 2px);
+    color:#14110C;
+    font-variant-numeric:tabular-nums;
+  }
+  .kpi-num--accent{ color:#2f7ae6; }
+  .kpi-note{
+    font-family:var(--ff-display);
+    font-weight:300;
+    font-size:19px;
+    line-height:1.5;
+    color:#4A443A;
+    max-width:30ch;
+  }
+  @media (max-width:1100px){
+    .kpi-num{ font-size:clamp(84px, 13vw, 150px); }
+  }
+  @media (max-width:900px){
+    .kpi-row{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width:560px){
+    .kpi-row{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px 20px; }
+    .kpi{ padding:clamp(16px, 4vw, 24px) 0; }
+    .kpi:first-child, .kpi:nth-child(2){ padding-top:0; }
+    .kpi-label{ font-size:13px; min-height:2.6em; display:flex; align-items:flex-start; }
+    .kpi-num{ font-size:clamp(46px, 15vw, 68px); }
+    .kpi-note{ max-width:none; font-size:13px; }
+  }
+
+  .reveal-line > span{
+    transform:translateY(110%);
+    opacity:0;
+    transition:transform 1.05s cubic-bezier(.19,1,.22,1), opacity 1.05s cubic-bezier(.19,1,.22,1);
+  }
+  .in .reveal-line > span{ transform:translateY(0); opacity:1; }
+
+  .fade-up{
+    transform:translateY(26px);
+    opacity:0;
+    transition:transform 1s cubic-bezier(.19,1,.22,1), opacity 1s cubic-bezier(.19,1,.22,1);
+  }
+  .in .fade-up{ transform:translateY(0); opacity:1; }
+
+  .word{
+    display:inline-block;
+    transform:translateY(40px);
+    opacity:0;
+    transition:transform .9s cubic-bezier(.19,1,.22,1), opacity .9s cubic-bezier(.19,1,.22,1);
+  }
+  .in:not(.eco) .word{ transform:translateY(0); opacity:1; }
+
+  @media (max-width:900px){
+    .hero-grid{ grid-template-columns:1fr; gap:20px; }
+    .hero-visual{ min-height:44vh; order:-1; }
+    .hero{ padding-top:130px; }
+    .hdr-actions .btn-ghost.get{ display:none; }
+  }
+  @media (max-width:700px){
+    .hero{ min-height:100svh; height:100svh; padding-top:0; box-sizing:border-box; }
+    .hero .wrap{ height:100%; }
+    .hero-grid{ display:flex; flex-direction:column; height:100%; gap:0; justify-content:flex-start; padding-top:78px; padding-bottom:28px; box-sizing:border-box; }
+    .hero-visual{ order:-1; min-height:0; flex:0 0 40vh; }
+    .hero-copy{ flex:0 0 auto; text-align:center; }
+    #rosco{ width:min(380px, 82vw); }
+    .hero-brand{ margin-inline:auto; max-width:200px; }
+    .manifesto h2{ font-size:40px; }
+    .hero h1{ font-size:clamp(30px, 8vw, 44px); }
+    .hero h1 .line{ white-space:normal; }
+    .hero p.lede{ margin:16px auto 0; font-size:clamp(20px,5.4vw,26px); max-width:34ch; }
+    .hero-cta{ margin-top:22px; justify-content:center; }
+    .hero-cta .btn{ height:48px; }
+  }
+  @media (max-width:560px){
+    .hero-cta .btn{ width:100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal-line > span,
+    .fade-up,
+    .word{ transition:none; transform:none; opacity:1; }
+  }
+
+  /* ── Ecosistema lead · cream contour beat (Ulltra consultancy bg) ──────── */
+  .ecl{ position:relative; min-height:100vh; background:var(--bg); color:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(48px, 6vw, 88px); padding:clamp(96px, 12vh, 160px) 24px; overflow:clip; isolation:isolate; }
+  .ecl-inner{ position:relative; z-index:2; text-align:center; padding:0 24px; display:flex; align-items:center; justify-content:center; }
+  /* White cells backdrop (fades in as the title shrinks) */
+  .ecl-white{ position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0; background:#FFFFFF;
+    background-image:linear-gradient(to right, rgba(26,22,18,0.07) 1px, transparent 1px),
+                     linear-gradient(to bottom, rgba(26,22,18,0.07) 1px, transparent 1px);
+    background-size:120px 120px; }
+  /* Floating 3D decorations (parallax on scroll + gentle bob) */
+  .ecl-deco{ position:absolute; z-index:1; pointer-events:none; opacity:0; will-change:transform; }
+  .ecl-deco img{ display:block; width:100%; height:auto; animation:eclFloat 6s ease-in-out infinite; }
+  .ecl-deco.d-bars img{ animation-duration:7.5s; animation-direction:reverse; }
+  .ecl-deco.d-rosco{ left:1%; top:12%; width:clamp(250px, 25vw, 440px); }
+  .ecl-deco.d-bars{ right:1%; bottom:6%; width:clamp(260px, 26vw, 460px); }
+  @keyframes eclFloat{ 0%,100%{ transform:translateY(-12px) rotate(-2deg); } 50%{ transform:translateY(12px) rotate(2deg); } }
+  @media (prefers-reduced-motion: reduce){ .ecl-deco img{ animation:none; } }
+  .ecl-ring{
+    position:absolute; top:50%; left:50%; width:min(760px, 92vw); aspect-ratio:1 / 1;
+    transform:translate(-50%, -50%); border-radius:50%; z-index:-1; pointer-events:none;
+    background:repeating-conic-gradient(from 0deg, #fff 0deg 0.32deg, transparent 0.32deg 3.2deg);
+    -webkit-mask:radial-gradient(circle, transparent 0 47.5%, #000 48% 50%, transparent 50.4%);
+            mask:radial-gradient(circle, transparent 0 47.5%, #000 48% 50%, transparent 50.4%);
+    opacity:0.5;
+    animation:eclSpin 80s linear infinite;
+  }
+  @keyframes eclSpin{ to{ transform:translate(-50%, -50%) rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){ .ecl-ring{ animation:none; } }
+  .ecl-title{ margin:0 auto; max-width:20ch; font-family:var(--ff-display); font-weight:800; font-size:clamp(32px, 4.6vw, 76px); line-height:0.92; letter-spacing:-0.03em; color:#fff; text-wrap:balance; }
+  .ecl-title em{ font-style:italic; font-weight:700; color:#fff; }
+  /* Partner logo cards · static responsive grid */
+  .ecl-cards{ list-style:none; margin:0; padding:0; position:relative; z-index:2; width:min(var(--maxw), 100% - 48px); display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:clamp(16px, 1.6vw, 24px); }
+  .ecl-card{
+    box-sizing:border-box; background:var(--bg); border:2px solid rgba(237,229,204,0.32);
+    display:flex; flex-direction:column; text-align:center;
+    opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.19,1,.22,1), transform .7s cubic-bezier(.19,1,.22,1), border-color .4s ease;
+  }
+  .ecl-card.in{ opacity:1; transform:translateY(0); }
+  .ecl-card:hover{ border-color:rgba(237,229,204,0.6); }
+  .ecl-card .ecl-logo{ height:104px; display:flex; align-items:center; justify-content:center; padding:32px 28px; }
+  .ecl-card .ecl-logo img{ display:block; width:auto; max-width:82%; max-height:100%; object-fit:contain; }
+  .ecl-tag{ font-family:var(--ff-display); font-weight:500; font-size:clamp(16px, 1.1vw, 20px); letter-spacing:-0.01em; text-transform:none; color:#fff; border-top:2px solid rgba(237,229,204,0.32); padding:18px 20px; transition:color .5s ease, border-color .5s ease; }
+  /* White mode · content turns dark over the cells backdrop */
+  .ecl.is-white .ecl-title, .ecl.is-white .ecl-title em{ color:#1A1612; transition:color .5s ease; }
+  .ecl.is-white .ecl-ring{ filter:invert(1); opacity:0.28; }
+  .ecl.is-white .ecl-card{ background:#FFFFFF; border-color:rgba(26,22,18,0.18); }
+  .ecl.is-white .ecl-card:hover{ border-color:rgba(26,22,18,0.4); }
+  .ecl.is-white .ecl-card .ecl-logo img{ filter:brightness(0); }
+  .ecl.is-white .ecl-tag{ color:#4A4237; border-top-color:rgba(26,22,18,0.18); }
+  /* Pinned-scroll mode (desktop): GSAP owns transforms; title centered then rises, cards revealed below */
+  .ecl--pin{ display:block; padding:0; }
+  .ecl--pin .ecl-inner{ position:absolute; left:50%; top:50%; width:100%; padding:0 24px; margin:0; will-change:transform; }
+  .ecl--pin .ecl-cards{ position:absolute; left:50%; top:50%; margin-inline:0; width:min(var(--maxw), 100vw - 48px); will-change:transform; }
+  .ecl--pin .ecl-card{ transition:border-color .4s ease; will-change:transform, opacity; }
+
+  @media (max-width:900px){
+    .ecl{ min-height:auto; padding:150px 0 44px; overflow:visible; }
+    .ecl-ring{ width:min(400px, 78vw); }
+    .ecl-cards{ width:min(var(--maxw), 100vw - 48px); grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); }
+  }
+</style>
+</head>
+<body class="accent-blue">
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" fill="#0A0807"/>
+      <circle cx="50" cy="50" r="24" fill="none" stroke="#D2FF00" stroke-width="9"/>
+    </svg>
+  </template>
+
+  <div id="bg-fixed" aria-hidden="true"></div>
+  <div id="rosco-float" aria-hidden="true"><div id="rosco"></div></div>
+
+  <header class="hdr">
+    <div class="hdr-inner">
+      <a class="hdr-logo" href="index.html"><span class="hdr-logo-mark" role="img" aria-label="DataLab"></span></a>
+      <div class="hdr-actions">
+        <button class="btn-getstarted" type="button">Agendar reunión</button>
+        <button class="btn-menu" type="button" aria-label="Menú">
+          <span class="btn-menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- SECTION 1 · HERO -->
+    <section class="hero" id="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="hero-brand fade-up" style="transition-delay:.05s">
+              <img class="hero-brand-img hero-brand-white" src="assets/datalab-logo.png" alt="DataLab">
+              <img class="hero-brand-img hero-brand-blue" src="assets/datalab-logo-blue.png" alt="" aria-hidden="true">
+            </span>
+            <h1 aria-label="El espacio de datos que impulsa el ecommerce inteligente">
+              <span class="line reveal-line" style="--d:.10s"><span>El espacio de datos</span></span>
+              <span class="line reveal-line" style="--d:.22s"><span>que impulsa el</span></span>
+              <span class="line reveal-line" style="--d:.34s"><span class="em">ecommerce inteligente</span></span>
+            </h1>
+            <p class="lede fade-up" style="transition-delay:.55s">El primer espacio de datos especializado en ecommerce en España y el tercero con más usuarios a nivel nacional.</p>
+            <div class="hero-cta">
+              <button class="btn btn-solid fade-up" style="transition-delay:.68s; color:#fff;" type="button">Conocer el proyecto</button>
+              <button class="btn btn-ghost fade-up" style="transition-delay:.78s" type="button">Ver indicadores clave</button>
+            </div>
+          </div>
+          <div class="hero-visual"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 · MANIFESTO -->
+    <section class="manifesto" id="manifesto">
+      <div class="wrap">
+        <h2 aria-label="Espacio de datos líder para el ecommerce en España. Top 3 nacional por usuarios."></h2>
+      </div>
+    </section>
+
+    <!-- SECTION 3 · KPIs -->
+    <section class="kpis" id="indicadores">
+      <div class="wrap">
+        <div class="kpi-row">
+          <div class="kpi fade-up" style="transition-delay:.05s">
+            <span class="kpi-label">Organizaciones</span>
+            <span class="kpi-num" data-target="200" data-prefix="+">+200</span>
+            <span class="kpi-note">Forman parte del ecosistema DataLab.</span>
+          </div>
+          <div class="kpi fade-up" style="transition-delay:.13s">
+            <span class="kpi-label">Usuarios / mes</span>
+            <span class="kpi-num" data-target="2.5" data-decimals="1" data-suffix="M">2.5M</span>
+            <span class="kpi-note">Datos agregados de ecommerce de millones de usuarios cada mes.</span>
+          </div>
+          <div class="kpi fade-up" style="transition-delay:.21s">
+            <span class="kpi-label">Datasets</span>
+            <span class="kpi-num" data-target="200" data-prefix="+">+200</span>
+            <span class="kpi-note">Fuentes estructuradas para análisis, benchmarking y casos de uso.</span>
+          </div>
+          <div class="kpi fade-up" style="transition-delay:.29s">
+            <span class="kpi-label">Ranking nacional</span>
+            <span class="kpi-num" data-target="3" data-prefix="Top&nbsp;">Top&nbsp;3</span>
+            <span class="kpi-note">Tercer espacio de datos con más usuarios de España.</span>
+          </div>
+          <div class="kpi fade-up" style="transition-delay:.37s">
+            <span class="kpi-label">Ecommerce</span>
+            <span class="kpi-num kpi-num--accent" data-target="1" data-prefix="#">#1</span>
+            <span class="kpi-note">El espacio de datos líder en usuarios dentro del sector ecommerce.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 · ECOSISTEMA (pinned scrollytelling) -->
+    <section class="eco" id="ecosistema">
+      <div class="eco-pin">
+        <div class="scy-progress" aria-hidden="true"><span></span></div>
+
+        <!-- Phase 1 · intro -->
+        <div class="scy-layer scy-intro">
+          <div class="wrap">
+            <h2 class="scy-title" aria-label="Transforma datos en decisiones inteligentes"><span class="tw" data-text="Transforma datos en "></span><br><span class="tw arch-em" data-text="decisiones inteligentes"></span><span class="tw-caret" aria-hidden="true"></span></h2>
+            <p class="scy-lede">DataLab permite a empresas, instituciones y partners tecnológicos trabajar sobre datos anonimizados, gobernados e interoperables — creando conocimiento compartido, comparativas sectoriales, análisis de mercado y nuevos servicios digitales basados en datos reales.</p>
+          </div>
+        </div>
+
+        <!-- Phase 3 · features -->
+        <div class="scy-layer scy-features">
+          <div class="wrap">
+            <article class="scy-feat" data-i="0">
+              <div class="scy-feat-media"><img src="assets/eco-shot-1.png" alt="Repositorio de datos"></div>
+              <div class="scy-feat-body">
+                <span class="scy-eyebrow"><i>01</i> — Repositorio</span>
+                <h3>Repositorio de datos</h3>
+                <p>Almacenamiento, actualización, normalización y anonimización de datos sectoriales.</p>
+              </div>
+            </article>
+            <article class="scy-feat" data-i="1">
+              <div class="scy-feat-media"><img src="assets/eco-consultas.png" alt="Sistema de consultas"></div>
+              <div class="scy-feat-body">
+                <span class="scy-eyebrow"><i>02</i> — Consultas</span>
+                <h3>Sistema de consultas</h3>
+                <p>Exploración mediante consultas, lenguaje natural o herramientas visuales.</p>
+              </div>
+            </article>
+            <article class="scy-feat" data-i="2">
+              <div class="scy-feat-media"><img src="assets/scy-feat-paneles.png" alt="Paneles de control"></div>
+              <div class="scy-feat-body">
+                <span class="scy-eyebrow"><i>03</i> — Paneles</span>
+                <h3>Paneles de control</h3>
+                <p>Dashboards reutilizables para visualizar tendencias, indicadores y oportunidades.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 · INFRAESTRUCTURA (pinned central-node timeline) -->
+    <section class="tml" id="infraestructura" data-screen-label="Infraestructura">
+      <div class="tml-pin">
+        <div class="wrap tml-wrap">
+          <h2 class="tml-title">Una infraestructura de datos para el <em>crecimiento empresarial</em></h2>
+          <div class="tml-stage">
+            <div class="tml-track">
+              <div class="tml-rail" aria-hidden="true">
+                <div class="tml-line"></div>
+                <div class="tml-progress"></div>
+              </div>
+              <div class="tml-node" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+        <div class="tml-cardsview">
+          <ol class="tml-cards">
+                <li class="tml-card tml-right">
+                  <div class="tml-card-head">
+                    <span class="tml-num">01</span>
+                    <span class="tml-htitle">Benchmarking sectorial</span>
+                  </div>
+                  <div class="tml-illus tml-illus--contain"><img src="assets/tml-illus-01b.png" alt="Benchmarking sectorial"></div>
+                  <div class="tml-card-foot">
+                    <span class="tml-ico" aria-hidden="true">+</span>
+                    <p>Comparar el rendimiento de una organización con el de su sector.</p>
+                  </div>
+                </li>
+                <li class="tml-card tml-left">
+                  <div class="tml-card-head">
+                    <span class="tml-num">02</span>
+                    <span class="tml-htitle">Tendencias de mercado</span>
+                  </div>
+                  <div class="tml-illus tml-illus--contain"><img src="assets/tml-tendencias.png" alt="Tendencias de mercado"></div>
+                  <div class="tml-card-foot">
+                    <span class="tml-ico" aria-hidden="true">+</span>
+                    <p>Detectar tendencias reales del mercado ecommerce.</p>
+                  </div>
+                </li>
+                <li class="tml-card tml-right">
+                  <div class="tml-card-head">
+                    <span class="tml-num">03</span>
+                    <span class="tml-htitle">Producto y servicio</span>
+                  </div>
+                  <div class="tml-illus tml-illus--contain"><img src="assets/tml-illus-03.png" alt="Producto y servicio"></div>
+                  <div class="tml-card-foot">
+                    <span class="tml-ico" aria-hidden="true">+</span>
+                    <p>Crear nuevos productos y servicios basados en datos.</p>
+                  </div>
+                </li>
+                <li class="tml-card tml-left">
+                  <div class="tml-card-head">
+                    <span class="tml-num">04</span>
+                    <span class="tml-htitle">Colaboración</span>
+                  </div>
+                  <div class="tml-illus tml-illus--contain"><img src="assets/tml-illus-04.png" alt="Colaboración"></div>
+                  <div class="tml-card-foot">
+                    <span class="tml-ico" aria-hidden="true">+</span>
+                    <p>Facilitar colaboraciones entre empresas con control y trazabilidad.</p>
+                  </div>
+                </li>
+                <li class="tml-card tml-right">
+                  <div class="tml-card-head">
+                    <span class="tml-num">05</span>
+                    <span class="tml-htitle">Acceso sectorial</span>
+                  </div>
+                  <div class="tml-illus tml-illus--contain"><img src="assets/tml-illus-05.png" alt="Acceso sectorial"></div>
+                  <div class="tml-card-foot">
+                    <span class="tml-ico" aria-hidden="true">+</span>
+                    <p>Democratizar el acceso a inteligencia sectorial para pymes y grandes compañías.</p>
+                  </div>
+                </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5c · ECOSISTEMA LEAD (cream contour beat) -->
+    <section class="ecl" id="ecosistema-lead" data-screen-label="Ecosistema">
+      <div class="ecl-white" aria-hidden="true"></div>
+      <div class="ecl-deco d-rosco" aria-hidden="true"><img src="assets/rosco-donut-2-cut.png" alt=""></div>
+      <div class="ecl-deco d-bars" aria-hidden="true"><img src="assets/grafico-barras-2-cut.png" alt=""></div>
+      <div class="ecl-inner">
+        <div class="ecl-ring" aria-hidden="true"></div>
+        <h2 class="ecl-title">Respaldado por <em>líderes del sector</em></h2>
+      </div>
+      <ul class="ecl-cards">
+        <li class="ecl-card">
+          <div class="ecl-logo"><img src="assets/logo-bizum.png" alt="Bizum"></div>
+          <span class="ecl-tag">Pagos instantáneos</span>
+        </li>
+        <li class="ecl-card">
+          <div class="ecl-logo"><img src="assets/logo-granini.png" alt="PCBOX"></div>
+          <span class="ecl-tag">Retail tecnológico</span>
+        </li>
+        <li class="ecl-card">
+          <div class="ecl-logo"><img src="assets/logo-pxbox.png" alt="CNMC"></div>
+          <span class="ecl-tag">Organismo regulador</span>
+        </li>
+        <li class="ecl-card">
+          <div class="ecl-logo"><img src="assets/logo-cnmc.png" alt="Accom"></div>
+          <span class="ecl-tag">Marketing digital</span>
+        </li>
+        <li class="ecl-card">
+          <div class="ecl-logo"><img src="assets/logo-accom.png" alt="Granini"></div>
+          <span class="ecl-tag">Retail y marca</span>
+        </li>
+      </ul>
+    </section>
+
+<!-- SECTION 7 · GOBERNANZA (cream grid beat) -->
+    <section class="gov" id="gobernanza" data-screen-label="Gobernanza">
+      <div class="gov-grid" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="gov-copy">
+          <h2 class="gov-title">Datos compartidos con control y <em>gobernanza</em></h2>
+          <p class="gov-lede">El modelo de DataLab se basa en datos anonimizados, trazabilidad, control de accesos y reglas claras de uso. La colaboración entre organizaciones es posible sin comprometer la privacidad, la confidencialidad ni el control sobre la información.</p>
+          <ul class="gov-tiles">
+            <li class="gov-tile"><span class="dot" aria-hidden="true"></span><span>Anonimización</span></li>
+            <li class="gov-tile"><span class="dot" aria-hidden="true"></span><span>Interoperabilidad</span></li>
+            <li class="gov-tile"><span class="dot" aria-hidden="true"></span><span>Trazabilidad</span></li>
+            <li class="gov-tile"><span class="dot" aria-hidden="true"></span><span>Control de acceso</span></li>
+            <li class="gov-tile"><span class="dot" aria-hidden="true"></span><span>Licencias de uso</span></li>
+            <li class="gov-tile"><span class="dot" aria-hidden="true"></span><span>Conformidad</span></li>
+          </ul>
+        </div>
+        <div class="gov-shot"><img src="assets/gov-macbook.png" alt="DataLab en MacBook"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 · CLOSING BANNER -->
+    <section class="close" id="cierre">
+      <div class="close-card">
+        <div class="close-bg" aria-hidden="true"><img src="assets/footer_columns.webp" alt=""></div>
+        <div class="close-veil" aria-hidden="true"></div>
+        <div class="close-inner">
+          <h2 class="close-title">
+            <span>Construyendo el futuro</span>
+            <span>del ecommerce</span>
+            <span class="serif">basado en datos</span>
+          </h2>
+          <p class="close-lede">DataLab conecta organizaciones, datasets y conocimiento para crear una infraestructura común que permita competir mejor, innovar más rápido y decidir con más contexto.</p>
+          <button class="close-btn" type="button">Explorar DataLab</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+
+  /* ── Ring · sprite contained within the hero (spins with scroll) ──────── */
+  (function(){
+    var el    = document.getElementById("rosco");
+    var wrap  = document.getElementById("rosco-float");
+    var hero  = document.getElementById("hero");
+    var next  = document.getElementById("manifesto");
+    if (!el || !wrap || !hero || !next) return;
+    var COLS = 6, ROWS = 10, FRAMES = 60, TURNS = 1;   // full turns across the travel
+
+    function setFrame(i){
+      var c = i % COLS, r = Math.floor(i / COLS);
+      el.style.backgroundPosition = (c / (COLS - 1) * 100) + "% " + (r / (ROWS - 1) * 100) + "%";
+    }
+
+    if (reduce){ setFrame(0); return; }
+
+    function update(){
+      // progress from the hero top to the point the manifesto scrolls out of
+      // view (one viewport before its bottom).
+      var start = hero.getBoundingClientRect().top + window.scrollY;
+      var end   = next.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+      var p = (window.scrollY - start) / Math.max(1, end - start);
+      p = Math.max(0, Math.min(1, p));
+
+      var frame = Math.floor(p * FRAMES * TURNS) % FRAMES;
+      if (frame < 0) frame += FRAMES;
+      setFrame(frame);
+
+      var scale = (window.innerWidth <= 700) ? 1 : (1 - p * 0.4);
+      el.style.transform = "scale(" + scale.toFixed(3) + ")";
+
+      // Horizontal drift: from the right (+24vw) to the centre (0) at the end.
+      if (window.innerWidth <= 700){
+        // Mobile: rosco travels down WITH the scroll — starts in the hero and
+        // settles just below the second section's text (no fixed/jump).
+        var mH2 = next.querySelector("h2");
+        var startY = 78 + window.innerHeight * 0.20;
+        var endY = startY;
+        if (mH2){
+          var hr = mH2.getBoundingClientRect();
+          endY = hr.top + hr.height / 2 + window.scrollY;   // behind the text
+        }
+        wrap.style.position = "absolute";
+        wrap.style.top  = (startY + (endY - startY) * p) + "px";
+        wrap.style.left = "50%";
+      } else if (p >= 1){
+        // Docked: anchor lower inside the manifesto (below the headline) so it
+        // sits under the text instead of fixed behind it.
+        var cy = next.offsetTop + next.offsetHeight * 0.82;
+        wrap.style.position = "absolute";
+        wrap.style.top  = cy + "px";
+        wrap.style.left = "50%";
+      } else {
+        wrap.style.position = "fixed";
+        wrap.style.top  = "50%";
+        wrap.style.left = (50 + (24 - p * 24)) + "vw";
+      }
+    }
+
+    var ticking = false;
+    window.addEventListener("scroll", function(){
+      if (!ticking){ requestAnimationFrame(function(){ update(); ticking = false; }); ticking = true; }
+    }, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  })();
+
+  /* ── Build the manifesto headline as animatable words ─────────────────── */
+  (function buildManifesto(){
+    var h2 = document.querySelector(".manifesto h2");
+    // token: [text, isEmphasis]
+    var tokens = [
+      ["Espacio",0],["de",0],["datos",0],["líder",1],["para",0],["el",0],["ecommerce",1],
+      ["en",0],["España.",0],["Top 3",1],["nacional",0],["por",0],["usuarios.",1]
+    ];
+    tokens.forEach(function(t, i){
+      var w = document.createElement("span");
+      w.className = "word" + (t[1] ? " em" : "");
+      w.textContent = t[0];
+      w.style.transitionDelay = (0.05 + i * 0.06) + "s";
+      h2.appendChild(w);
+      h2.appendChild(document.createTextNode(" "));
+    });
+  })();
+
+  /* ── Entrance reveals via IntersectionObserver ────────────────────────── */
+  function setLineDelays(){
+    document.querySelectorAll(".reveal-line").forEach(function(el){
+      var d = el.style.getPropertyValue("--d") || "0s";
+      el.querySelector("span").style.transitionDelay = d;
+    });
+  }
+  setLineDelays();
+
+  if (reduce){
+    document.querySelectorAll(".hero, .manifesto").forEach(function(s){ s.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold:0.25 });
+    document.querySelectorAll(".hero, .manifesto").forEach(function(s){ io.observe(s); });
+    // Hero should fire on load (already in view)
+    requestAnimationFrame(function(){ document.getElementById("hero").classList.add("in"); });
+  }
+
+  /* ── KPI count-up (fires once on view; respects reduced motion) ───────── */
+  (function(){
+    var section = document.querySelector(".kpis");
+    if (!section) return;
+    var nums = [].slice.call(section.querySelectorAll(".kpi-num"));
+    function fmt(v, dec){ return dec ? v.toFixed(dec) : Math.round(v).toString(); }
+    function run(){
+      section.classList.add("in");
+      nums.forEach(function(el){
+        var target = parseFloat(el.getAttribute("data-target"));
+        var dec = parseInt(el.getAttribute("data-decimals") || "0", 10);
+        var pre = el.getAttribute("data-prefix") || "";
+        var suf = el.getAttribute("data-suffix") || "";
+        if (reduce){ el.textContent = pre + fmt(target, dec) + suf; return; }
+        var dur = 1400, t0 = null;
+        function step(ts){
+          if (!t0) t0 = ts;
+          var p = Math.min(1, (ts - t0) / dur);
+          var e = 1 - Math.pow(1 - p, 3); // ease-out cubic
+          el.textContent = pre + fmt(target * e, dec) + suf;
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = pre + fmt(target, dec) + suf;
+        }
+        el.textContent = pre + fmt(0, dec) + suf;
+        requestAnimationFrame(step);
+      });
+    }
+    // Hide the ring while the KPIs or ecosistema sections are on screen.
+    var hideTargets = [section, document.getElementById("ecosistema")].filter(Boolean);
+    var vis = new IntersectionObserver(function(){
+      var anyVisible = hideTargets.some(function(el){
+        var r = el.getBoundingClientRect();
+        return r.top < window.innerHeight && r.bottom > 0;
+      });
+      document.body.classList.toggle("kpis-visible", anyVisible);
+    }, { threshold:0.02 });
+    hideTargets.forEach(function(el){ vis.observe(el); });
+
+    if (reduce){ run(); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting){ run(); io.disconnect(); } });
+    }, { threshold:0.3 });
+    io.observe(section);
+  })();
+
+  /* ── Ecosistema · pinned scrollytelling controller ────────────────────── */
+  (function(){
+    var eco = document.getElementById("ecosistema");
+    if (!eco) return;
+    var intro = eco.querySelector(".scy-intro");
+    var introWrap = intro.querySelector(".wrap");
+    var titleEl = intro.querySelector(".scy-title");
+    var ledeEl = intro.querySelector(".scy-lede");
+    var tws = [].slice.call(eco.querySelectorAll(".tw"));
+    var caret = eco.querySelector(".tw-caret");
+    var bar = eco.querySelector(".scy-progress span");
+    var feats = [].slice.call(eco.querySelectorAll(".scy-feat"));
+    var medias = feats.map(function(f){ return f.querySelector(".scy-feat-media"); });
+    var bodies = feats.map(function(f){ return f.querySelector(".scy-feat-body"); });
+    var mimgs = medias.map(function(m){ return m.querySelector("img"); });
+
+    function smooth(x){ x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+
+    // Typewriter: reveal characters across the .tw segments in sequence.
+    function typewrite(){
+      var segs = tws.map(function(el){ return el.getAttribute("data-text") || ""; });
+      var total = segs.reduce(function(a, s){ return a + s.length; }, 0);
+      var n = 0;
+      function tick(){
+        var rem = n, out = [];
+        for (var i = 0; i < segs.length; i++){
+          var take = Math.max(0, Math.min(segs[i].length, rem));
+          tws[i].textContent = segs[i].slice(0, take);
+          rem -= take;
+        }
+        n++;
+        if (n <= total) setTimeout(tick, 30);
+        else if (caret) setTimeout(function(){ caret.style.display = "none"; }, 900);
+      }
+      tick();
+    }
+    function fillNow(){ tws.forEach(function(el){ el.textContent = el.getAttribute("data-text") || ""; }); if (caret) caret.style.display = "none"; }
+
+    // No GSAP, or the user prefers reduced motion → static, fully typed content.
+    // (The CSS media queries un-pin the section and reveal every layer here.)
+    if (reduce || !window.gsap || !window.ScrollTrigger){
+      fillNow();
+      [titleEl, ledeEl].concat(medias).concat(bodies).forEach(function(el){
+        el.style.opacity = "1"; el.style.visibility = "visible";
+      });
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── Smooth scroll (Lenis) synced to GSAP's ticker & ScrollTrigger ──
+    if (window.Lenis){
+      var lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+      window.__lenis = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(function(t){ lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    // Desktop only: build the pinned, scrubbed timeline. gsap.matchMedia reverts
+    // it (and clears the inline styles) below 901px, where the CSS lays the
+    // section out statically instead.
+    var mm = gsap.matchMedia();
+    mm.add("(min-width: 901px)", function(){
+      var typed = false;
+
+      // Start states: intro hidden (enters on scrub). Every feature FRAME is
+      // hidden (autoAlpha 0) and its image is parked below the frame
+      // (yPercent 100) so nothing shows until the timeline reveals it. Image
+      // opacity is never touched — reveal is a vertical slide clipped by the
+      // frame's overflow:hidden.
+      gsap.set([titleEl, ledeEl], { autoAlpha: 0, y: 0 });
+      medias.forEach(function(m){ gsap.set(m, { autoAlpha: 0, yPercent: 0 }); });
+      mimgs.forEach(function(im){ gsap.set(im, { yPercent: 100 }); });
+      bodies.forEach(function(b){ gsap.set(b, { autoAlpha: 0, yPercent: 0, y: 0 }); });
+
+      // Rest points (progress) where each beat "settles" — feeds the snap.
+      var SNAP = [0.23, 0.66, 0.82, 0.97];
+
+      var tl = gsap.timeline({
+        defaults: { ease: "none" },            // scrub + Lenis + snap give the feel
+        scrollTrigger: {
+          trigger: eco,
+          start: "top top",
+          end: "+=6200",
+          pin: ".eco-pin",
+          scrub: 1,                            // 1s of catch-up smoothing (not `true`)
+          invalidateOnRefresh: true,
+          snap: {
+            snapTo: SNAP,                      // magnetic settle on the intro beat + each feature
+            duration: { min: 0.2, max: 0.5 },
+            ease: "power2.inOut"
+          },
+          onUpdate: function(self){ if (bar) bar.style.width = (self.progress * 100).toFixed(1) + "%"; },
+          onEnter: function(){ if (!typed){ typed = true; typewrite(); } },
+          onEnterBack: function(){ if (!typed){ typed = true; typewrite(); } }
+        }
+      });
+
+      // ── Phase 1 · intro — Solairis "A rooftop" behaviour ──
+      var LBIG = Math.round(window.innerHeight * 0.55), UP = Math.round(window.innerHeight * 0.62);
+      gsap.set(ledeEl, { y: LBIG });
+      tl.fromTo(titleEl, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.0);
+      tl.to({}, { duration: 0.2 }, 0.7);                                                 // title decodes/settles
+      tl.to(ledeEl, { autoAlpha: 1, y: 0, ease: "power1.out", duration: 1.8 }, 0.9);      // paragraph rises from far below, opacity lands early
+      tl.to({}, { duration: 0.5 }, 2.7);                                                 // both visible
+      tl.to(titleEl, { autoAlpha: 0, y: -UP, ease: "power1.in", duration: 1.2 }, 3.0);    // title exits up first
+      tl.to(ledeEl,  { autoAlpha: 0, y: -UP, ease: "power1.in", duration: 2.4 }, 3.9);    // then the paragraph, slower
+
+      // ── Phase 2 · features — vertical curtain slide inside a fixed frame ──
+      var FSTART = 6.6;      // features start once the longer intro is fully gone
+      var SEG    = 1.8;      // each feature owns one slot (~1000px of scroll)
+      var IMG    = 0.6;      // image slide duration
+      var TXTD   = 0.75;     // title+text arrives ~this long after the image lands
+      var TXT    = 0.6;      // text fade-up duration
+      var END    = 11.6;     // total timeline length (last feature settle)
+
+      // Feature 0: frame on, image slides up into it, then text a beat later.
+      tl.set(medias[0], { autoAlpha: 1 }, FSTART);
+      tl.fromTo(mimgs[0], { yPercent: 100 }, { yPercent: 0, duration: IMG }, FSTART);
+      tl.fromTo(bodies[0], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: TXT }, FSTART + TXTD);
+
+      // Each next feature: incoming image slides 100→0 while the outgoing one
+      // slides 0→-100 (a clean vertical wipe, never opacity, never a hard cut);
+      // the incoming text arrives after the image has landed.
+      for (var i = 1; i < feats.length; i++){
+        var p = FSTART + i * SEG;
+        tl.set(medias[i], { autoAlpha: 1 }, p);
+        tl.fromTo(mimgs[i], { yPercent: 100 }, { yPercent: 0, duration: IMG }, p);
+        tl.set(medias[i - 1], { autoAlpha: 0 }, p + IMG);          // retire once fully covered
+        tl.to(bodies[i - 1], { autoAlpha: 0, y: -16, duration: 0.45 }, p);
+        tl.fromTo(bodies[i], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: TXT }, p + TXTD);
+      }
+
+      // Micro-parallax on the text column only (moving the image frames would
+      // offset their clip boxes and open a black seam between images).
+      for (var j = 0; j < feats.length; j++){
+        var ws = FSTART + j * SEG;
+        var we = j === feats.length - 1 ? END : FSTART + (j + 1) * SEG;
+        var dur = we - ws;
+        tl.fromTo(bodies[j], { yPercent: 10 }, { yPercent: -10, duration: dur }, ws);
+      }
+
+      // Hold so the last feature rests (defines total length / final snap point).
+      tl.to({}, { duration: 0.01 }, END);
+
+      return function(){
+        if (bar) bar.style.width = "0%";
+        gsap.set([titleEl, ledeEl].concat(medias).concat(mimgs).concat(bodies), { clearProps: "all" });
+      };
+    });
+  })();
+
+  /* ── Infraestructura · central-node timeline (Lenis + GSAP ScrollTrigger) ── */
+  (function(){
+    var tml = document.getElementById("infraestructura");
+    if (!tml) return;
+    var stage = tml.querySelector(".tml-stage");
+    var track = tml.querySelector(".tml-track");
+    var node  = tml.querySelector(".tml-node");
+    var progress = tml.querySelector(".tml-progress");
+    var title = tml.querySelector(".tml-title");
+    var cardsview = tml.querySelector(".tml-cardsview");
+    var cardsEl = tml.querySelector(".tml-cards");
+    var cards = [].slice.call(tml.querySelectorAll(".tml-card"));
+
+    // Reduced motion or no GSAP → everything static & visible (CSS stacks it).
+    if (reduce || !window.gsap || !window.ScrollTrigger){
+      cards.forEach(function(c){ c.style.opacity = "1"; c.style.transform = "none"; });
+      return;
+    }
+    gsap.registerPlugin(ScrollTrigger);
+
+    var mm = gsap.matchMedia();
+
+    // ── Desktop: pinned. First the title settles and holds (nothing else);
+    //    then the square rides the line while the cards scroll past two-at-a-time. ──
+    mm.add("(min-width: 901px)", function(){
+      gsap.set(title, { autoAlpha: 0, y: 24 });
+      gsap.set(cardsview, { autoAlpha: 0 });
+      gsap.set(cardsEl, { y: 0 });
+      gsap.set(node, { y: 0, scale: 1 });
+      if (progress){ gsap.set(progress, { scaleY: 0 }); }
+
+      // Column start/end so the first card is centred at the start of phase 2
+      // and the last card is centred at the end (protagonist rides through).
+      function startY(){ return cardsview.clientHeight / 2 - cards[0].offsetHeight / 2; }
+      function endY(){ return cardsview.clientHeight / 2 - (cardsEl.scrollHeight - cards[cards.length - 1].offsetHeight / 2); }
+
+      // Small square overshoot each time the scroll snaps onto a milestone.
+      function bounce(){ gsap.fromTo(node, { scale: 1.28 }, { scale: 1, duration: 0.4, ease: "back.out(3)" }); }
+
+      var Q = 2.8;    // filmstrip begins only after the title has fully left
+      var END = 12;   // total timeline length
+
+      // Progress points where each card sits centred — derived from the live
+      // column geometry so the magnet always lands a whole, centred card
+      // (plus one rest point for the settled intro title). Recomputed on call
+      // so it stays correct after resize / invalidateOnRefresh.
+      function snapPoints(){
+        var c0 = cards[0].offsetHeight / 2;
+        var base = cards[0].offsetTop;
+        var last = cards.length - 1;
+        var cLast = (cards[last].offsetTop - base) + cards[last].offsetHeight / 2;
+        var span = (cLast - c0) || 1;
+        var pts = [1.3 / END];                       // intro title settled
+        for (var i = 0; i < cards.length; i++){
+          var ci = (cards[i].offsetTop - base) + cards[i].offsetHeight / 2;
+          var f = (ci - c0) / span;                   // 0 at first card, 1 at last
+          pts.push((Q + (END - Q) * f) / END);
+        }
+        return pts;
+      }
+      function nearestSnap(value){
+        var pts = snapPoints(), best = pts[0], d = Infinity;
+        for (var i = 0; i < pts.length; i++){
+          var dd = Math.abs(pts[i] - value);
+          if (dd < d){ d = dd; best = pts[i]; }
+        }
+        return best;
+      }
+
+      var tl = gsap.timeline({
+        defaults: { ease: "none" },              // scrub + Lenis + snap give the feel
+        scrollTrigger: {
+          trigger: tml,
+          start: "top top",
+          end: "+=6000",
+          pin: ".tml-pin",
+          scrub: 1,
+          invalidateOnRefresh: true,
+          snap: {
+            snapTo: nearestSnap,                       // land a whole, centred card
+            duration: { min: 0.3, max: 0.6 },
+            ease: "back.out(1.7)",                     // elastic settle
+            onComplete: bounce
+          }
+        }
+      });
+
+      // Phase 1 — title enters, settles, then rises + fades out completely.
+      tl.fromTo(title, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.9 }, 0.0);
+      tl.to(title, { autoAlpha: 0, y: -48, duration: 0.7 }, 1.9);   // gone by ~2.6
+
+      // Phase 2 — the whole card column scrolls up 1:1 with progress: previous
+      // card exits the top, protagonist centres, next one rises from the bottom.
+      tl.to(cardsview, { autoAlpha: 1, duration: 0.4 }, Q);
+      tl.fromTo(cardsEl, { y: startY }, { y: endY, duration: END - Q }, Q);
+      // Square rides the bounded track in sync; blue progress grows.
+      tl.fromTo(node, { y: 0 }, { y: function(){ return track.clientHeight - 13; }, duration: END - Q }, Q);
+      if (progress) tl.fromTo(progress, { scaleY: 0 }, { scaleY: 1, duration: END - Q }, Q);
+
+      // Blue line brightens with Lenis scroll velocity, eases back when it stops.
+      var onVel = null;
+      if (window.__lenis && progress){
+        onVel = function(e){
+          var v = Math.min(1, Math.abs((e && e.velocity) || 0) / 35);
+          progress.style.opacity = (0.78 + v * 0.22).toFixed(3);
+          progress.style.filter = "drop-shadow(0 0 " + (4 + v * 12).toFixed(1) + "px rgba(30,107,255," + (0.4 + v * 0.5).toFixed(2) + "))";
+        };
+        window.__lenis.on("scroll", onVel);
+      }
+
+      return function(){
+        if (onVel && window.__lenis) window.__lenis.off("scroll", onVel);
+        if (progress){ progress.style.opacity = ""; progress.style.filter = ""; }
+        gsap.set([title, cardsview, cardsEl, node, progress].concat(cards), { clearProps: "all" });
+      };
+    });
+
+    // ── Mobile: no pin/snap — dotted line + square at the left, blue grows too. ──
+    mm.add("(max-width: 900px)", function(){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+      }, { threshold: 0.2 });
+      cards.forEach(function(c){ io.observe(c); });
+
+      var onScroll = null;
+      if (progress){
+        onScroll = function(){
+          var total = tml.offsetHeight - window.innerHeight;
+          var r = tml.getBoundingClientRect();
+          var p = total > 0 ? Math.max(0, Math.min(1, -r.top / total)) : 0;
+          progress.style.transform = "scaleY(" + p.toFixed(3) + ")";
+          if (node) node.style.transform = "translateY(" + (p * (track.clientHeight - 13)).toFixed(1) + "px)";
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+      }
+      return function(){
+        io.disconnect();
+        cards.forEach(function(c){ c.classList.remove("in"); });
+        if (onScroll) window.removeEventListener("scroll", onScroll);
+      };
+    });
+  })();
+
+  /* ── Ecosistema lead · partner cards orbit in on scroll (Lenis + scrub) ── */
+  (function(){
+    var sec = document.getElementById("ecosistema-lead");
+    if (!sec) return;
+    var inner = sec.querySelector(".ecl-inner");
+    var wrap  = sec.querySelector(".ecl-cards");
+    var cards = [].slice.call(sec.querySelectorAll(".ecl-card"));
+
+    if (reduce || !window.gsap || !window.ScrollTrigger){
+      cards.forEach(function(c){ c.classList.add("in"); });
+      return;
+    }
+    gsap.registerPlugin(ScrollTrigger);
+    var mm = gsap.matchMedia();
+
+    // Desktop: pin the beat. Title starts centered & large, then shrinks and
+    // rises while the five logo cards reveal below it (staggered).
+    mm.add("(min-width: 901px)", function(){
+      sec.classList.add("ecl--pin");
+      var vh = window.innerHeight;
+      gsap.set(inner, { xPercent:-50, yPercent:-50, y:0, scale:1.0 });
+      gsap.set(wrap,  { xPercent:-50, yPercent:0, y:170 });
+      gsap.set(cards, { autoAlpha:0, y:56 });
+
+      var white = sec.querySelector(".ecl-white");
+      var decos = [].slice.call(sec.querySelectorAll(".ecl-deco"));
+      gsap.set(decos, { autoAlpha:0 });
+      var tl = gsap.timeline({
+        defaults: { ease: "power2.out" },
+        scrollTrigger: {
+          trigger: sec, start: "top top", end: "+=1400",
+          pin: true, scrub: 1, invalidateOnRefresh: true,
+          onUpdate: function(self){ sec.classList.toggle("is-white", self.progress > 0.28); }
+        }
+      });
+      tl.to(inner, { y:-20, scale:0.9, ease:"power2.inOut", duration:1 }, 0)
+        .to(white, { opacity:1, ease:"none", duration:0.55 }, 0)
+        .to(cards, { autoAlpha:1, y:0, duration:0.9, stagger:0.08 }, 0.35);
+      // Floating 3D decorations: fade in, then drift at their own parallax speed.
+      tl.fromTo(decos[0], { autoAlpha:0, y:70 }, { autoAlpha:1, y:-70, ease:"none", duration:1 }, 0.2);
+      if (decos[1]) tl.fromTo(decos[1], { autoAlpha:0, y:-50 }, { autoAlpha:1, y:60, ease:"none", duration:1 }, 0.2);
+
+      return function(){
+        sec.classList.remove("ecl--pin"); sec.classList.remove("is-white");
+        gsap.set([inner, wrap, cards, white, decos], { clearProps:"all" });
+        cards.forEach(function(c){ c.classList.add("in"); });
+      };
+    });
+
+    // Mobile: no pin — simple staggered fade-up as each card enters.
+    mm.add("(max-width: 900px)", function(){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (!e.isIntersecting) return;
+          var i = cards.indexOf(e.target);
+          e.target.style.transitionDelay = (i * 90) + "ms";
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0.2 });
+      cards.forEach(function(c){ io.observe(c); });
+      return function(){ io.disconnect(); cards.forEach(function(c){ c.classList.remove("in"); }); };
+    });
+  })();
+
+  /* ── Closing banner · rise-in on scroll, then inner content fades up ────── */
+  (function(){
+    var sec = document.getElementById("cierre");
+    if (!sec) return;
+    var card = sec.querySelector(".close-card");
+    var inner = [].slice.call(sec.querySelectorAll(".close-title, .close-lede, .close-btn"));
+    if (reduce || !window.gsap || !window.ScrollTrigger) return;   // static, already visible
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set(card, { y: 80, autoAlpha: 0 });
+    gsap.set(inner, { y: 24, autoAlpha: 0 });
+    var tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 82%", once: true } });
+    tl.to(card, { y: 0, autoAlpha: 1, duration: 1.0, ease: "power3.out" });
+    tl.to(inner, { y: 0, autoAlpha: 1, duration: 0.7, ease: "power2.out", stagger: 0.12 }, 0.55);
+  })();
+
+  /* ── Header over the light KPIs section: swap to dark pill + white button ── */
+  (function(){
+    var kpis = document.querySelector(".kpis");
+    var gov  = document.getElementById("gobernanza");
+    var ecl  = document.getElementById("ecosistema-lead");
+    if (!kpis && !gov && !ecl) return;
+    function over(el){ if (!el) return false; var r = el.getBoundingClientRect(); return r.top < 105 && r.bottom > 0; }
+    function upd(){
+      document.body.classList.toggle("hdr-light", over(kpis) || over(gov) || (over(ecl) && ecl.classList.contains("is-white")));
+    }
+    window.addEventListener("scroll", upd, { passive:true });
+    window.addEventListener("resize", upd);
+    upd();
+  })();
+
+  /* ── Pixel-resolve · big crisp square cells fill in one by one (reusable) ─ */
+  function pixelResolve(container, img, opts){
+    opts = opts || {};
+    var cover = !!opts.cover;                 // true when img uses object-fit:cover
+    var DUR = opts.dur || 1800;
+    function run(){
+      var iw = img.naturalWidth, ih = img.naturalHeight;
+      if (!iw || !ih){ img.addEventListener("load", run, { once:true }); return; }
+      var box = container.getBoundingClientRect();
+      // For cover, sample the same crop the frame shows so cells map 1:1.
+      var sx = 0, sy = 0, sw = iw, sh = ih;
+      if (cover && box.width && box.height){
+        var scale = Math.max(box.width / iw, box.height / ih);
+        sw = box.width / scale; sh = box.height / scale;
+        sx = (iw - sw) / 2; sy = (ih - sh) / 2;
+      }
+      var cv = document.createElement("canvas");
+      cv.className = "px-cv";
+      cv.width = Math.round(sw); cv.height = Math.round(sh);
+      var ctx = cv.getContext("2d");
+      container.appendChild(cv);
+      container.classList.add("px-run");
+
+      var dispW = box.width || sw;
+      var cellNat = Math.max(24, Math.round(56 * sw / dispW));
+      var cols = Math.ceil(sw / cellNat), rows = Math.ceil(sh / cellNat);
+      var cells = [];
+      for (var ry = 0; ry < rows; ry++){
+        for (var cx = 0; cx < cols; cx++){ cells.push({ x: cx * cellNat, y: ry * cellNat }); }
+      }
+      for (var i = cells.length - 1; i > 0; i--){        // shuffle for staggered fill
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = cells[i]; cells[i] = cells[j]; cells[j] = tmp;
+      }
+      var total = cells.length, drawn = 0, t0 = null;
+      function ease(x){ return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; }
+      function frame(ts){
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / DUR);
+        var target = Math.floor(ease(p) * total);
+        for (; drawn < target; drawn++){
+          var c = cells[drawn];
+          var w = Math.min(cellNat, sw - c.x), h = Math.min(cellNat, sh - c.y);
+          ctx.drawImage(img, sx + c.x, sy + c.y, w, h, c.x, c.y, w, h);   // full-res, crisp
+        }
+        if (p < 1){ requestAnimationFrame(frame); }
+        else { img.style.opacity = "1"; container.classList.remove("px-run"); cv.remove(); }
+      }
+      requestAnimationFrame(frame);
+    }
+    run();
+  }
+
+  /* ── Governance shot · pixel-resolve on enter (once) ──────────────────── */
+  (function(){
+    var shot = document.querySelector(".gov-shot");
+    if (!shot) return;
+    var img = shot.querySelector("img");
+    if (!img) return;
+    if (reduce){ return; }   // static, sharp image
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ io.disconnect(); pixelResolve(shot, img, { cover:false }); }
+      });
+    }, { threshold: 0.35 });
+    io.observe(shot);
+  })();
+
+  /* ── Proximity snap between the flat, full-screen sections (desktop only) ──
+     Excludes the pinned/animated sections (infraestructura, ecosistema-lead)
+     so their internal timelines scroll normally and are never interrupted. */
+  (function(){
+    var lenis = window.__lenis;
+    if (!lenis || reduce) return;
+
+    var ids = ["hero", "manifesto", "indicadores", "gobernanza", "cierre"];
+    // On mobile the pinned sections are static — snap to them too so scrolling
+    // between the timeline and the "respaldado por líderes" beat anchors.
+    if (window.matchMedia("(max-width: 900px)").matches){
+      ids = ids.concat(["infraestructura", "ecosistema-lead"]);
+    }
+    var secs = ids.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+    var timer = null;
+
+    function nearest(){
+      var vh = window.innerHeight, y = window.scrollY;
+      var best = null, bd = Infinity;
+      secs.forEach(function(s){
+        var top = s.getBoundingClientRect().top + window.scrollY;
+        var d = Math.abs(top - y);
+        if (d < bd){ bd = d; best = top; }
+      });
+      // Snap to the nearest section boundary (magnetic — always settles,
+      // never a free/endless scroll between the hero and the next section).
+      if (best !== null && bd > 4 && bd < vh * 0.5){
+        lenis.scrollTo(best, { duration: 0.6, easing: function(x){ return 1 - Math.pow(1 - x, 3); } });
+      }
+    }
+
+    lenis.on("scroll", function(){
+      clearTimeout(timer);
+      timer = setTimeout(nearest, 170);   // fire only once scrolling has settled
+    });
+  })();
+
+  /* ── KPIs busto · parallax (moves slower than the section content) ────── */
+  (function(){
+    var busto = document.querySelector(".kpi-busto .kb-busto");
+    if (!busto || reduce || !window.gsap || !window.ScrollTrigger) return;
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.fromTo(busto, { yPercent: 22 }, {
+      yPercent: -22, ease: "none",
+      scrollTrigger: { trigger: ".kpis", start: "top bottom", end: "bottom top", scrub: true }
+    });
+    var rosco = document.querySelector(".kpi-busto .kb-rosco");
+    if (rosco){
+      gsap.fromTo(rosco, { yPercent: -40 }, {
+        yPercent: 40, ease: "none",
+        scrollTrigger: { trigger: ".kpis", start: "top bottom", end: "bottom top", scrub: true }
+      });
+    }
+  })();
+
+  /* ── 3D frosted-glass ring (Three.js) — travels hero → manifesto centre ── */
+  if (!window.THREE) return;
+  var canvas = document.getElementById("ring-canvas");
+  if (!canvas) return;
+  var renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  camera.position.set(0, 0, 6.2);
+
+  // Procedural environment (gradient) for glass refraction/reflection.
+  var envTex = (function(){
+    var c = document.createElement("canvas"); c.width = 32; c.height = 128;
+    var g = c.getContext("2d");
+    var grd = g.createLinearGradient(0,0,0,128);
+    grd.addColorStop(0.0, "#1a1712");
+    grd.addColorStop(0.45, "#3a3320");
+    grd.addColorStop(0.62, "#8f9a2e");
+    grd.addColorStop(0.75, "#2a2a1a");
+    grd.addColorStop(1.0, "#0A0807");
+    g.fillStyle = grd; g.fillRect(0,0,32,128);
+    var tx = new THREE.CanvasTexture(c);
+    tx.mapping = THREE.EquirectangularReflectionMapping;
+    tx.encoding = THREE.sRGBEncoding;
+    return tx;
+  })();
+  var pmrem = new THREE.PMREMGenerator(renderer);
+  var envRT = pmrem.fromEquirectangular(envTex);
+  scene.environment = envRT.texture;
+
+  var geo = new THREE.TorusGeometry(1.15, 0.44, 80, 220);
+  var mat = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color(0xD2FF00),
+    metalness: 0.0,
+    roughness: 0.28,
+    transmission: 0.92,
+    ior: 1.32,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.5,
+    reflectivity: 0.6,
+    envMapIntensity: 1.15,
+    transparent: true
+  });
+  var ring = new THREE.Mesh(geo, mat);
+  scene.add(ring);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+  var key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(3,4,5); scene.add(key);
+  var rim = new THREE.PointLight(0xD95BFF, 0.8, 30); rim.position.set(-4,-2,3); scene.add(rim);
+  var rim2 = new THREE.PointLight(0xD2FF00, 0.6, 30); rim2.position.set(4,2,-2); scene.add(rim2);
+
+  var colA = new THREE.Color(0xD2FF00); // lime
+  var colB = new THREE.Color(0x318BFF); // blue
+
+  function resize(){
+    var w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  var progress = 0;
+  function computeProgress(){
+    var man = document.getElementById("manifesto");
+    var manCenter = man.offsetTop + man.offsetHeight / 2;
+    var viewCenter = window.scrollY + window.innerHeight / 2;
+    var start = window.innerHeight / 2;
+    var p = (viewCenter - start) / (manCenter - start);
+    progress = Math.max(0, Math.min(1, p));
+  }
+  window.addEventListener("scroll", computeProgress, { passive:true });
+  computeProgress();
+
+  var isDesktop = function(){ return window.innerWidth > 900; };
+
+  var t0 = performance.now();
+  function frame(now){
+    var t = (now - t0) / 1000;
+    var p = progress;
+    var pe = p * p * (3 - 2 * p);
+
+    // Hero → right-of-centre; manifesto → fixed in the middle of the text block.
+    var xRight = isDesktop() ? 1.7 : 0.0;
+    ring.position.x = xRight * (1 - pe);
+    ring.position.y = (reduce ? 0 : Math.sin(t * 0.6) * 0.12 * (1 - pe)) + (-0.6 * (1 - pe));
+    var s = 1.12 - 0.42 * pe;
+    ring.scale.setScalar(s);
+
+    // Slow spin + gentle sway; both freeze as it settles into the manifesto.
+    if (!reduce){
+      ring.rotation.y = t * 0.12 * (1 - pe) + 0.3 + pe * Math.PI * 2.0;
+      ring.rotation.x = 0.62 + Math.sin(t * 0.4) * 0.10 * (1 - pe) - pe * 0.5;
+      ring.rotation.z = Math.sin(t * 0.3) * 0.05 * (1 - pe);
+    } else {
+      ring.rotation.set(0.62 - pe * 0.5, 0.5 + pe * Math.PI * 2.0, 0);
+    }
+
+    // Lime → blue: much gentler now — a longer window eased with smootherstep
+    // so the colour drifts across instead of snapping.
+    var raw = Math.max(0, Math.min(1, (t - 3.0) / 4.2));
+    var tBlue = raw * raw * raw * (raw * (raw * 6 - 15) + 10);   // smootherstep
+    var mix = Math.max(pe, tBlue);
+    var col = colA.clone().lerp(colB, mix);
+    mat.color.copy(col);
+    rim2.color.copy(col);
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
