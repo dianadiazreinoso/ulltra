@@ -3675,12 +3675,10 @@
     will-change:transform;
     /* centred on its (left,top) anchor; GSAP composes xPercent/yPercent + y */
   }
-  .cl-slot{ pointer-events:none; }
-  .cl-slot-anim{ will-change:transform, opacity; pointer-events:auto; }
+  .cl-slot-anim{ will-change:transform, opacity; }
   /* Hover lifts a card above all others so it can be read whole — eased with a
      gentle scale + shadow so the z-index change feels smooth, not abrupt */
   .cl-card{ transition: transform .5s cubic-bezier(.22,.61,.36,1), box-shadow .5s ease; }
-  .cl-card--link{ text-decoration:none; cursor:pointer; }
   .cl-slot:hover{ z-index:999 !important; }
   .cl-slot:hover .cl-card{
     transform: scale(0.92);
@@ -3707,6 +3705,11 @@
   .cl-card--lime{    background:#2F3A0A; color:#F1EEDC; }
   .cl-card--magenta{ background:#D2FF00; color:#070902; }
   .cl-card--dark{    background:#1A1A1A; color:#F2EDE1; }
+  /* Tarjeta-enlace: mantener el color de texto propio de cada tono (gana al color inline del JS) */
+  .cl-card--link{ text-decoration:none !important; }
+  .cl-card--magenta.cl-card--link{ color:#070902 !important; }
+  .cl-card--lime.cl-card--link{    color:#F1EEDC !important; }
+  .cl-card--dark.cl-card--link{    color:#F2EDE1 !important; }
 
   .cl-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
   .cl-card-id{ display:flex; flex-direction:column; gap:2px; }
