@@ -3311,7 +3311,7 @@ function App() {
     accent: t.accent
   }), /*#__PURE__*/React.createElement(Hero, {
     tweaks: t
-  }), /*#__PURE__*/React.createElement(PositioningSection, null), /*#__PURE__*/React.createElement(ApproachSection, null), /*#__PURE__*/React.createElement(ConsultancySection, null), /*#__PURE__*/React.createElement(window.RevealSection, null), /*#__PURE__*/React.createElement(window.CapabilitiesSection, null), /*#__PURE__*/React.createElement(window.ArchetypeSection, null), /*#__PURE__*/React.createElement(StackSection, null), /*#__PURE__*/React.createElement(window.ClientsSection, null), /*#__PURE__*/React.createElement(window.ClientLogosGrid, null), /*#__PURE__*/React.createElement(window.FooterCTA, null), /*#__PURE__*/React.createElement(SystemOverlay, {
+  }), /*#__PURE__*/React.createElement(PositioningSection, null), /*#__PURE__*/React.createElement(ApproachSection, null), /*#__PURE__*/React.createElement(ConsultancySection, null), /*#__PURE__*/React.createElement(window.RevealSection, null), /*#__PURE__*/React.createElement(window.CapabilitiesSection, null), /*#__PURE__*/React.createElement(StackSection, null), /*#__PURE__*/React.createElement(window.ClientsSection, null), /*#__PURE__*/React.createElement(window.ClientLogosGrid, null), /*#__PURE__*/React.createElement(window.FooterCTA, null), /*#__PURE__*/React.createElement(SystemOverlay, {
     open: t.showSystemOverlay,
     onClose: () => setTweak("showSystemOverlay", false)
   }), /*#__PURE__*/React.createElement(TweaksPanel, {
