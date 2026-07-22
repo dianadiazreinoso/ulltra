@@ -3311,11 +3311,10 @@
       position: sticky;
       top: 0;
       height: 100vh;
+      /* stable svh height: keeps the wipe math stable AND keeps the calibrated
+         overlap with the Tech & AI Stack section aligned (that section pulls up
+         over the reveal's bottom, so this area is covered anyway) */
       height: 100svh;
-      /* fill the viewport with a STABLE height (lvh) so the illustrations reach
-         the bottom without the toolbar-resize that made scrolling up janky;
-         the wipe runway stays on .reveal's stable 300svh */
-      height: 100lvh;
     }
     .reveal-headline{ max-width: 80%; }
     .reveal-h-archivo{ font-size:52px; line-height:48px; letter-spacing:-2px; }
