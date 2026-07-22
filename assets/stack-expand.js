@@ -38,42 +38,36 @@
 
     function apply() {
       if (!mq.matches) {
-        // MOBILE: give EVERY card the same height so they stack cleanly, cover
-        // each other and leave together. The shared height is one screen (or the
-        // tallest short card, whichever is bigger, so short cards are never
-        // clipped). The long first card (Agentic AI) is the only one that
-        // exceeds it, so it gets clamped to the shared height with the fade +
-        // Read more toggle instead of forcing every card up to its huge size.
+        // MOBILE: move the long card (Agentic AI) to the END so it's on top and
+        // never covered, and let it scroll NORMALLY (not pinned) so the whole
+        // card can be read. The short cards keep the sticky stack (equal height
+        // = one screen, so each covers the previous cleanly).
+        if (wrap.lastElementChild !== longCard) wrap.appendChild(longCard);
+
         resetMobileStyles();
+        longCard.classList.remove("ac--collapsible", "is-expanded");
+        btn.style.display = "none";
+
         var vis = Math.max(320, window.innerHeight - 360);
         var tallestOther = 0;
         others.forEach(function (c) { if (c.offsetHeight > tallestOther) tallestOther = c.offsetHeight; });
         var h = Math.max(vis, tallestOther);
-        cards.forEach(function (c) {
+        others.forEach(function (c) {
           c.style.minHeight = h + "px";
           c.style.height = h + "px";
           c.style.overflow = "hidden";
         });
+        // the long card scrolls normally and shows all its content
+        longCard.style.position = "static";
+        longCard.style.minHeight = "";
+        longCard.style.height = "";
+        longCard.style.overflow = "";
         wrap.style.alignItems = "start";
-
-        var overflows = longCard.scrollHeight > h + 8;
-        if (expanded) {
-          longCard.classList.add("ac--collapsible", "is-expanded");
-          longCard.style.height = "";     // expand to show all of its content
-          longCard.style.overflow = "";
-          btn.style.display = "";
-          btn.innerHTML = "Read less";
-        } else if (overflows) {
-          longCard.classList.add("ac--collapsible");
-          longCard.classList.remove("is-expanded");
-          btn.style.display = "";
-          btn.innerHTML = "Read more";
-        } else {
-          longCard.classList.remove("ac--collapsible", "is-expanded");
-          btn.style.display = "none";
-        }
         return;
       }
+      // desktop: restore the long card to first position
+      if (wrap.firstElementChild !== longCard) wrap.insertBefore(longCard, wrap.firstElementChild);
+      longCard.style.position = "";
       btn.style.display = "";
 
       // desktop: undo everything the mobile branch may have set before measuring
