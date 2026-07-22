@@ -2623,7 +2623,7 @@
      seated figure (right-of-centre) — the sea/mountains on the left crop away
      but the figure + columns stay predominantly in frame. Text sits low over
      the bottom/left darkening so it reads without hiding the character. */
-  .hero{ height: 200vh; }
+  .hero{ height: 130vh; }
   /* fill the whole mobile viewport (dynamic) so the image reaches the very bottom */
   .hero-sticky{ height: 100dvh; }
   .hero-video{
@@ -2634,7 +2634,7 @@
     justify-content: flex-end;
     padding-top: clamp(96px, 22vw, 150px);
     /* larger bottom padding lifts the title + paragraph up and leaves room for the scroll cue */
-    padding-bottom: clamp(104px, 27vw, 176px);
+    padding-bottom: calc(clamp(104px, 27vw, 176px) + 40px);
   }
   .hero-content{max-width: 100%; width: 100% !important; transform: none}
   .hero-h1{line-height: 0.92}
