@@ -3310,6 +3310,10 @@
       top: 0;
       height: 100vh;
       height: 100svh;
+      /* fill the dynamic viewport so the illustrations reach the very bottom on
+         mobile (this section is reached with the toolbar already hidden, so there
+         is no jump; the wipe runway stays on .reveal's stable 300svh) */
+      height: 100dvh;
     }
     .reveal-headline{ max-width: 80%; }
     .reveal-h-archivo{ font-size:52px; line-height:48px; letter-spacing:-2px; }
