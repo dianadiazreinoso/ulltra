@@ -1288,6 +1288,8 @@
   pointer-events: none;
   animation: bgFade 1.6s var(--ease-out-cine) both;
 }
+/* scroll-down cue: hidden by default, shown only on mobile (see mobile block) */
+.hero-scrolldown{ display:none; }
 @media (max-width: 760px) and (orientation: portrait){
   /* Bias the cover crop toward the seated figure (right-of-centre in the
      16:9 source) so it stays predominantly in frame on a narrow portrait. */
@@ -2622,6 +2624,8 @@
      but the figure + columns stay predominantly in frame. Text sits low over
      the bottom/left darkening so it reads without hiding the character. */
   .hero{ height: 200vh; }
+  /* fill the whole mobile viewport (dynamic) so the image reaches the very bottom */
+  .hero-sticky{ height: 100dvh; }
   .hero-video{
     object-fit: cover;
     object-position: 85% center;
@@ -2629,12 +2633,29 @@
   .hero-stage{
     justify-content: flex-end;
     padding-top: clamp(96px, 22vw, 150px);
-    padding-bottom: clamp(40px, 13vw, 84px);
+    /* larger bottom padding lifts the title + paragraph up and leaves room for the scroll cue */
+    padding-bottom: clamp(104px, 27vw, 176px);
   }
   .hero-content{max-width: 100%; width: 100% !important; transform: none}
-  .hero-h1{line-height: 1.02}
+  .hero-h1{line-height: 0.92}
   .cards{grid-template-columns: 1fr}
   .hero-scroll{display:none}
+  /* Scroll-down cue at the very bottom of the hero (mobile only) */
+  .hero-scrolldown{
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    position:absolute; left:50%; bottom: clamp(14px, 4.5vw, 28px);
+    z-index: var(--z-content);
+    background:none; border:0; margin:0; padding:6px 10px;
+    color:#D2FF00; cursor:pointer;
+    font-family:"JetBrains Mono", ui-monospace, monospace;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+    animation: heroScrollBounce 1.9s ease-in-out infinite;
+  }
+  .hero-scrolldown svg{ display:block; }
+  @keyframes heroScrollBounce{
+    0%,100%{ transform: translateX(-50%) translateY(0); }
+    50%{ transform: translateX(-50%) translateY(7px); }
+  }
   .bg-img{background-position: 65% 30%}
   .bg-grad{
     /* dark from the bottom (text) + from the left, leaving the right (figure) clearer */
@@ -4513,5 +4534,33 @@
 
   <script src="assets/stack-expand.js?v=2"></script>
 
+  <!-- Mobile hero scroll-down cue (injected; only visible on mobile via CSS) -->
+  <script>
+  (function(){
+    function addScrollDown(){
+      var sticky = document.querySelector('.hero-sticky');
+      if(!sticky) return false;
+      if(sticky.querySelector('.hero-scrolldown')) return true;
+      var btn = document.createElement('button');
+      btn.className = 'hero-scrolldown';
+      btn.type = 'button';
+      btn.setAttribute('aria-label','Scroll down');
+      btn.innerHTML = '<span>Scroll down</span>'
+        + '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13"/><path d="M6 12l6 6 6-6"/></svg>';
+      btn.addEventListener('click', function(){
+        var t = document.getElementById('positioning');
+        if(t){ t.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+      sticky.appendChild(btn);
+      return true;
+    }
+    if(!addScrollDown()){
+      var tries = 0;
+      var iv = setInterval(function(){
+        if(addScrollDown() || ++tries > 60){ clearInterval(iv); }
+      }, 120);
+    }
+  })();
+  </script>
 
 </body></html>
