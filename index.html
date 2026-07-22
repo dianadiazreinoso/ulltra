@@ -2686,6 +2686,17 @@
   /* sticky descendants need a non-clipping section (.ap sets overflow:hidden) */
   #software{ overflow: visible; }
 
+  /* Stronger veil on mobile so the wordmark + paragraph read clearly over the
+     bright painting + figure on a small screen. */
+  #software .ap-veil{
+    background:
+      linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
+      linear-gradient(180deg,
+        rgba(10,8,7,.6) 0%,
+        rgba(10,8,7,.4) 42%,
+        rgba(10,8,7,.62) 100%);
+  }
+
   #software .ap-banner{
     position: sticky;
     top: 0;
@@ -2746,7 +2757,7 @@
   #software .ap-subtitle{
     width: auto !important;
     max-width: calc(100% - 12px) !important;
-    font-size: 13px !important;
+    font-size: 15px !important;
     line-height: 1.4 !important;
     margin-top: 64px !important;
   }
