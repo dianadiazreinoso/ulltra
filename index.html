@@ -2624,8 +2624,9 @@
      but the figure + columns stay predominantly in frame. Text sits low over
      the bottom/left darkening so it reads without hiding the character. */
   .hero{ height: 130vh; }
-  /* fill the whole mobile viewport (dynamic) so the image reaches the very bottom */
-  .hero-sticky{ height: 100dvh; }
+  /* stable fixed height: doesn't react to the browser toolbar hiding, so the
+     background image no longer jumps/grows when you start scrolling */
+  .hero-sticky{ height: 100svh; }
   .hero-video{
     object-fit: cover;
     object-position: 85% center;
