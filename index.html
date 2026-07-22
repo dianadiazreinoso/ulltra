@@ -3340,6 +3340,10 @@
     .reveal.reveal-fade-armed.is-revealed .reveal-frame{ opacity: 1; transition: opacity 1.5s ease; }
     /* the following section no longer overlaps the (now un-pinned) reveal */
     #capabilities{ margin-top: 0 !important; }
+    /* snap: settle cleanly onto the reveal on arrival, and onto the next
+       section when leaving — never show both at once mid-scroll */
+    .reveal{ scroll-snap-align: start; scroll-snap-stop: always; scroll-margin-top: 0; }
+    .caps{ scroll-snap-align: start; scroll-snap-stop: always; scroll-margin-top: 0; }
     .reveal-headline{ max-width: 80%; }
     .reveal-h-archivo{ font-size:52px; line-height:48px; letter-spacing:-2px; }
     .reveal-h-ancient{ font-size:62px;  line-height:48px; letter-spacing:-2px; }
@@ -4619,11 +4623,11 @@
           entries.forEach(function(e){
             if (e.isIntersecting){ rv.classList.add("is-revealed"); io.disconnect(); }
           });
-        }, { threshold: 0.18 });
+        }, { threshold: 0.55 });
         io.observe(rv);
       } catch(err){ rv.classList.add("is-revealed"); }
       var r = rv.getBoundingClientRect();
-      if (r.top < window.innerHeight * 0.85 && r.bottom > 0) rv.classList.add("is-revealed");
+      if (r.top < window.innerHeight * 0.5 && r.bottom > window.innerHeight * 0.5) rv.classList.add("is-revealed");
       return true;
     }
     if (!arm()){
