@@ -57,8 +57,11 @@
           c.style.height = h + "px";
           c.style.overflow = "hidden";
         });
-        // the long card scrolls normally and shows all its content
-        longCard.style.position = "static";
+        // the long card scrolls normally (relative, not sticky) but stays ON TOP
+        // of the sticky short cards — z-index only works on a positioned element,
+        // so we use relative (static would be painted under the sticky cards).
+        longCard.style.position = "relative";
+        longCard.style.zIndex = "20";
         longCard.style.minHeight = "";
         longCard.style.height = "";
         longCard.style.overflow = "";
@@ -68,6 +71,7 @@
       // desktop: restore the long card to first position
       if (wrap.firstElementChild !== longCard) wrap.insertBefore(longCard, wrap.firstElementChild);
       longCard.style.position = "";
+      longCard.style.zIndex = "";
       btn.style.display = "";
 
       // desktop: undo everything the mobile branch may have set before measuring
