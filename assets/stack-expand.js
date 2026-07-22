@@ -27,14 +27,16 @@
       others.forEach(function (c) { c.style.height = ""; });
     }
 
-    // Mobile: equalize every card to the tallest one (same as
-    // software-equal-cards.js does for #software) so the sticky stack behaves
-    // correctly — each card fully covers the previous and they release together.
+    // Mobile: instead of stretching every card up to the TALLEST one (which
+    // leaves a huge empty gap in short cards like the deploy card), give each
+    // card just enough height to fill the VISIBLE stack area (from its sticky
+    // top of 360px down to the bottom of the screen). That's all a card needs
+    // to fully cover the one behind it. Naturally-tall cards (Agentic AI) keep
+    // their own height — they're covered by the next card anyway.
     function equalizeMobile() {
       cards.forEach(function (c) { c.style.minHeight = ""; });
-      var maxH = 0;
-      cards.forEach(function (c) { if (c.offsetHeight > maxH) maxH = c.offsetHeight; });
-      if (maxH > 0) cards.forEach(function (c) { c.style.minHeight = maxH + "px"; });
+      var visible = Math.max(0, window.innerHeight - 360 - 16);
+      if (visible > 0) cards.forEach(function (c) { c.style.minHeight = visible + "px"; });
     }
 
     function apply() {
