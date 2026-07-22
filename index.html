@@ -2639,6 +2639,9 @@
   .hero-content{max-width: 100%; width: 100% !important; transform: none}
   .hero-h1{line-height: 0.92}
   .cards{grid-template-columns: 1fr}
+  /* fill the dynamic mobile viewport so the section covers the full height
+     whether the browser toolbar is shown or hidden (matches the hero) */
+  .ps{ min-height: 100dvh; }
   .hero-scroll{display:none}
   /* Scroll-down cue at the very bottom of the hero (mobile only) */
   .hero-scrolldown{
