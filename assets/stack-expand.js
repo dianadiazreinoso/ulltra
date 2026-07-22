@@ -16,7 +16,7 @@
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "ac-more";
-    btn.innerHTML = 'Leer m\u00e1s';
+    btn.innerHTML = 'Read more';
     longCard.appendChild(btn);
 
     var expanded = false;
@@ -27,15 +27,30 @@
       others.forEach(function (c) { c.style.height = ""; });
     }
 
+    // Mobile: equalize every card to the tallest one (same as
+    // software-equal-cards.js does for #software) so the sticky stack behaves
+    // correctly — each card fully covers the previous and they release together.
+    function equalizeMobile() {
+      cards.forEach(function (c) { c.style.minHeight = ""; });
+      var maxH = 0;
+      cards.forEach(function (c) { if (c.offsetHeight > maxH) maxH = c.offsetHeight; });
+      if (maxH > 0) cards.forEach(function (c) { c.style.minHeight = maxH + "px"; });
+    }
+
     function apply() {
       if (!mq.matches) {
-        // mobile: remove any desktop clamping, let the sticky stack take over
+        // mobile: remove any desktop clamping, then equalize heights and let the
+        // sticky stack take over (behaves like #software)
         clearHeights();
         longCard.classList.remove("ac--collapsible", "is-expanded");
         btn.style.display = "none";
+        equalizeMobile();
         return;
       }
       btn.style.display = "";
+
+      // desktop: undo the mobile equalizing before measuring
+      cards.forEach(function (c) { c.style.minHeight = ""; });
 
       // measure natural heights with nothing forced
       clearHeights();
@@ -58,13 +73,13 @@
         longCard.style.height = "";            // grow to full content
         others.forEach(function (c) { c.style.height = h + "px"; });
         wrap.style.alignItems = "start";       // don't stretch the short ones
-        btn.innerHTML = 'Leer menos';
+        btn.innerHTML = 'Read less';
       } else {
         longCard.classList.remove("is-expanded");
         longCard.style.height = h + "px";      // clamp to the shared height
         others.forEach(function (c) { c.style.height = ""; });
         wrap.style.alignItems = "stretch";     // short ones stretch to match
-        btn.innerHTML = 'Leer m\u00e1s';
+        btn.innerHTML = 'Read more';
       }
     }
 
