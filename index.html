@@ -1822,7 +1822,8 @@
     top: 0;
     height: 100vh;
     height: 100svh;
-    height: 100dvh;
+    /* stable height (lvh) — avoids the toolbar-resize that made scroll-up janky */
+    height: 100lvh;
     overflow: hidden;
     isolation: isolate;
   }
@@ -2640,9 +2641,10 @@
   .hero-content{max-width: 100%; width: 100% !important; transform: none}
   .hero-h1{line-height: 0.92}
   .cards{grid-template-columns: 1fr}
-  /* fill the dynamic mobile viewport so the section covers the full height
-     whether the browser toolbar is shown or hidden (matches the hero) */
-  .ps{ min-height: 100dvh; }
+  /* fill the mobile viewport with a STABLE height (lvh doesn't change when the
+     toolbar shows/hides) so the section covers the screen without the resize
+     that made scrolling up janky */
+  .ps{ min-height: 100lvh; }
   .hero-scroll{display:none}
   /* Scroll-down cue at the very bottom of the hero (mobile only) */
   .hero-scrolldown{
@@ -3310,10 +3312,10 @@
       top: 0;
       height: 100vh;
       height: 100svh;
-      /* fill the dynamic viewport so the illustrations reach the very bottom on
-         mobile (this section is reached with the toolbar already hidden, so there
-         is no jump; the wipe runway stays on .reveal's stable 300svh) */
-      height: 100dvh;
+      /* fill the viewport with a STABLE height (lvh) so the illustrations reach
+         the bottom without the toolbar-resize that made scrolling up janky;
+         the wipe runway stays on .reveal's stable 300svh */
+      height: 100lvh;
     }
     .reveal-headline{ max-width: 80%; }
     .reveal-h-archivo{ font-size:52px; line-height:48px; letter-spacing:-2px; }
