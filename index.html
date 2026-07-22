@@ -4635,5 +4635,40 @@
     }
   })();
   </script>
+  <!-- Mobile: auto-snap from the reveal to the next section once you start
+       scrolling down out of it, so you never drag through both at once -->
+  <script>
+  (function(){
+    if (!window.matchMedia("(max-width: 760px)").matches) return;
+    var reveal, caps, lockUntil = 0, lastY = window.pageYOffset || 0;
+    function ready(){
+      reveal = document.getElementById("reveal");
+      caps = document.getElementById("capabilities");
+      return reveal && caps;
+    }
+    function onScroll(){
+      var y = window.pageYOffset || 0;
+      var goingDown = y > lastY + 1;
+      lastY = y;
+      if (Date.now() < lockUntil || !goingDown) return;
+      var r = reveal.getBoundingClientRect();
+      var vh = window.innerHeight;
+      // reveal has started leaving (its top is at/above the fold and its bottom
+      // has risen into the upper part of the screen → the next section is showing)
+      if (r.top < vh * 0.12 && r.bottom > 0 && r.bottom < vh * 0.75){
+        lockUntil = Date.now() + 900;   // ignore scroll events during the animated snap
+        caps.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+    function init(){
+      if (!ready()) return false;
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return true;
+    }
+    if (!init()){
+      var n = 0, iv = setInterval(function(){ if (init() || ++n > 60) clearInterval(iv); }, 200);
+    }
+  })();
+  </script>
 
 </body></html>
