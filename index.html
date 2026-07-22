@@ -1149,7 +1149,7 @@
   font-size: clamp(28px, 2.9vw, 45px);
   line-height: 1.18;
   color: var(--c-ink);
-  max-width: 38ch;
+  max-width: 52ch;
   margin: 0;
   letter-spacing: 0;
 }
@@ -1564,7 +1564,7 @@
   line-height: 35px;
   letter-spacing: 0;
   color: #2A2218;
-  max-width: 950px;
+  max-width: 1200px;
 }
 @media (max-width: 1180px){
   .ps-eyebrow{ font-size: clamp(34px, 4.8vw, 50px) }
@@ -2055,6 +2055,23 @@
     radial-gradient(120% 80% at 50% 45%,
       rgba(10,8,7,0) 45%,
       rgba(10,8,7,.42) 100%);
+}
+
+/* Desktop only: stronger opacity veil + white wordmark/subtitle for #software */
+@media (min-width: 761px){
+  #software .ap-veil{
+    background:
+      linear-gradient(rgba(0,0,0,.62), rgba(0,0,0,.62)),
+      linear-gradient(180deg,
+        rgba(10,8,7,.55) 0%,
+        rgba(10,8,7,.38) 40%,
+        rgba(10,8,7,.6) 100%);
+  }
+  #software .ap-word{ color: #ffffff; }
+  #software .ap-subtitle{
+    color: #ffffff;
+    font-size: clamp(17px, 1.15vw, 20px);   /* +2px */
+  }
 }
 
 /* — Banner: image area at the top of the section. The painting + wordmark +
@@ -3306,16 +3323,23 @@
        reveal.js matchMedia). The section is a tall runway and .reveal-pin sticks
        to the viewport while a passive rAF handler drives the clip-path wipe.
        100svh keeps the maths stable when the URL bar shows/hides. */
-    .reveal{ height: 200svh; }
+    /* Mobile: NO scroll-driven wipe. The reveal is a single normal-height
+       screen showing the night image, which fades in over 1.5s when it scrolls
+       into view (armed by JS — if JS doesn't run the image simply shows). No
+       pin, no long runway, no navigation blocking. */
+    .reveal{ height: 100lvh; }
     .reveal-pin{
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      /* stable svh height: keeps the wipe math stable AND keeps the calibrated
-         overlap with the Tech & AI Stack section aligned (that section pulls up
-         over the reveal's bottom, so this area is covered anyway) */
-      height: 100svh;
+      position: static;
+      height: 100lvh;
     }
+    /* neutralise reveal.js's scroll-driven clip-wipe + scale on mobile */
+    .reveal-layer--classic{ clip-path: inset(0 0 0 0) !important; }
+    .reveal-img{ transform: none !important; }
+    /* fade-in — only armed when JS runs, so a JS failure never hides the image */
+    .reveal.reveal-fade-armed .reveal-frame{ opacity: 0; }
+    .reveal.reveal-fade-armed.is-revealed .reveal-frame{ opacity: 1; transition: opacity 1.5s ease; }
+    /* the following section no longer overlaps the (now un-pinned) reveal */
+    #capabilities{ margin-top: 0 !important; }
     .reveal-headline{ max-width: 80%; }
     .reveal-h-archivo{ font-size:52px; line-height:48px; letter-spacing:-2px; }
     .reveal-h-ancient{ font-size:62px;  line-height:48px; letter-spacing:-2px; }
@@ -4579,6 +4603,31 @@
       var iv = setInterval(function(){
         if(addScrollDown() || ++tries > 60){ clearInterval(iv); }
       }, 120);
+    }
+  })();
+  </script>
+  <!-- Mobile reveal: fade the image in over 1.5s when the section scrolls into view -->
+  <script>
+  (function(){
+    if (!window.matchMedia("(max-width: 760px)").matches) return;
+    function arm(){
+      var rv = document.getElementById("reveal");
+      if (!rv) return false;
+      rv.classList.add("reveal-fade-armed");
+      try {
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if (e.isIntersecting){ rv.classList.add("is-revealed"); io.disconnect(); }
+          });
+        }, { threshold: 0.18 });
+        io.observe(rv);
+      } catch(err){ rv.classList.add("is-revealed"); }
+      var r = rv.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.85 && r.bottom > 0) rv.classList.add("is-revealed");
+      return true;
+    }
+    if (!arm()){
+      var n = 0, iv = setInterval(function(){ if (arm() || ++n > 60) clearInterval(iv); }, 200);
     }
   })();
   </script>
