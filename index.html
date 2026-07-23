@@ -3851,17 +3851,41 @@
   @media (max-width: 1280px){ .cl-canvas{ transform: scale(.82); } }
   @media (max-width: 1024px){ .cl-canvas{ transform: scale(.66); } }
   @media (max-width: 760px){
-    .clients{ height: 360vh; }
-    .cl-canvas{ transform: scale(.529); transform-origin: center center; }
+    /* Mobile: the moving/overlapping scatter was hard to tap. Turn it into a
+       static, full-width vertical list of the project cards (parallax disabled
+       in clients.js), so each card is a big, still, easy tap target. */
+    .clients{ height: auto; }
+    .clients-stage{ position: static; height: auto; overflow: visible; }
+    .clients-bg, .clients-bg-veil{ display: none; }
+    .cl-title{ position: static; text-align: center; padding: 48px 20px 4px; }
     .cl-title-a{ font-size: clamp(30px,9vw,40px); }
     .cl-title-b{ font-size: clamp(40px,12vw,56px); }
 
-    /* Tap-to-front (mobile only): raise the tapped card above the others and
-       force its inner reveal visible even mid-animation (GSAP drives autoAlpha
-       on .cl-slot-anim, hence !important). Same size/position — only z-index +
-       opacity change, so the GSAP scroll transforms are left untouched. */
-    .cl-slot.is-active{ z-index: 9999 !important; }
-    .cl-slot.is-active .cl-slot-anim{ opacity: 1 !important; visibility: visible !important; }
+    .cl-canvas{
+      position: static; inset: auto;
+      transform: none !important;
+      display: flex; flex-direction: column; gap: 16px;
+      width: 100%; padding: 8px 18px 48px; box-sizing: border-box;
+    }
+    .cl-slot{
+      position: static !important; left: auto !important; top: auto !important;
+      transform: none !important; width: 100% !important;
+      pointer-events: auto !important;
+    }
+    .cl-slot-anim{ opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    .cl-card{
+      width: 100% !important; height: auto !important; min-height: 132px;
+      transform: none !important; border-radius: 20px 0 20px 0;
+    }
+    .cl-card--lime, .cl-card--magenta, .cl-card--dark{ padding: 24px 24px 20px !important; }
+    .cl-card-name{ font-size: 26px !important; line-height: 1.05 !important; }
+    .cl-card-type{ font-size: 13px !important; }
+    .cl-card-desc{ font-size: 15px !important; line-height: 1.42 !important; margin: 12px 0 0 !important; max-width: none !important; }
+    .cl-card-year{ font-size: 44px !important; }
+    .cl-plus{ width: 26px !important; height: 26px !important; }
+    /* only the tappable project cards — hide the decorative art tiles */
+    .cl-slot:has(.cl-card--art){ display: none !important; }
+    .cl-card--art{ display: none !important; }
   }
 
   /* =============================================================================
@@ -4576,7 +4600,7 @@
   <script defer src="assets/sections.js?v=53"></script>
   <script defer src="assets/reveal.js?v=53"></script>
   <script defer src="assets/capabilities.js?v=53"></script>
-  <script defer src="assets/clients.js?v=58"></script>
+  <script defer src="assets/clients.js?v=59"></script>
   <script defer src="assets/client-logos.js?v=53"></script>
   <script defer src="assets/footer-cta.js?v=53"></script>
   <script defer src="assets/hero.js?v=58"></script>
