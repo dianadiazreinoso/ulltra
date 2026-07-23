@@ -835,7 +835,37 @@
     tl.to({}, { duration:0.6 });                                 // final hold
   })();
 
- — big centered title, paragraph rises, then title shrinks and 6 cards appear. */
+
+  /* study screenshots — MOBILE native-scroll switcher (desktop keeps the GSAP below) */
+  (function(){
+    if(!(window.matchMedia && window.matchMedia('(max-width:920px)').matches)) return;
+    var msec=document.getElementById('study');
+    if(!msec) return;
+    var mslides=[].slice.call(msec.querySelectorAll('.sv-slide'));
+    var mcapT=msec.querySelector('.sv-cap-title');
+    var mcapD=msec.querySelector('.sv-cap-desc');
+    if(!mslides.length) return;
+    var mcur=-1,mraf=0;
+    function mapply(){
+      mraf=0;
+      var r=msec.getBoundingClientRect();
+      var total=r.height-window.innerHeight;
+      var p=total>0?(-r.top)/total:0;
+      p=Math.max(0,Math.min(0.999,p));
+      var i=Math.floor(p*mslides.length);
+      if(i===mcur)return;
+      mcur=i;
+      mslides.forEach(function(sl,k){ sl.classList.toggle('m-active',k===i); });
+      if(mcapT)mcapT.textContent=mslides[i].dataset.title;
+      if(mcapD)mcapD.textContent=mslides[i].dataset.desc;
+    }
+    function mreq(){ if(!mraf)mraf=requestAnimationFrame(mapply); }
+    window.addEventListener('scroll',mreq,{passive:true});
+    window.addEventListener('resize',mreq);
+    mapply();
+  })();
+
+  /* Study section: pinned scrollytelling (desktop) */
   (function(){
     var sec = document.getElementById('study');
     if (!sec) return;
