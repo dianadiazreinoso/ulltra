@@ -25,7 +25,7 @@
     --maxw:1480px;
   }
   *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; overflow-x:clip; }
+  html{ scroll-behavior:smooth; overflow-x:clip; scroll-snap-type: y proximity; }
   body{
     margin:0;
     background:var(--bg);
@@ -37,6 +37,9 @@
   }
   a{ color:var(--lime); text-decoration:none; }
   a:hover{ color:var(--ink); }
+  /* Snap only on the simple sections — NOT the pinned scrollytelling (eco, tml,
+     ecl), to avoid the smooth-scroll/pin conflict that blocks scrolling. */
+  .hero, .manifesto, .kpis, .gov, .close{ scroll-snap-align: start; scroll-margin-top: 0; }
   .wrap{ width:min(var(--maxw), 100vw - 48px); margin-inline:auto; }
 
   /* ── 3D glass ring (Three.js) — fixed, travels from hero to manifesto ───── */
@@ -1696,6 +1699,8 @@
 
   var progress = 0;
   var manEl = document.getElementById("manifesto");
+  var ringStage = document.getElementById("ring-stage");
+  var h2El = manEl ? manEl.querySelector("h2") : null;
   function computeProgress(){
     var man = document.getElementById("manifesto");
     var manCenter = man.offsetTop + man.offsetHeight / 2;
@@ -1718,16 +1723,16 @@
     // Hero → right-of-centre; manifesto → fixed in the middle of the text block.
     var xRight = isDesktop() ? 1.7 : 0.0;
     ring.position.x = xRight * (1 - pe);
-    // manifesto → keep the ring centred on the text block: track the manifesto's
-    // live centre in the viewport (so it follows the text as you scroll) instead
-    // of freezing at the viewport centre and appearing to drop below the text.
-    var trackY = 0;
-    if (manEl){
-      var offsetPx = (manEl.offsetTop + manEl.offsetHeight / 2 - window.scrollY) - (window.innerHeight / 2);
-      var visH = 2 * camera.position.z * Math.tan(camera.fov * Math.PI / 360);
-      trackY = -offsetPx * (visH / window.innerHeight);
+    // Manifesto: keep the ring exactly BEHIND the title. Rather than converting
+    // to 3D world units (which under-shot and left it too low), render the ring
+    // at the canvas centre and translate the whole transparent fixed canvas in
+    // PIXELS so it sits right on the title block and follows it as you scroll.
+    ring.position.y = (reduce ? 0 : Math.sin(t * 0.6) * 0.12 * (1 - pe)) + (-0.6 * (1 - pe));
+    if (ringStage && h2El){
+      var _r = h2El.getBoundingClientRect();
+      var offsetPx = (_r.top + _r.height / 2) - (window.innerHeight / 2);
+      ringStage.style.transform = "translateY(" + (pe * offsetPx) + "px)";
     }
-    ring.position.y = (reduce ? 0 : Math.sin(t * 0.6) * 0.12 * (1 - pe)) + (-0.6 * (1 - pe)) + pe * trackY;
     var s = 1.12 - 0.42 * pe;
     ring.scale.setScalar(s);
 
