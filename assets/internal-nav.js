@@ -91,7 +91,7 @@
   });
   html += '</ul>';
   html += '<div class="inav-foot">'
-    + '<a class="inav-cta" href="index.html#footer">Get Started</a>'
+    + '<a class="inav-cta" href="index.html#footer">Book a meeting</a>'
     + '<div class="inav-social">'
     + '<a href="https://x.com/Gluegl?lang=es" target="_blank" rel="noopener" aria-label="X">X</a>'
     + '<a href="https://www.instagram.com/gluedigital/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>'
@@ -102,8 +102,8 @@
   document.body.appendChild(ov);
 
   /* ---- behaviour ---- */
-  function open() { ov.classList.add("is-open"); ov.setAttribute("aria-hidden", "false"); document.body.classList.add("inav-open"); document.documentElement.classList.add("inav-open"); }
-  function close() { ov.classList.remove("is-open"); ov.setAttribute("aria-hidden", "true"); document.body.classList.remove("inav-open"); document.documentElement.classList.remove("inav-open"); }
+  function open() { ov.classList.add("is-open"); ov.setAttribute("aria-hidden", "false"); document.body.classList.add("inav-open"); document.documentElement.classList.add("inav-open"); if (window.__lenis && window.__lenis.stop) window.__lenis.stop(); }
+  function close() { ov.classList.remove("is-open"); ov.setAttribute("aria-hidden", "true"); document.body.classList.remove("inav-open"); document.documentElement.classList.remove("inav-open"); if (window.__lenis && window.__lenis.start) window.__lenis.start(); }
 
   // Work (and any section with sub-items) expands instead of navigating on the toggle
   ov.querySelectorAll(".inav-toggle").forEach(function (btn) {
