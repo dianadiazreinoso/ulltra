@@ -399,6 +399,19 @@
   .sv-stack{ position:relative; width:100%; aspect-ratio:1516 / 846; max-height:74vh; }
   .sv-slide{ position:absolute; inset:0; margin:0; opacity:0; }
   .sv-slide img, .sv-slide image-slot{ display:block; width:100%; height:100%; object-fit:cover; object-position:top center; border-radius:14px 14px 0 0; border:1px solid var(--hair-dark); border-bottom:none; }
+  /* Mobile: the scrollytelling is desktop-only, so lay the study section out as a
+     clean centred block — title, text and one screenshot in the middle of the screen. */
+  @media(max-width:920px){
+    .study-stage{ min-height:100svh; justify-content:center; gap:18px; padding:96px 20px 44px; }
+    .st-title{ position:static; left:auto; top:auto; transform:none; font-size:clamp(1.8rem,7vw,2.5rem); max-width:none; }
+    .st-lede{ position:static; left:auto; top:auto; transform:none; width:100%; max-width:40ch; margin:0 auto; }
+    .study-cards{ display:none; }
+    .sv-cap{ display:none; }
+    .study-viewer{ position:static; left:auto; bottom:auto; transform:none; width:100%; margin:0 auto; }
+    .sv-stack{ max-height:46svh; }
+    .sv-slide{ display:none; }
+    .sv-slide:first-of-type{ display:block; opacity:1 !important; }
+  }
 
   /* closing image card (matches other internal pages) */
   .close{ background:var(--bg); padding:0; }
@@ -475,7 +488,7 @@
     <div class="data-feats-pin">
       <div class="dfp-progress" aria-hidden="true"><span></span></div>
       <article class="data-feat">
-        <div class="db-media"><img src="assets/data-geometry.png" alt="Thermal map of an industrial estate — rooftops scored by solar potential"></div>
+        <div class="db-media"><img src="assets/data-geometry.png?v=2" alt="Thermal map of an industrial estate — rooftops scored by solar potential"></div>
         <div class="db-body">
           <div class="s-label">Geometry</div>
           <h3>What the roof can hold</h3>
@@ -490,7 +503,7 @@
         </div>
       </article>
       <article class="data-feat">
-        <div class="db-media"><img src="assets/data-load.png" alt="Holographic dashboard over a warehouse — production, consumption, savings and ROI"></div>
+        <div class="db-media"><img src="assets/data-load.png?v=2" alt="Holographic dashboard over a warehouse — production, consumption, savings and ROI"></div>
         <div class="db-body">
           <div class="s-label">Load</div>
           <h3>What the building will pay for</h3>
@@ -504,7 +517,7 @@
         </div>
       </article>
       <article class="data-feat">
-        <div class="db-media"><img src="assets/data-incentives.png" alt="Subsidy registry visual — technicians reviewing a site against incentive programmes"></div>
+        <div class="db-media"><img src="assets/data-incentives.png?v=2" alt="Subsidy registry visual — technicians reviewing a site against incentive programmes"></div>
         <div class="db-body">
           <div class="s-label">Incentives</div>
           <h3>What the state will co-fund</h3>
