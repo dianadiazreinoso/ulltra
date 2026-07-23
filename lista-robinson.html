@@ -104,7 +104,7 @@
   .btn-solid{ background:var(--blue); color:#0A0807; }
   .btn-solid:hover{ transform:translateY(-1px); }
   .btn-ghost{ background:transparent; color:var(--ink); border-color:var(--blue); }
-  .btn-ghost:hover{ background:rgba(49,139,255,0.10); }
+  .btn-ghost:hover{ background:rgba(0,0,0,0.35); }
 
   /* ZK diagram frame */
   /* ZK diagram frame — Ulltra consultancy-card aesthetic (cream body, black header) */
@@ -565,7 +565,7 @@
     </section>
 
     <!-- SECTION 5 · GUARANTEES (dark) -->
-    <section class="dark" id="garantias" data-screen-label="Guarantees" style="border-top:none; padding-top:0;">
+    <section class="dark" id="garantias" data-screen-label="Guarantees" style="border-top:none; padding-top:clamp(120px,15vh,160px);">
       <div class="wrap">
         <span class="eyebrow fade-up" style="display:none;">Designed for trust</span>
         <h2 class="sec-h2 fade-up" id="gar-head" style="transition-delay:.06s"><em class="scr gar-em" data-text="Protection ">Protection </em><span class="scr" data-text="for every ">for every </span><span class="scr" data-text="actor in the system.">actor in the system.</span></h2>
@@ -705,7 +705,7 @@
           scrollTrigger: {
             trigger: eco,
             start: "top top",
-            end: "+=6500",
+            end: "+=5200",
             pin: ".eco-pin",
             refreshPriority: 1,
             scrub: 1,
