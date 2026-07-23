@@ -72,9 +72,10 @@
   var html = '<div class="inav-panel"><div class="inav-head"><span class="inav-eyebrow">Index</span>'
     + '<button class="inav-close" type="button" aria-label="Close menu">\u00d7</button></div>'
     + '<ul class="inav-list">';
-  var CUR = (location.pathname.split("/").pop() || "").toLowerCase();
+  var CUR = (location.pathname.replace(/\/+$/, "").split("/").pop() || "").toLowerCase().replace(/\.html$/, "");
+  var sameName = function (h) { return h.toLowerCase().replace(/[#?].*$/, "").replace(/\.html$/, "").split("/").pop() === CUR; };
   SECTIONS.forEach(function (s, i) {
-    var rowCur = !!(s.sub && s.sub.some(function (c) { return c.href.toLowerCase() === CUR; }));
+    var rowCur = !!(s.sub && CUR && s.sub.some(function (c) { return sameName(c.href); }));
     html += '<li class="inav-row' + (rowCur ? ' is-expanded' : '') + '">'
       + '<a class="inav-link" href="' + s.href + '">'
       + '<span class="inav-num">' + pad2(i) + '</span>'
@@ -83,7 +84,7 @@
       + '</a>';
     if (s.sub) {
       html += '<ul class="inav-sub">';
-      s.sub.forEach(function (c) { html += '<li><a href="' + c.href + '"' + (c.href.toLowerCase() === CUR ? ' class="is-current"' : '') + '>' + c.n + '</a></li>'; });
+      s.sub.forEach(function (c) { html += '<li><a href="' + c.href + '"' + (CUR && sameName(c.href) ? ' class="is-current"' : '') + '>' + c.n + '</a></li>'; });
       html += '</ul>';
     }
     html += '</li>';
