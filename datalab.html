@@ -45,10 +45,11 @@
     inset:0;
     z-index:1;
     pointer-events:none;
+    overflow:clip;
     transition:opacity .5s ease;
   }
   body.kpis-visible #ring-stage{ opacity:0; }
-  #ring-canvas{ width:100vw; height:100vh; display:block; }
+  #ring-canvas{ width:100%; height:100%; display:block; }
 
   /* ── Header pill (project header) ────────────────────────────────────── */
   .hdr{
