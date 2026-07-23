@@ -2994,6 +2994,11 @@
           footer's snap point gently pulls into place when the reader is close,
           so the long pinned-scroll storytelling sections are never interrupted. */
        scroll-snap-type: y proximity;}
+  /* Desktop: turn scroll-snap OFF. On desktop the hero and consultancy are
+     GSAP-pinned scroll-storytelling sections, and CSS scroll-snap fights those
+     pins — the scroll stutters and "blocks" until the mouse is nudged. Snap is
+     only needed for the mobile section flow. */
+  @media (min-width: 761px){ html{ scroll-snap-type: none; } }
   body{font-family:var(--ff-display);font-size:var(--fs-body);
        line-height:var(--lh-body);font-weight:400;
        background:var(--c-bg);color:var(--c-ink);
