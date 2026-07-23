@@ -29,7 +29,7 @@
     "  display:flex;justify-content:flex-end;box-sizing:border-box;",
     "  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s cubic-bezier(.19,1,.22,1),visibility .45s;}",
     ".inav.is-open{opacity:1;visibility:visible;pointer-events:auto;}",
-    ".inav-panel{width:min(460px,92vw);height:100%;background:var(--bg,#0A0807);color:var(--ink,#EDE5CC);display:flex;flex-direction:column;padding:clamp(20px,4vw,40px);box-sizing:border-box;overflow-y:auto;transform:translateX(30px);transition:transform .45s cubic-bezier(.19,1,.22,1);box-shadow:-24px 0 60px rgba(0,0,0,.5);}",
+    ".inav-panel{width:min(460px,92vw);height:100%;background:var(--bg,#0A0807);color:var(--ink,#EDE5CC);display:flex;flex-direction:column;padding:clamp(20px,4vw,40px);box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;transform:translateX(30px);transition:transform .45s cubic-bezier(.19,1,.22,1);box-shadow:-24px 0 60px rgba(0,0,0,.5);}",
     ".inav.is-open .inav-panel{transform:translateX(0);}",
     "@media(max-width:760px){.inav{background:var(--bg,#0A0807);}.inav-panel{width:100%;box-shadow:none;transform:none;}.inav-foot{flex-wrap:nowrap;gap:10px;}.inav-cta{height:40px;padding:0 14px;font-size:12px;white-space:nowrap;}.inav-social{gap:12px;flex:0 0 auto;}.inav-social a{font-size:12px;white-space:nowrap;}}",
     ".inav-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:clamp(18px,3vw,34px);}",
@@ -57,7 +57,7 @@
     ".inav-social{display:flex;gap:20px;}",
     ".inav-social a{color:var(--ink-2,#B8AD93);text-decoration:none;font-family:\\\"JetBrains Mono\\\",ui-monospace,monospace;font-size:13px;letter-spacing:.04em;}",
     ".inav-social a:hover{color:var(--lime,#D2FF00);}",
-    "body.inav-open{overflow:hidden;}"
+    "html.inav-open, body.inav-open{overflow:hidden !important;}"
   ].join("\n");
   document.head.appendChild(css);
 
@@ -102,8 +102,8 @@
   document.body.appendChild(ov);
 
   /* ---- behaviour ---- */
-  function open() { ov.classList.add("is-open"); ov.setAttribute("aria-hidden", "false"); document.body.classList.add("inav-open"); }
-  function close() { ov.classList.remove("is-open"); ov.setAttribute("aria-hidden", "true"); document.body.classList.remove("inav-open"); }
+  function open() { ov.classList.add("is-open"); ov.setAttribute("aria-hidden", "false"); document.body.classList.add("inav-open"); document.documentElement.classList.add("inav-open"); }
+  function close() { ov.classList.remove("is-open"); ov.setAttribute("aria-hidden", "true"); document.body.classList.remove("inav-open"); document.documentElement.classList.remove("inav-open"); }
 
   // Work (and any section with sub-items) expands instead of navigating on the toggle
   ov.querySelectorAll(".inav-toggle").forEach(function (btn) {
