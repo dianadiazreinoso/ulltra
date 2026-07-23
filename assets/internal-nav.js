@@ -49,6 +49,7 @@
     ".inav-row.is-expanded .inav-sub{max-height:420px;}",
     ".inav-sub a{display:block;padding:8px 0 8px clamp(40px,6vw,66px);text-decoration:none;color:var(--ink-2,#B8AD93);font-family:var(--ff-display,\"Archivo\",sans-serif);font-weight:500;font-size:clamp(17px,2.4vw,24px);}",
     ".inav-sub a:hover{color:var(--lime,#D2FF00);}",
+    ".inav-sub a.is-current{color:var(--lime,#D2FF00);}",
     ".inav-sub li:last-child a{padding-bottom:14px;}",
     ".inav-foot{margin-top:auto;padding-top:clamp(20px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid rgba(237,229,204,.18);}",
     ".inav-cta{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;border:1px solid var(--lime,#D2FF00);color:var(--lime,#D2FF00);font-family:\\\"JetBrains Mono\\\",ui-monospace,monospace;font-size:13px;letter-spacing:.02em;text-decoration:none;border-radius:0;transition:background-color .3s ease;}",
@@ -71,8 +72,10 @@
   var html = '<div class="inav-panel"><div class="inav-head"><span class="inav-eyebrow">Index</span>'
     + '<button class="inav-close" type="button" aria-label="Close menu">\u00d7</button></div>'
     + '<ul class="inav-list">';
+  var CUR = (location.pathname.split("/").pop() || "").toLowerCase();
   SECTIONS.forEach(function (s, i) {
-    html += '<li class="inav-row">'
+    var rowCur = !!(s.sub && s.sub.some(function (c) { return c.href.toLowerCase() === CUR; }));
+    html += '<li class="inav-row' + (rowCur ? ' is-expanded' : '') + '">'
       + '<a class="inav-link" href="' + s.href + '">'
       + '<span class="inav-num">' + pad2(i) + '</span>'
       + '<span class="inav-name">' + s.n + '</span>'
@@ -80,7 +83,7 @@
       + '</a>';
     if (s.sub) {
       html += '<ul class="inav-sub">';
-      s.sub.forEach(function (c) { html += '<li><a href="' + c.href + '">' + c.n + '</a></li>'; });
+      s.sub.forEach(function (c) { html += '<li><a href="' + c.href + '"' + (c.href.toLowerCase() === CUR ? ' class="is-current"' : '') + '>' + c.n + '</a></li>'; });
       html += '</ul>';
     }
     html += '</li>';
