@@ -199,7 +199,7 @@
   /* Data features · single pinned stage, DataLab-style curtain slide */
   .data-feats{ position:relative; }
   .data-feats-pin{ position:relative; height:100vh; overflow:hidden; }
-  .dfp-progress{ position:absolute; top:0; left:0; right:0; height:2px; background:color-mix(in oklab, var(--ink) 12%, transparent); z-index:6; }
+  .dfp-progress{ display:none; position:absolute; top:0; left:0; right:0; height:2px; background:color-mix(in oklab, var(--ink) 12%, transparent); z-index:6; }
   .dfp-progress span{ display:block; height:100%; width:0; background:var(--lime); }
   .data-feat{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:min(1480px, 100vw - 64px); display:grid; grid-template-columns:.9fr 1.1fr; gap:clamp(36px,4vw,88px); align-items:center; }
   .data-feat .db-media{ opacity:0; aspect-ratio:16 / 11; }

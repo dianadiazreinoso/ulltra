@@ -37,6 +37,12 @@
   a:hover{ color:var(--ink); }
   .wrap{ width:min(var(--maxw), 100vw - 48px); margin-inline:auto; }
   section{ position:relative; }
+  /* Mobile: Lenis is off (native scroll), pins are desktop-only — so CSS
+     section-snap works here. */
+  @media(max-width:900px){
+    html{ scroll-snap-type:y proximity; scroll-padding-top:80px; }
+    section{ scroll-snap-align:start; }
+  }
 
   /* ── Header pill ─────────────────────────────────────────────────────── */
   .hdr{
@@ -881,7 +887,7 @@
     })();
 
     // Smooth scroll (Lenis) — coherent with the DataLab page.
-    if (window.Lenis && !reduce){
+    if (window.Lenis && !reduce && window.matchMedia("(min-width: 901px)").matches){
       var lenis = new Lenis({ duration: 1.2, smoothWheel: true });
       window.__lenis = lenis;
       if (window.gsap && window.ScrollTrigger){
