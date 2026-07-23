@@ -268,7 +268,7 @@
     background:transparent;
     z-index:-1;
   }
-  .manifesto .wrap{ max-width:1180px; position:relative; z-index:2; }
+  .manifesto .wrap{ max-width:1400px; position:relative; z-index:2; }
   /* ── Ecosistema · pinned scrollytelling ──────────────────────────────── */
   /* Lenis smooth-scroll recommended styles */
   html.lenis, html.lenis body{ height:auto; }
@@ -1695,6 +1695,7 @@
   resize();
 
   var progress = 0;
+  var manEl = document.getElementById("manifesto");
   function computeProgress(){
     var man = document.getElementById("manifesto");
     var manCenter = man.offsetTop + man.offsetHeight / 2;
@@ -1717,7 +1718,16 @@
     // Hero → right-of-centre; manifesto → fixed in the middle of the text block.
     var xRight = isDesktop() ? 1.7 : 0.0;
     ring.position.x = xRight * (1 - pe);
-    ring.position.y = (reduce ? 0 : Math.sin(t * 0.6) * 0.12 * (1 - pe)) + (-0.6 * (1 - pe));
+    // manifesto → keep the ring centred on the text block: track the manifesto's
+    // live centre in the viewport (so it follows the text as you scroll) instead
+    // of freezing at the viewport centre and appearing to drop below the text.
+    var trackY = 0;
+    if (manEl){
+      var offsetPx = (manEl.offsetTop + manEl.offsetHeight / 2 - window.scrollY) - (window.innerHeight / 2);
+      var visH = 2 * camera.position.z * Math.tan(camera.fov * Math.PI / 360);
+      trackY = -offsetPx * (visH / window.innerHeight);
+    }
+    ring.position.y = (reduce ? 0 : Math.sin(t * 0.6) * 0.12 * (1 - pe)) + (-0.6 * (1 - pe)) + pe * trackY;
     var s = 1.12 - 0.42 * pe;
     ring.scale.setScalar(s);
 
