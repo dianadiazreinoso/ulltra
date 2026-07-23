@@ -356,7 +356,7 @@
 
   /* sales section · scroll-pinned white → black, header-aligned scramble title on the left */
   #sales{ position:relative; }
-  .sl-stage{ position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center; overflow:clip; }
+  .sl-stage{ position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center; overflow:clip; padding:110px 0 44px; }
   .sl-stage .wrap{ position:relative; z-index:1; max-width:min(1480px, 100vw - 32px); padding-inline:clamp(18px,2.2vw,32px); text-align:left; }
   .sl-white{ position:absolute; inset:0; z-index:3; pointer-events:none; background:#FFFFFF;
     background-image:linear-gradient(to right, rgba(26,22,18,0.07) 1px, transparent 1px),
@@ -367,7 +367,7 @@
   .sl-sub{ display:block; margin-top:.55em; font-style:normal; font-weight:800; color:var(--ink); }
   .sl-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(32px,5vw,72px); align-items:start; }
   .sl-illus{ margin-top:clamp(24px,3vw,44px); }
-  .sl-illus img{ display:block; width:100%; height:auto; }
+  .sl-illus img{ display:block; width:auto; max-width:100%; height:auto; max-height:44vh; mix-blend-mode:lighten; }
   @media(max-width:920px){ .sl-grid{ grid-template-columns:1fr; } }
   .sl-cards{ margin-top:0; margin-right:calc(clamp(18px,2.2vw,32px) * -1); display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,1.4vw,22px); }
   @media(max-width:560px){ .sl-cards{ grid-template-columns:1fr; } }
