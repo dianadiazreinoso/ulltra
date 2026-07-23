@@ -698,7 +698,7 @@
     gsap.set(lede, { autoAlpha:0, y:Math.round(window.innerHeight * 0.6) });
     var ran = false;
     var tl = gsap.timeline({
-      scrollTrigger:{ trigger:intro, start:'top top', end:'+=3200', pin:true, refreshPriority:3, scrub:1, invalidateOnRefresh:true,
+      scrollTrigger:{ trigger:intro, start:'top top', end:'+=3200', pin:true, refreshPriority:4, scrub:1, invalidateOnRefresh:true,
         onEnter:function(){ if (scr && !ran){ ran = true; scr.run(); } },
         onEnterBack:function(){ if (scr && !ran){ ran = true; scr.run(); } } }
     });
@@ -739,7 +739,7 @@
         defaults:{ ease:'none' },
         scrollTrigger:{
           trigger:sec, start:'top top', end:'+=' + (feats.length * 2200),
-          pin:'.data-feats-pin', scrub:1, anticipatePin:1, invalidateOnRefresh:true,
+          pin:'.data-feats-pin', scrub:1, anticipatePin:1, refreshPriority:3, invalidateOnRefresh:true,
           snap:{ snapTo:settle.map(function(t){ return t / END; }), duration:{min:0.2,max:0.5}, ease:'power2.inOut' },
           onUpdate:function(self){ if (bar) bar.style.width = (self.progress * 100).toFixed(1) + '%'; }
         }
