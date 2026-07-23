@@ -382,7 +382,7 @@
   .study-stage{ position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 clamp(18px,2.2vw,32px); }
   .st-title{ margin:0; font-family:var(--disp); font-weight:800; font-size:clamp(2.2rem,5vw,4rem); line-height:1.02; letter-spacing:-.02em; color:var(--ink-dark); max-width:20ch; text-wrap:balance; will-change:transform; }
   .st-title em{ font-family:var(--disp); font-style:italic; font-weight:400; color:var(--ink-dark); }
-  .st-lede{ position:absolute; left:50%; top:57%; transform:translateX(-50%); width:min(720px,90vw); margin:0; color:var(--ink-dark-dim); font-size:clamp(1rem,1.3vw,1.2rem); line-height:1.6; }
+  .st-lede{ position:absolute; left:50%; top:64%; transform:translateX(-50%); width:min(720px,90vw); margin:0; color:var(--ink-dark-dim); font-size:clamp(1rem,1.3vw,1.2rem); line-height:1.6; }
   .study-cards{ position:absolute; left:50%; top:0; transform:translateX(-50%); width:min(1480px, 100vw - 32px); height:100%; display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:1fr; gap:clamp(14px,1.4vw,22px); align-content:center; padding:16vh 0 6vh; }
   @media(max-width:920px){ .study-cards{ grid-template-columns:1fr 1fr; } }
   .sc-card{ position:relative; overflow:hidden; border-radius:14px; min-height:190px; background:var(--bg-raise); border:1px solid var(--hair-dark); }
@@ -393,7 +393,7 @@
   .sc-body p{ font-family:var(--sans); font-weight:300; font-size:.85rem; color:rgba(255,255,255,.82); line-height:1.45; margin:0; }
   /* Big bottom-anchored screenshot viewer */
   .study-viewer{ position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:min(1340px, 95vw); }
-  .sv-cap{ position:absolute; left:50%; top:calc(clamp(12px,1.5vw,20px) + 72px + 20px); transform:translateX(-50%); width:min(1000px, 94vw); text-align:center; }
+  .sv-cap{ position:absolute; left:50%; top:calc(clamp(12px,1.5vw,20px) + 72px); transform:translateX(-50%); width:min(1000px, 94vw); text-align:center; }
   .sv-cap-title{ font-family:var(--disp); font-weight:800; font-size:clamp(1.8rem,3.2vw,2.9rem); letter-spacing:-.02em; color:var(--ink-dark); margin:0 0 8px; }
   .sv-cap-desc{ font-family:var(--sans); font-weight:300; font-size:clamp(1.05rem,1.35vw,1.2rem); line-height:1.55; color:#3a3529; margin:0; white-space:nowrap; }
   .sv-stack{ position:relative; width:100%; aspect-ratio:1516 / 846; max-height:74vh; }
@@ -738,7 +738,7 @@
       var tl = gsap.timeline({
         defaults:{ ease:'none' },
         scrollTrigger:{
-          trigger:sec, start:'top top', end:'+=' + (feats.length * 1150),
+          trigger:sec, start:'top top', end:'+=' + (feats.length * 2200),
           pin:'.data-feats-pin', scrub:1, anticipatePin:1, invalidateOnRefresh:true,
           snap:{ snapTo:settle.map(function(t){ return t / END; }), duration:{min:0.2,max:0.5}, ease:'power2.inOut' },
           onUpdate:function(self){ if (bar) bar.style.width = (self.progress * 100).toFixed(1) + '%'; }
@@ -838,7 +838,7 @@
     function cap(i){ if (capT) capT.textContent = slides[i].dataset.title; if (capD) capD.textContent = slides[i].dataset.desc; }
     var ran = false;
     var tl = gsap.timeline({
-      scrollTrigger:{ trigger:sec, start:'top top', end:'+=6000', pin:true, refreshPriority:1, scrub:1, invalidateOnRefresh:true,
+      scrollTrigger:{ trigger:sec, start:'top top', end:'+=4500', pin:true, refreshPriority:1, scrub:1, invalidateOnRefresh:true,
         onEnter:function(){ if (scr && !ran){ ran = true; scr.run(); } },
         onEnterBack:function(){ if (scr && !ran){ ran = true; scr.run(); } } }
     });
