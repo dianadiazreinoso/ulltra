@@ -428,6 +428,24 @@
   .close-lede{ margin:clamp(20px,2.2vw,30px) auto 0; max-width:42em; color:var(--ink-dim); font-size:clamp(1rem,1.25vw,1.15rem); }
   .close-ctas{ margin-top:clamp(30px,3.4vw,44px); display:flex; gap:16px; flex-wrap:wrap; align-items:center; justify-content:center; }
   .close-note{ display:none; font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; color:var(--ink-dim); margin-top:22px; }
+
+  /* ===== study screenshots — same mechanism as AOS (native scroll + sticky) ===== */
+  #study .shots-scroll{ position:relative; height:600vh; margin-top:0; }
+  #study .shots-sticky{ position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding-top:clamp(90px,12vh,150px); }
+  #study .shots-head{ display:flex; flex-direction:column; align-items:center; gap:22px; text-align:center; max-width:min(1100px,92vw); }
+  #study .platform-head{ text-align:center; font-family:var(--disp); font-weight:800; font-size:clamp(2rem,4.6vw,3.6rem); line-height:1.04; letter-spacing:-.02em; color:var(--ink-dark); margin:0; }
+  #study .platform-head em{ font-style:italic; font-weight:400; }
+  #study .shot-cap{ font-family:var(--sans); font-size:1rem; letter-spacing:0; color:var(--ink-dark-dim); line-height:1.6; max-width:60em; margin:0; }
+  #study .shot-stage{ position:relative; width:min(1231px,96%); aspect-ratio:1467/800; margin-top:18px; }
+  #study .shot-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:bottom; border-radius:14px 14px 0 0; border:1px solid var(--hair-dark); border-bottom:none; background:#fff; opacity:0; transform:scale(.985); transition:opacity .5s ease, transform .5s ease; }
+  #study .shot-img.is-active{ opacity:1; transform:none; }
+  @media(max-width:600px){
+    #study .shots-sticky{ justify-content:center; padding-top:0; }
+    #study .shot-stage{ margin-top:clamp(24px,6vw,44px); width:96%; }
+    #study .shot-img{ object-fit:cover; object-position:top center; border-radius:16px; border:6px solid #fff; box-shadow:0 18px 48px -18px rgba(0,0,0,.35); }
+    #study .platform-head{ font-size:clamp(1.5rem,7vw,2.1rem); }
+    #study .shot-cap{ font-size:.9rem; }
+  }
 </style>
 </head>
 <body>
@@ -581,24 +599,25 @@
 
 <!-- ================= THE AUTOMATED STUDY ================= -->
 <section class="cream-section study-section" id="study">
-  <div class="st-bg" aria-hidden="true"></div>
-  <div class="study-stage">
-    <div class="st-black" aria-hidden="true"></div>
-    <h2 class="st-title" aria-label="The study is not a document. It is a derivation."><span class="scr" data-text="The study is not a document. ">The study is not a document. </span><em class="scr" data-text="It is a derivation.">It is a derivation.</em></h2>
-    <p class="st-lede">An agentic engineer performs the project automatically: it reads the resolved data of each site and derives the complete engineering study from it — no templates, no typical values. In our first pilots this synthesis already exceeds 58% measured accuracy against ground truth, and the agents that produce it retrain their own outputs, so the figure improves day by day.</p>
-    <div class="sv-cap"><h5 class="sv-cap-title">System design</h5><p class="sv-cap-desc">Panel layout solved over the segmented usable surface, sized against the site's actual load curve.</p></div>
-    <div class="study-viewer">
-      <div class="sv-stack">
-        <figure class="sv-slide" data-title="System design" data-desc="Panel layout solved over the segmented usable surface, sized against the site's actual load curve."><img src="assets/study-1.png" alt="System design screen"></figure>
-        <figure class="sv-slide" data-title="Production estimate" data-desc="Hourly generation from the irradiance and shading model of this roof's planes. Monthly, seasonal, annual."><img src="assets/study-2.png" alt="Production estimate screen"></figure>
-        <figure class="sv-slide" data-title="Savings &amp; payback" data-desc="The counterfactual bill: this consumption, this tariff, with and without the system. Payback as an output."><img src="assets/study-3.png" alt="Savings &amp; payback screen"></figure>
-        <figure class="sv-slide" data-title="Subsidies applied" data-desc="Every programme whose constraints this site satisfies, netted from the investment case at current budgets."><img src="assets/study-4.png" alt="Subsidies applied screen"></figure>
-        <figure class="sv-slide" data-title="Commercial proposal" data-desc="The derivation rendered for a human decision: visuals, numbers, incentives, next steps. Ready to present."><img src="assets/study-5.png" alt="Explored zones screen"></figure>
-        <figure class="sv-slide" data-title="Provenance" data-desc="Every figure traces to its source dataset and model version. Defensible before client, installer and auditor."><img src="assets/study-6.png" alt="Solar configurator detail screen"></figure>
+    <div class="wrap">
+      <div class="shots-scroll">
+        <div class="shots-sticky">
+          <div class="shots-head">
+            <h2 class="platform-head" aria-label="The study is not a document. It is a derivation."><span class="scr" data-text="The study is not a document. ">The study is not a document. </span><em class="scr" data-text="It is a derivation.">It is a derivation.</em></h2>
+            <p class="shot-cap" id="study-cap"><b>System design.</b> Panel layout solved over the segmented usable surface, sized against the site's actual load curve.</p>
+          </div>
+          <div class="shot-stage">
+            <img class="shot-img is-active" data-i="0" src="assets/study-1.png" alt="System design screen">
+            <img class="shot-img" data-i="1" src="assets/study-2.png" alt="Production estimate screen">
+            <img class="shot-img" data-i="2" src="assets/study-3.png" alt="Savings &amp; payback screen">
+            <img class="shot-img" data-i="3" src="assets/study-4.png" alt="Subsidies applied screen">
+            <img class="shot-img" data-i="4" src="assets/study-5.png" alt="Commercial proposal screen">
+            <img class="shot-img" data-i="5" src="assets/study-6.png" alt="Provenance screen">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 <!-- ================= SALES AUTOMATION ================= -->
 <section class="dark-section" id="sales">
@@ -830,6 +849,39 @@
     tl.to({}, { duration:0.6 });                                 // final hold
   })();
 
+  /* study screenshots — AOS-style scroll-driven switcher */
+  (function(){
+    var scroll=document.querySelector('#study .shots-scroll');
+    if(!scroll) return;
+    var imgs=[].slice.call(scroll.querySelectorAll('.shot-img'));
+    var cap=document.getElementById('study-cap');
+    var caps=[
+      '<b>System design.</b> Panel layout solved over the segmented usable surface, sized against the site\'s actual load curve.',
+      '<b>Production estimate.</b> Hourly generation from the irradiance and shading model of this roof\'s planes. Monthly, seasonal, annual.',
+      '<b>Savings &amp; payback.</b> The counterfactual bill: this consumption, this tariff, with and without the system. Payback as an output.',
+      '<b>Subsidies applied.</b> Every programme whose constraints this site satisfies, netted from the investment case at current budgets.',
+      '<b>Commercial proposal.</b> The derivation rendered for a human decision: visuals, numbers, incentives, next steps. Ready to present.',
+      '<b>Provenance.</b> Every figure traces to its source dataset and model version. Defensible before client, installer and auditor.'
+    ];
+    var cur=-1,raf=0;
+    function apply(){
+      raf=0;
+      var r=scroll.getBoundingClientRect();
+      var total=r.height-window.innerHeight;
+      var p=total>0 ? (-r.top)/total : 0;
+      p=Math.max(0,Math.min(0.999,p));
+      var i=Math.floor(p*imgs.length);
+      if(i===cur) return;
+      cur=i;
+      imgs.forEach(function(im,k){ im.classList.toggle('is-active',k===i); });
+      if(cap) cap.innerHTML=caps[i];
+    }
+    function req(){ if(!raf) raf=requestAnimationFrame(apply); }
+    window.addEventListener('scroll',req,{passive:true});
+    window.addEventListener('resize',req);
+    apply();
+  })();
+
   /* Study section: pinned — big centered title, paragraph rises, then title shrinks and 6 cards appear. */
   (function(){
     var sec = document.getElementById('study');
@@ -837,6 +889,7 @@
     var title = sec.querySelector('.st-title');
     var lede = sec.querySelector('.st-lede');
     var slides = [].slice.call(sec.querySelectorAll('.sv-slide'));
+    if (!slides.length) return;  /* study replaced by AOS-style native-scroll switcher */
     var capEl = sec.querySelector('.sv-cap');
     var capT = sec.querySelector('.sv-cap-title');
     var capD = sec.querySelector('.sv-cap-desc');
