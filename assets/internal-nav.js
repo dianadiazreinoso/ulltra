@@ -40,10 +40,11 @@
     ".inav-row{border-top:1px solid rgba(237,229,204,.18);}",
     ".inav-link{display:flex;align-items:center;gap:clamp(14px,2vw,28px);padding:clamp(12px,1.6vw,18px) 0;text-decoration:none;color:var(--ink,#EDE5CC);}",
     ".inav-num{font-family:\"JetBrains Mono\",ui-monospace,monospace;font-size:12px;letter-spacing:.1em;color:var(--ink-2,#B8AD93);min-width:26px;}",
-    ".inav-name{font-family:var(--ff-display,\"Archivo\",sans-serif);font-weight:700;font-size:clamp(30px,5vw,52px);line-height:1;letter-spacing:-0.02em;}",
+    ".inav-name{font-family:var(--ff-display,\"Archivo\",sans-serif);font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1;letter-spacing:-0.02em;}",
     ".inav-link:hover .inav-name{color:var(--lime,#D2FF00);}",
     ".inav-toggle{margin-left:auto;width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;background:none;border:1px solid rgba(237,229,204,.3);color:var(--ink,#EDE5CC);cursor:pointer;border-radius:50%;transition:transform .35s ease,border-color .3s ease;}",
     ".inav-row.is-expanded .inav-toggle{transform:rotate(180deg);border-color:var(--lime,#D2FF00);color:var(--lime,#D2FF00);}",
+    ".inav-toggle svg{width:18px;height:18px;display:block;}",
     ".inav-sub{list-style:none;margin:0;padding:0;max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.19,1,.22,1);}",
     ".inav-row.is-expanded .inav-sub{max-height:420px;}",
     ".inav-sub a{display:block;padding:8px 0 8px clamp(40px,6vw,66px);text-decoration:none;color:var(--ink-2,#B8AD93);font-family:var(--ff-display,\"Archivo\",sans-serif);font-weight:500;font-size:clamp(17px,2.4vw,24px);}",
@@ -69,7 +70,7 @@
       + '<a class="inav-link" href="' + s.href + '">'
       + '<span class="inav-num">' + pad2(i) + '</span>'
       + '<span class="inav-name">' + s.n + '</span>'
-      + (s.sub ? '<button class="inav-toggle" type="button" aria-label="Show ' + s.n + ' items">\u2304</button>' : '')
+      + (s.sub ? '<button class="inav-toggle" type="button" aria-label="Show ' + s.n + ' items"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>' : '')
       + '</a>';
     if (s.sub) {
       html += '<ul class="inav-sub">';
