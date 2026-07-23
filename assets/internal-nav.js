@@ -40,7 +40,7 @@
     ".inav-row{border-top:1px solid rgba(237,229,204,.18);}",
     ".inav-link{display:flex;align-items:center;gap:clamp(14px,2vw,28px);padding:clamp(12px,1.6vw,18px) 0;text-decoration:none;color:var(--ink,#EDE5CC);}",
     ".inav-num{font-family:\"JetBrains Mono\",ui-monospace,monospace;font-size:12px;letter-spacing:.1em;color:var(--ink-2,#B8AD93);min-width:26px;}",
-    ".inav-name{font-family:var(--ff-display,\"Archivo\",sans-serif);font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1;letter-spacing:-0.02em;}",
+    ".inav-name{font-family:var(--ff-display,\"Archivo\",sans-serif);font-weight:700;font-size:clamp(30px,5vw,38px);line-height:1;letter-spacing:-0.02em;}",
     ".inav-link:hover .inav-name{color:var(--lime,#D2FF00);}",
     ".inav-toggle{margin-left:auto;width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;background:none;border:1px solid rgba(237,229,204,.3);color:var(--ink,#EDE5CC);cursor:pointer;border-radius:50%;transition:transform .35s ease,border-color .3s ease;}",
     ".inav-row.is-expanded .inav-toggle{transform:rotate(180deg);border-color:var(--lime,#D2FF00);color:var(--lime,#D2FF00);}",
@@ -50,6 +50,12 @@
     ".inav-sub a{display:block;padding:8px 0 8px clamp(40px,6vw,66px);text-decoration:none;color:var(--ink-2,#B8AD93);font-family:var(--ff-display,\"Archivo\",sans-serif);font-weight:500;font-size:clamp(17px,2.4vw,24px);}",
     ".inav-sub a:hover{color:var(--lime,#D2FF00);}",
     ".inav-sub li:last-child a{padding-bottom:14px;}",
+    ".inav-foot{margin-top:auto;padding-top:clamp(20px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid rgba(237,229,204,.18);}",
+    ".inav-cta{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;border:1px solid var(--lime,#D2FF00);color:var(--lime,#D2FF00);font-family:\\\"JetBrains Mono\\\",ui-monospace,monospace;font-size:13px;letter-spacing:.02em;text-decoration:none;border-radius:0;transition:background-color .3s ease;}",
+    ".inav-cta:hover{background:rgba(210,255,0,0.12);}",
+    ".inav-social{display:flex;gap:20px;}",
+    ".inav-social a{color:var(--ink-2,#B8AD93);text-decoration:none;font-family:\\\"JetBrains Mono\\\",ui-monospace,monospace;font-size:13px;letter-spacing:.04em;}",
+    ".inav-social a:hover{color:var(--lime,#D2FF00);}",
     "body.inav-open{overflow:hidden;}"
   ].join("\n");
   document.head.appendChild(css);
@@ -80,6 +86,13 @@
     html += '</li>';
   });
   html += '</ul>';
+  html += '<div class="inav-foot">'
+    + '<a class="inav-cta" href="index.html#footer">Get Started</a>'
+    + '<div class="inav-social">'
+    + '<a href="https://x.com/Gluegl?lang=es" target="_blank" rel="noopener" aria-label="X">X</a>'
+    + '<a href="https://www.instagram.com/gluedigital/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>'
+    + '<a href="https://www.linkedin.com/company/glue-interactiva" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>'
+    + '</div></div>';
   html += '</div>';
   ov.innerHTML = html;
   document.body.appendChild(ov);

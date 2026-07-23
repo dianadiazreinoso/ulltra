@@ -1505,10 +1505,11 @@
     var kpis = document.querySelector(".kpis");
     var gov  = document.getElementById("gobernanza");
     var ecl  = document.getElementById("ecosistema-lead");
-    if (!kpis && !gov && !ecl) return;
+    var close = document.getElementById("cierre");
+    if (!kpis && !gov && !ecl && !close) return;
     function over(el){ if (!el) return false; var r = el.getBoundingClientRect(); return r.top < 105 && r.bottom > 0; }
     function upd(){
-      document.body.classList.toggle("hdr-light", over(kpis) || over(gov) || (over(ecl) && ecl.classList.contains("is-white")));
+      document.body.classList.toggle("hdr-light", over(kpis) || over(gov) || over(close) || (over(ecl) && ecl.classList.contains("is-white")));
     }
     window.addEventListener("scroll", upd, { passive:true });
     window.addEventListener("resize", upd);
