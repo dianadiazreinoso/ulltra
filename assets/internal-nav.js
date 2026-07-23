@@ -25,10 +25,13 @@
   var css = document.createElement("style");
   css.id = "inav-style";
   css.textContent = [
-    ".inav{position:fixed;inset:0;z-index:2000;background:var(--bg,#0A0807);color:var(--ink,#EDE5CC);",
-    "  display:flex;flex-direction:column;padding:clamp(20px,4vw,40px);box-sizing:border-box;",
-    "  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s cubic-bezier(.19,1,.22,1),visibility .45s;overflow-y:auto;}",
+    ".inav{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.55);",
+    "  display:flex;justify-content:flex-end;box-sizing:border-box;",
+    "  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s cubic-bezier(.19,1,.22,1),visibility .45s;}",
     ".inav.is-open{opacity:1;visibility:visible;pointer-events:auto;}",
+    ".inav-panel{width:min(460px,92vw);height:100%;background:var(--bg,#0A0807);color:var(--ink,#EDE5CC);display:flex;flex-direction:column;padding:clamp(20px,4vw,40px);box-sizing:border-box;overflow-y:auto;transform:translateX(30px);transition:transform .45s cubic-bezier(.19,1,.22,1);box-shadow:-24px 0 60px rgba(0,0,0,.5);}",
+    ".inav.is-open .inav-panel{transform:translateX(0);}",
+    "@media(max-width:760px){.inav{background:var(--bg,#0A0807);}.inav-panel{width:100%;box-shadow:none;transform:none;}}",
     ".inav-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:clamp(18px,3vw,34px);}",
     ".inav-eyebrow{font-family:\"JetBrains Mono\",ui-monospace,monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-2,#B8AD93);}",
     ".inav-close{width:44px;height:44px;display:grid;place-items:center;background:none;border:1px solid rgba(237,229,204,.32);color:var(--ink,#EDE5CC);cursor:pointer;border-radius:0;font-size:22px;line-height:1;}",
@@ -58,7 +61,7 @@
   ov.setAttribute("aria-label", "Index");
   ov.setAttribute("aria-hidden", "true");
 
-  var html = '<div class="inav-head"><span class="inav-eyebrow">Index</span>'
+  var html = '<div class="inav-panel"><div class="inav-head"><span class="inav-eyebrow">Index</span>'
     + '<button class="inav-close" type="button" aria-label="Close menu">\u00d7</button></div>'
     + '<ul class="inav-list">';
   SECTIONS.forEach(function (s, i) {
@@ -76,6 +79,7 @@
     html += '</li>';
   });
   html += '</ul>';
+  html += '</div>';
   ov.innerHTML = html;
   document.body.appendChild(ov);
 
@@ -93,6 +97,7 @@
   });
 
   ov.querySelector(".inav-close").addEventListener("click", close);
+  ov.addEventListener("click", function (e) { if (e.target === ov) close(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
 
   // wire the existing hamburger(s)
