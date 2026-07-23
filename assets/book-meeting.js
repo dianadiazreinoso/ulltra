@@ -13,13 +13,15 @@
 
   var css = document.createElement("style");
   css.textContent = [
-    "#bm-modal{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.62);backdrop-filter:blur(3px);}",
+    "#bm-modal{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:rgba(10,8,7,.72);backdrop-filter:blur(6px);padding:20px;box-sizing:border-box;}",
     "#bm-modal.is-open{display:flex;}",
-    "#bm-box{position:relative;width:min(980px,95vw);height:min(760px,90vh);background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 30px 90px -20px rgba(0,0,0,.6);}",
-    "#bm-close{position:absolute;top:10px;right:10px;z-index:2;width:40px;height:40px;border:none;background:rgba(0,0,0,.06);border-radius:50%;font-size:22px;line-height:1;cursor:pointer;color:#111;}",
-    "#bm-close:hover{background:rgba(0,0,0,.12);}",
-    "#bm-box .meetings-iframe-container{width:100%;height:100%;overflow:auto;}",
-    "#bm-box .meetings-iframe-container iframe{width:100%!important;height:100%!important;border:0;}"
+    "#bm-box{position:relative;display:flex;flex-direction:column;width:min(1000px,96vw);height:min(780px,92vh);background:#0A0807;border:1px solid rgba(237,229,204,.14);border-radius:16px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.85);}",
+    "#bm-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 14px 22px;background:#0A0807;border-bottom:1px solid rgba(237,229,204,.12);flex:0 0 auto;}",
+    "#bm-title{font-family:'Archivo',system-ui,sans-serif;font-weight:600;font-size:16px;letter-spacing:.01em;color:#EDE5CC;}",
+    "#bm-close{width:36px;height:36px;border:none;background:rgba(237,229,204,.08);border-radius:50%;font-size:20px;line-height:1;cursor:pointer;color:#EDE5CC;display:grid;place-items:center;transition:background .25s ease,color .25s ease;}",
+    "#bm-close:hover{background:rgba(210,255,0,.16);color:#D2FF00;}",
+    "#bm-box .meetings-iframe-container{flex:1 1 auto;width:100%;overflow:auto;background:#fff;}",
+    "#bm-box .meetings-iframe-container iframe{width:100%!important;height:100%!important;border:0;display:block;}"
   ].join("");
   document.head.appendChild(css);
 
@@ -28,7 +30,8 @@
   modal.setAttribute("aria-hidden", "true");
   modal.innerHTML =
     '<div id="bm-box" role="dialog" aria-modal="true" aria-label="Book a meeting">' +
-    '<button id="bm-close" type="button" aria-label="Close">\u00d7</button>' +
+    '<div id="bm-head"><span id="bm-title">Book a meeting</span>' +
+    '<button id="bm-close" type="button" aria-label="Close">\u00d7</button></div>' +
     '<div class="meetings-iframe-container" data-src="https://meetings-eu1.hubspot.com/javier-thomas/general?embed=true"></div>' +
     '</div>';
   document.body.appendChild(modal);

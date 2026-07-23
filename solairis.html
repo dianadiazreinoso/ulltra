@@ -402,15 +402,17 @@
   /* Mobile: the scrollytelling is desktop-only, so lay the study section out as a
      clean centred block — title, text and one screenshot in the middle of the screen. */
   @media(max-width:920px){
-    .study-stage{ min-height:100svh; justify-content:center; gap:18px; padding:96px 20px 44px; }
-    .st-title{ position:static; left:auto; top:auto; transform:none; font-size:clamp(1.8rem,7vw,2.5rem); max-width:none; }
-    .st-lede{ position:static; left:auto; top:auto; transform:none; width:100%; max-width:40ch; margin:0 auto; }
-    .study-cards{ display:none; }
-    .sv-cap{ display:none; }
-    .study-viewer{ position:static; left:auto; bottom:auto; transform:none; width:100%; margin:0 auto; }
-    .sv-stack{ max-height:46svh; }
-    .sv-slide{ display:none; }
-    .sv-slide:first-of-type{ display:block; opacity:1 !important; }
+    .study-section{ min-height:auto !important; }
+    .study-stage{ min-height:100svh; display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:80px 20px 30px !important; text-align:center; overflow:visible; }
+    .st-title{ position:static !important; left:auto !important; top:auto !important; transform:none !important; font-size:clamp(1.35rem,6vw,1.9rem) !important; line-height:1.1 !important; max-width:none !important; margin:0 !important; }
+    .st-lede{ position:static !important; left:auto !important; top:auto !important; transform:none !important; width:100% !important; max-width:38ch !important; margin:0 auto !important; font-size:.92rem !important; line-height:1.5 !important; }
+    .study-cards{ display:none !important; }
+    .sv-cap{ display:none !important; }
+    .study-viewer{ position:static !important; left:auto !important; bottom:auto !important; transform:none !important; width:100% !important; margin:0 auto !important; }
+    .sv-stack{ position:relative !important; width:100% !important; aspect-ratio:1516/846 !important; max-height:32svh !important; margin:0 auto !important; }
+    .sv-slide{ display:none !important; }
+    .sv-slide:first-of-type{ display:block !important; position:absolute !important; inset:0 !important; opacity:1 !important; }
+    .sv-slide:first-of-type img, .sv-slide:first-of-type image-slot{ object-fit:contain !important; border-radius:12px !important; border:1px solid var(--hair-dark) !important; }
   }
 
   /* closing image card (matches other internal pages) */
@@ -911,6 +913,6 @@
 </script>
 
   <script defer src="assets/internal-nav.js?v=6"></script>
-  <script defer src="assets/book-meeting.js?v=1"></script>
+  <script defer src="assets/book-meeting.js?v=2"></script>
 </body>
 </html>
