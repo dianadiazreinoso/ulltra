@@ -83,7 +83,7 @@
       others.forEach(function (c) { h = Math.max(h, c.offsetHeight); });
       var longNatural = longCard.offsetHeight;
 
-      if (longNatural <= h + 8) {
+      if (longNatural <= h + 140) {
         // nothing to collapse — heights already match closely
         longCard.classList.remove("ac--collapsible", "is-expanded");
         btn.style.display = "none";
