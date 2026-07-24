@@ -229,13 +229,13 @@
   .hero-copy{ position:relative; z-index:2; }
   .hero-visual{ display:flex; align-items:center; justify-content:center; position:relative; z-index:1; min-height:60vh; }
   #rosco-float{
-    position:fixed; top:50%; left:50%;
+    position:relative;
     z-index:1; pointer-events:none;
     animation:roscoFloat 5.5s ease-in-out infinite;
   }
   @keyframes roscoFloat{
-    0%, 100%{ transform:translate(-50%, -50%) translateY(-10px) rotate(-1deg); }
-    50%{ transform:translate(-50%, -50%) translateY(10px) rotate(1deg); }
+    0%, 100%{ transform:translateY(-10px) rotate(-1deg); }
+    50%{ transform:translateY(10px) rotate(1deg); }
   }
   @media (prefers-reduced-motion: reduce){ #rosco-float{ animation:none; } }
   #rosco{
@@ -690,7 +690,6 @@
   </template>
 
   <div id="bg-fixed" aria-hidden="true"></div>
-  <div id="rosco-float" aria-hidden="true"><div id="rosco"></div></div>
 
   <header class="hdr">
     <div class="hdr-inner">
@@ -725,7 +724,7 @@
               <button class="btn btn-ghost fade-up" style="transition-delay:.78s" type="button">See key metrics</button>
             </div>
           </div>
-          <div class="hero-visual"></div>
+          <div class="hero-visual"><div id="rosco-float" aria-hidden="true"><div id="rosco"></div></div></div>
         </div>
       </div>
     </section>
@@ -986,7 +985,7 @@
       el.style.backgroundPosition = (c / (COLS - 1) * 100) + "% " + (r / (ROWS - 1) * 100) + "%";
     }
 
-    if (reduce){ setFrame(0); return; }
+    setFrame(0); return;   /* static — just floats in the hero */
 
     function update(){
       // progress from the hero top to the point the manifesto scrolls out of
