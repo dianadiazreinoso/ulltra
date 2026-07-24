@@ -2726,8 +2726,8 @@
     height: 415px;
     min-height: 415px;
     padding-top: 0;
-    padding-bottom: 0;
-    justify-content: center;
+    padding-bottom: 40px;
+    justify-content: flex-end;
     z-index: 1;                 /* hero sits BEHIND the card stack */
   }
 
@@ -2737,7 +2737,7 @@
     z-index: 10;                /* whole stack above the hero */
     display: block;
     width: calc(100vw - 24px);
-    margin-top: -110px;         /* pull cards closer to the banner text (halve the gap) */
+    margin-top: -20px;         /* pull cards closer to the banner text (halve the gap) */
     padding-bottom: 70vh;       /* scroll runway so the last card stays pinned covering the previous */
   }
 
@@ -2789,6 +2789,7 @@
     line-height: 1.4 !important;
     max-width: calc(100% - 12px) !important;
   }
+  #software .ap-subtitle{ color: #fff !important; }
 }
 
 /* ── Tech & AI Stack · mobile stacked sticky cards ─────────────────────────────
@@ -2807,8 +2808,8 @@
     height: 415px;
     min-height: 415px;
     padding-top: 0;
-    padding-bottom: 0;
-    justify-content: center;
+    padding-bottom: 40px;
+    justify-content: flex-end;
     z-index: 1;                 /* banner sits BEHIND the card stack */
   }
 
@@ -2818,7 +2819,7 @@
     z-index: 10;
     display: block;
     width: calc(100vw - 24px);
-    margin-top: -140px;         /* pull cards closer to the banner text (halve the gap) */
+    margin-top: -20px;         /* pull cards closer to the banner text (halve the gap) */
     padding-bottom: 24vh;       /* scroll runway: enough to hold the stack together, without a big empty gap under the (shorter) last card */
   }
 
