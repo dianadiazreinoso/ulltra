@@ -1029,6 +1029,12 @@
         wrap.style.top  = "50%";
         wrap.style.left = (50 + (24 - p * 24)) + "vw";
       }
+
+      // Fade the rosco out as the manifesto scrolls away and the next
+      // section's text comes into view (gone by the time it fills the screen).
+      var mb = next.getBoundingClientRect().bottom;
+      var fade = (mb - window.innerHeight * 0.10) / (window.innerHeight * 0.40);
+      wrap.style.opacity = Math.max(0, Math.min(1, fade));
     }
 
     var ticking = false;
