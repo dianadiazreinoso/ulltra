@@ -854,7 +854,7 @@
     mm.add('(min-width: 901px)',function(){
       gsap.set([iTitle,iLede],{autoAlpha:0,y:0});
       medias.forEach(function(m){ gsap.set(m,{autoAlpha:0}); });
-      mimgs.forEach(function(im){ if(im) gsap.set(im,{yPercent:100}); });
+      mimgs.forEach(function(im){ if(im) gsap.set(im,{yPercent:0}); });
       bodies.forEach(function(b){ gsap.set(b,{autoAlpha:0,yPercent:0,y:0}); });
 
       var SNAP=[0.27,0.60,0.79,0.97];
@@ -881,16 +881,16 @@
       // Phase 2 · features: vertical curtain slide inside the fixed frame, text a beat after each image lands.
       var FSTART=6.6, SEG=2.7, IMG=0.9, TXTD=1.0, TXT=0.9, END=14.7;
       tl.set(feats[0],{autoAlpha:1,visibility:'visible'},FSTART);
-      tl.set(medias[0],{autoAlpha:1},FSTART);
-      if(mimgs[0]) tl.fromTo(mimgs[0],{yPercent:100},{yPercent:0,duration:IMG},FSTART);
+      tl.fromTo(medias[0],{autoAlpha:0},{autoAlpha:1,duration:IMG},FSTART);
+      /* curtain removed — clean fade */
       tl.fromTo(bodies[0],{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:TXT},FSTART+TXTD);
 
       for(var i=1;i<feats.length;i++){
         var p=FSTART+i*SEG;
         tl.set(feats[i],{autoAlpha:1,visibility:'visible'},p);
-        tl.set(medias[i],{autoAlpha:1},p);
-        if(mimgs[i]) tl.fromTo(mimgs[i],{yPercent:100},{yPercent:0,duration:IMG},p);
-        tl.set(medias[i-1],{autoAlpha:0},p+IMG);
+        tl.fromTo(medias[i],{autoAlpha:0},{autoAlpha:1,duration:IMG},p);
+        /* curtain removed — clean fade */
+        tl.to(medias[i-1],{autoAlpha:0,duration:IMG},p);
         tl.to(bodies[i-1],{autoAlpha:0,y:-16,duration:0.45},p);
         tl.fromTo(bodies[i],{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:TXT},p+TXTD);
       }
