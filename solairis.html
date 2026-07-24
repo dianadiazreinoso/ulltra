@@ -717,7 +717,7 @@
     gsap.set(lede, { autoAlpha:0, y:Math.round(window.innerHeight * 0.6) });
     var ran = false;
     var tl = gsap.timeline({
-      scrollTrigger:{ trigger:intro, start:'top top', end:'+=3200', pin:true, refreshPriority:4, scrub:1, invalidateOnRefresh:true,
+      scrollTrigger:{ trigger:intro, start:'top top', end:'+=1500', pin:true, refreshPriority:4, scrub:1, invalidateOnRefresh:true,
         onEnter:function(){ if (scr && !ran){ ran = true; scr.run(); } },
         onEnterBack:function(){ if (scr && !ran){ ran = true; scr.run(); } } }
     });
