@@ -619,13 +619,13 @@
       <div class="shots-sticky">
         <div class="shots-head">
           <h2 class="platform-head" id="product-head"><span class="scr" data-text="The platform, ">The platform, </span><span class="scr" data-text="in operation.">in operation.</span></h2>
-          <p class="shot-cap" id="shot-cap"><b>Operations inbox.</b> Every claim resolved to an entity, prioritized, with next-action and status at a glance.</p>
+          <p class="shot-cap" id="shot-cap"><b>Ontology map.</b> Every lot resolved to an entity — evidence, suppliers, process steps and decisions linked by governed relationships, in one graph.</p>
         </div>
         <div class="shot-stage">
-          <img class="shot-img is-active" data-i="0" src="assets/aos-shot-bandeja.png" alt="Claims inbox">
-          <img class="shot-img" data-i="1" src="assets/aos-shot-detalle.png" alt="Case detail">
-          <img class="shot-img" data-i="2" src="assets/aos-shot-insights.png" alt="AOS Insights">
-          <img class="shot-img" data-i="3" src="assets/aos-shot-devolucion.png" alt="Return / Refund">
+          <img class="shot-img is-active" data-i="0" src="assets/aos-shot-bandeja.png?v=2" alt="Claims inbox">
+          <img class="shot-img" data-i="1" src="assets/aos-shot-detalle.png?v=2" alt="Case detail">
+          <img class="shot-img" data-i="2" src="assets/aos-shot-insights.png?v=2" alt="AOS Insights">
+          <img class="shot-img" data-i="3" src="assets/aos-shot-devolucion.png?v=2" alt="Return / Refund">
         </div>
       </div>
     </div>
@@ -726,10 +726,10 @@
     var dots=[].slice.call(document.querySelectorAll('#shot-dots span'));
     var cap=document.getElementById('shot-cap');
     var caps=[
-      '<b>Operations inbox.</b> Every claim resolved to an entity, prioritized, with next-action and status at a glance.',
-      '<b>Claim workspace.</b> Lifecycle timeline, agent-proposed next action, and the resolved facts behind every decision.',
-      '<b>Operations insights.</b> Response time, resolution rate, savings and completeness — the day at a glance.',
-      '<b>Returns &amp; credits.</b> Refund and credit state reconciled per claim, with owner and one-click actions.'
+      '<b>Ontology map.</b> Every lot resolved to an entity — evidence, suppliers, process steps and decisions linked by governed relationships, in one graph.',
+      '<b>Mission Control.</b> Active flows, pending decisions and agents in one operational view — severity, ETA and the reasoning trace behind each.',
+      '<b>ROI &amp; game theory.</b> Value delivered per agent, and the payoff matrix behind each negotiation — the Nash equilibrium computed before every renewal.',
+      '<b>Ingestion.</b> Every source — ERP, CRM, OT, human channels, OCR — through the governed pipeline into the ontology, sanitized before any model.'
     ];
     var cur=-1,raf=0;
     function apply(){
