@@ -2037,6 +2037,7 @@
 }
 
 #software .ap-banner{
+  height: clamp(520px, 60vh, 900px);
   justify-content: center;
   padding-top: clamp(96px, 11vh, 150px);
   padding-bottom: calc(clamp(96px, 11vh, 150px) + clamp(140px, 16vh, 260px));
@@ -2736,7 +2737,7 @@
     z-index: 10;                /* whole stack above the hero */
     display: block;
     width: calc(100vw - 24px);
-    margin-top: -55px;         /* pull cards closer to the banner text (halve the gap) */
+    margin-top: -110px;         /* pull cards closer to the banner text (halve the gap) */
     padding-bottom: 70vh;       /* scroll runway so the last card stays pinned covering the previous */
   }
 
@@ -2783,6 +2784,11 @@
     line-height: 1.4 !important;
     margin-top: 64px !important;
   }
+  #stack .ap-subtitle{
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+    max-width: calc(100% - 12px) !important;
+  }
 }
 
 /* ── Tech & AI Stack · mobile stacked sticky cards ─────────────────────────────
@@ -2812,7 +2818,7 @@
     z-index: 10;
     display: block;
     width: calc(100vw - 24px);
-    margin-top: -110px;         /* pull cards closer to the banner text (halve the gap) */
+    margin-top: -140px;         /* pull cards closer to the banner text (halve the gap) */
     padding-bottom: 24vh;       /* scroll runway: enough to hold the stack together, without a big empty gap under the (shorter) last card */
   }
 
@@ -4582,7 +4588,7 @@
   <script defer src="assets/clients.js?v=60"></script>
   <script defer src="assets/client-logos.js?v=53"></script>
   <script defer src="assets/footer-cta.js?v=55"></script>
-  <script defer src="assets/hero.js?v=66"></script>
+  <script defer src="assets/hero.js?v=67"></script>
   <script defer src="assets/home-nav-work.js?v=3"></script>
   <script defer src="assets/book-meeting.js?v=3"></script>
   <script defer src="assets/oc-clients.js?v=1"></script>
