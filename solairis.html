@@ -717,7 +717,7 @@
     gsap.set(lede, { autoAlpha:0, y:Math.round(window.innerHeight * 0.6) });
     var ran = false;
     var tl = gsap.timeline({
-      scrollTrigger:{ trigger:intro, start:'top top', end:'+=1500', pin:true, refreshPriority:4, scrub:1, invalidateOnRefresh:true,
+      scrollTrigger:{ trigger:intro, start:'top top', end:'+=1000', pin:true, refreshPriority:4, scrub:1, invalidateOnRefresh:true,
         onEnter:function(){ if (scr && !ran){ ran = true; scr.run(); } },
         onEnterBack:function(){ if (scr && !ran){ ran = true; scr.run(); } } }
     });
@@ -746,9 +746,9 @@
     var mm = gsap.matchMedia();
 
     mm.add('(min-width: 921px)', function(){
-      gsap.set(medias, { autoAlpha:0 });
+      gsap.set(medias, { autoAlpha:0 }); if (medias[0]) gsap.set(medias[0], { autoAlpha:1 });
       gsap.set(curtains, { yPercent:100 });
-      gsap.set(bodies, { autoAlpha:0, yPercent:0, y:0 });
+      gsap.set(bodies, { autoAlpha:0, yPercent:0, y:0 }); if (bodies[0]) gsap.set(bodies[0], { autoAlpha:1 });
 
       var FSTART = 0.4, SEG = 1.8, IMG = 0.6, TXTD = 0.75, TXT = 0.6;
       var END = FSTART + (feats.length - 1) * SEG + 1.4;
@@ -757,16 +757,16 @@
       var tl = gsap.timeline({
         defaults:{ ease:'none' },
         scrollTrigger:{
-          trigger:sec, start:'top top', end:'+=' + (feats.length * 2200),
+          trigger:sec, start:'top top', end:'+=' + (feats.length * 1500),
           pin:'.data-feats-pin', scrub:1, anticipatePin:1, refreshPriority:3, invalidateOnRefresh:true,
           snap:{ snapTo:settle.map(function(t){ return t / END; }), duration:{min:0.2,max:0.5}, ease:'power2.inOut' },
           onUpdate:function(self){ if (bar) bar.style.width = (self.progress * 100).toFixed(1) + '%'; }
         }
       });
 
-      tl.set(medias[0], { autoAlpha:1 }, FSTART);
+      
       tl.fromTo(curtains[0], { yPercent:100 }, { yPercent:0, duration:IMG }, FSTART);
-      tl.fromTo(bodies[0], { autoAlpha:0, y:16 }, { autoAlpha:1, y:0, duration:TXT }, FSTART + TXTD);
+      
 
       for (var i = 1; i < feats.length; i++){
         var p = FSTART + i * SEG;
