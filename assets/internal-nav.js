@@ -91,7 +91,7 @@
   });
   html += '</ul>';
   html += '<div class="inav-foot">'
-    + '<a class="inav-cta" href="index.html#footer">Book a meeting</a>'
+    + '<a class="inav-cta" href="index.html#footer">Get Started</a>'
     + '<div class="inav-social">'
     + '<a href="https://x.com/Gluegl?lang=es" target="_blank" rel="noopener" aria-label="X">X</a>'
     + '<a href="https://www.instagram.com/gluedigital/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>'

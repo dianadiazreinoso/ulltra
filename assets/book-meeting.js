@@ -50,7 +50,7 @@
   modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
 
-  var LABELS = ["book a meeting", "schedule a meeting", "schedule a demo", "get started"];
+  var LABELS = ["book a meeting", "schedule a meeting", "schedule a demo"];
   function wire() {
     var els = document.querySelectorAll("button, a");
     for (var i = 0; i < els.length; i++) {
