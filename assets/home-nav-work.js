@@ -69,6 +69,13 @@
       e.stopPropagation();
       li.classList.toggle("menu-work-open");
     });
+
+    // Also expand when clicking the "Work" word / the whole row (not just the chevron).
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      li.classList.toggle("menu-work-open");
+    });
   }
 
   var mo = new MutationObserver(function () { enhance(); });

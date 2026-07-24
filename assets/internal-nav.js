@@ -114,6 +114,18 @@
     });
   });
 
+  // Also expand when clicking the row's word / whole line (rows with sub-items only).
+  ov.querySelectorAll(".inav-row").forEach(function (row) {
+    if (!row.querySelector(".inav-toggle")) return;
+    var link = row.querySelector(".inav-link");
+    if (!link) return;
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      row.classList.toggle("is-expanded");
+    });
+  });
+
   ov.querySelector(".inav-close").addEventListener("click", close);
   ov.addEventListener("click", function (e) { if (e.target === ov) close(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
