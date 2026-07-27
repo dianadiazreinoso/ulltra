@@ -1214,7 +1214,7 @@
           trigger: eco,
           start: "top top",
           end: "+=9800",
-          pin: ".eco-pin",
+          pin: ".eco-pin", refreshPriority: 3, anticipatePin: 1,
           scrub: 1,                            // 1s of catch-up smoothing (not `true`)
           invalidateOnRefresh: true,
           snap: {
@@ -1357,7 +1357,7 @@
           trigger: tml,
           start: "top top",
           end: "+=6000",
-          pin: ".tml-pin",
+          pin: ".tml-pin", refreshPriority: 2, anticipatePin: 1,
           scrub: 1,
           invalidateOnRefresh: true,
           snap: {
@@ -1457,7 +1457,7 @@
         defaults: { ease: "power2.out" },
         scrollTrigger: {
           trigger: sec, start: "top top", end: "+=1400",
-          pin: true, scrub: 1, invalidateOnRefresh: true,
+          pin: true, refreshPriority: 1, anticipatePin: 1, scrub: 1, invalidateOnRefresh: true,
           onUpdate: function(self){ sec.classList.toggle("is-white", self.progress > 0.28); }
         }
       });

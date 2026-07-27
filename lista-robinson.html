@@ -702,10 +702,10 @@
         var typed = false;
         gsap.set([titleEl, ledeEl], { autoAlpha: 0, y: 0 });
         medias.forEach(function(m){ gsap.set(m, { autoAlpha: 0, yPercent: 0 }); });
-        mimgs.forEach(function(im){ gsap.set(im, { yPercent: 100 }); });
+        mimgs.forEach(function(im){ gsap.set(im, { yPercent: 0 }); });
         bodies.forEach(function(b){ gsap.set(b, { autoAlpha: 0, yPercent: 0, y: 0 }); });
 
-        var SNAP = [0.22, 0.60, 0.80];
+        var SNAP = [0.30, 0.67, 0.95];
 
         var tl = gsap.timeline({
           defaults: { ease: "none" },
@@ -741,15 +741,15 @@
         var FSTART = LEAD + 4.6, SEG = 3.4, IMG = 1.1, TXTD = 0.6, TXT = 0.8;
         var END = FSTART + (feats.length - 1) * SEG + 2.6;
 
-        tl.set(medias[0], { autoAlpha: 1 }, FSTART);
-        tl.fromTo(mimgs[0], { yPercent: 100 }, { yPercent: 0, duration: IMG }, FSTART);
+        tl.fromTo(medias[0], { autoAlpha: 0 }, { autoAlpha: 1, duration: IMG }, FSTART);
+        /* curtain removed — clean fade */
         tl.fromTo(bodies[0], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: TXT }, FSTART + TXTD);
 
         for (var i = 1; i < feats.length; i++){
           var p = FSTART + i * SEG;
-          tl.set(medias[i], { autoAlpha: 1 }, p);
-          tl.fromTo(mimgs[i], { yPercent: 100 }, { yPercent: 0, duration: IMG }, p);
-          tl.set(medias[i - 1], { autoAlpha: 0 }, p + IMG);
+          tl.fromTo(medias[i], { autoAlpha: 0 }, { autoAlpha: 1, duration: IMG }, p);
+          /* curtain removed — clean fade */
+          tl.to(medias[i - 1], { autoAlpha: 0, duration: IMG }, p);
           tl.to(bodies[i - 1], { autoAlpha: 0, y: -16, duration: 0.7 }, p + 0.2);
           tl.fromTo(bodies[i], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: TXT }, p + TXTD);
         }
