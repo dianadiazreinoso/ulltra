@@ -556,6 +556,8 @@
   }
   @media (max-width:900px){
     .kpi-row{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    /* Aire bajo el header fijo (pill = 12px top + 85px alto = 97px) */
+    .kpis{ padding-top:clamp(112px, 17vh, 148px); }
   }
   @media (max-width:560px){
     .kpi-row{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:2px 20px; margin-top:20px; }
