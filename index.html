@@ -2497,13 +2497,13 @@
      smaller wordmark (the title is longer than "Software"), and grouped tool
      lists inside the cards. */
 .stk{
-  /* Este -114vh era para que la sección quedara DETRÁS del "bust stage" opaco
-     que se encogía (el de la sección .reveal): al encogerse, la imagen de manos
-     asomaba desde abajo. Pero .reveal se eliminó, así que ya no hay nada que
-     tape ese solape: lo único que hacía era montar el banner de Stack (y su
-     wordmark) justo encima del título "Discover our capabilities", en la misma
-     banda vertical. Sin el pull-up las dos secciones se leen enteras. */
-  margin-top: 0;
+  /* Pulled up one viewport so it sits BEHIND the (opaque) shrinking bust stage:
+     as that stage shrinks, this section's hands image rises into view from below
+     — no separate copy of the image (avoids the duplicate), and its top aligns
+     exactly with the viewport when the bust stage releases (seamless handoff).
+     OJO: este solape es además lo que mantiene OCULTO el mazo de cards de
+     Capabilities (.caps-deck). Si se quita, el mazo reaparece. */
+  margin-top: -114vh;
   z-index: 1;
 }
 .stk .ap-bg-img{
@@ -3489,11 +3489,7 @@
        Capabilities is only uncovered as the card shrinks/exits. Out = in. */
     margin-top: 0;   /* reveal removed — no pin-spacer to compensate */
     position:relative;
-    /* Stack se sube margin-top:-114vh a propósito, para que su imagen de manos
-       asome DESDE DETRÁS de esta sección. Pero ambas tenían z-index:1 y Stack va
-       después en el DOM, así que ganaba y su banner (720px) tapaba el título
-       "Discover our capabilities". Con 2, se cumple el diseño original. */
-    z-index:2;
+    z-index:1;
   }
   /* Faint painted ground — full-width, natural aspect, anchored top, fades to cream */
   .caps-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
