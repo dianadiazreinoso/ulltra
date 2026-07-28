@@ -9,7 +9,7 @@
   window.addEventListener('pageshow', function (e) { if (e.persisted && !location.hash) window.scrollTo(0, 0); });
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ulltra - Sovereign AI powerhouse</title>
+<title>Ulltra — Sovereign AI powerhouse</title>
 
 <meta name="description" content="Ulltra designs, builds and operates AI-based systems that automate and transform business processes — the sovereign operating layer for European companies.">
 
@@ -2497,11 +2497,13 @@
      smaller wordmark (the title is longer than "Software"), and grouped tool
      lists inside the cards. */
 .stk{
-  /* Pulled up one viewport so it sits BEHIND the (opaque) shrinking bust stage:
-     as that stage shrinks, this section's hands image rises into view from below
-     — no separate copy of the image (avoids the duplicate), and its top aligns
-     exactly with the viewport when the bust stage releases (seamless handoff). */
-  margin-top: -114vh;
+  /* Este -114vh era para que la sección quedara DETRÁS del "bust stage" opaco
+     que se encogía (el de la sección .reveal): al encogerse, la imagen de manos
+     asomaba desde abajo. Pero .reveal se eliminó, así que ya no hay nada que
+     tape ese solape: lo único que hacía era montar el banner de Stack (y su
+     wordmark) justo encima del título "Discover our capabilities", en la misma
+     banda vertical. Sin el pull-up las dos secciones se leen enteras. */
+  margin-top: 0;
   z-index: 1;
 }
 .stk .ap-bg-img{
@@ -2698,19 +2700,29 @@
   .ap-word{font-size: clamp(40px, 13vw, 100px)}
 }
 
-/* ── Software · mobile "stacked sticky cards" ──────────────────────────────────
-   The hero banner pins as a fixed 415px layer behind the cards; the three
-   product cards break out of the grid into normal flow and each pin at a
-   progressively larger top offset with a rising z-index — so card 2 mounts
-   over card 1 and card 3 over card 2, leaving a ~20px strip of each previous
-   card peeking (a premium Apple-style stack). The first card starts with a
-   negative margin so it visibly invades the bottom of the hero. */
+/* ── Software · móvil "crossfade sobre banner fijo" ───────────────────────────
+   Comportamiento: al hacer snap se ve SOLO el banner (imagen de fondo + título
+   + subtítulo). Con un poco de scroll entra la card 1; más scroll y la card 1
+   se va por opacidad y entra la 2; y luego la 3. Las tres están superpuestas en
+   el mismo sitio (position:absolute dentro de un contenedor sticky a pantalla
+   completa) y `software-equal-cards.js` las iguala de alto, así que el relevo
+   es un cambio limpio de opacidad. Las opacidades las calcula ese mismo JS a
+   partir del progreso de scroll de la sección. */
 @media (max-width: 760px){
-  /* sticky descendants need a non-clipping section (.ap sets overflow:hidden) */
-  #software{ overflow: visible; }
+  /* los sticky necesitan una sección que no recorte (.ap pone overflow:hidden) */
+  #software{
+    overflow: visible;
+    /* Runway: 1 pantalla de banner + 3 fases de card. En svh para que no salte
+       al ocultarse la barra del navegador. */
+    height: 380svh;
+    padding-bottom: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    scroll-margin-top: 0;
+  }
 
-  /* Stronger veil on mobile so the wordmark + paragraph read clearly over the
-     bright painting + figure on a small screen. */
+  /* Velo más fuerte en móvil para que el wordmark + párrafo se lean sobre la
+     pintura clara y la figura en una pantalla pequeña. */
   #software .ap-veil{
     background:
       linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
@@ -2720,50 +2732,55 @@
         rgba(10,8,7,.62) 100%);
   }
 
+  /* Banner = telón de fondo a pantalla completa, fijo toda la sección */
   #software .ap-banner{
     position: sticky;
     top: 0;
-    height: 415px;
-    min-height: 415px;
-    padding-top: 0;
+    height: 100svh;
+    min-height: 100svh;
+    padding-top: clamp(104px, 15svh, 150px);
     padding-bottom: 0;
-    justify-content: center;
-    z-index: 1;                 /* hero sits BEHIND the card stack */
+    justify-content: flex-start;
+    z-index: 1;
   }
 
-  /* card column breaks out of the grid and stacks in normal flow */
+  /* Capa de cards: también fija a pantalla completa, superpuesta al banner */
   #software .ap-cards.container{
-    position: relative;
-    z-index: 10;                /* whole stack above the hero */
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    margin-top: -100svh;        /* se solapa exactamente con el banner */
     display: block;
     width: calc(100vw - 24px);
-    margin-top: -110px;         /* pull cards closer to the banner text (halve the gap) */
-    padding-bottom: 70vh;       /* scroll runway so the last card stays pinned covering the previous */
+    margin-inline: auto;
+    z-index: 10;
+    pointer-events: none;       /* el JS reactiva solo la card visible */
   }
 
+  /* Las tres cards, superpuestas y ancladas abajo. opacity la controla el JS. */
   #software .ap-cards .ac{
-    position: sticky;
-    top: 360px;                 /* below the banner content (title + description) so cards stack under them */
-    display: block;
-    width: 100%;
+    position: absolute;
+    left: 0; right: 0;
+    top: auto;
+    bottom: 6svh;
+    width: auto;
     height: auto;
-    margin: 0 0 14px;
+    margin: 0;
     border-radius: 32px;
     overflow: hidden;
     box-shadow: none;
+    /* Framer Motion también escribe style.opacity en estas cards (su reveal de
+       entrada), así que pisaba el relevo. Se lee de una custom property con
+       !important: así el inline de Framer no gana y el JS solo toca --sw-fade. */
+    opacity: var(--sw-fade, 0) !important;
+    will-change: opacity;
   }
-  /* iOS/Safari clip-bug fix: the AOS card's background-image + veil layers carry
-     their own compositing layer (will-change:transform) and bleed past the
-     parent's rounded corners, squaring the top edge. Rounding the layers
-     themselves to the same radius keeps every corner clipped. */
+  /* Fix de recorte en iOS/Safari: .ac-bg y .ac-veil llevan su propia capa de
+     composición y se salen de las esquinas redondeadas del padre. */
   #software .ap-cards .ac .ac-bg,
   #software .ap-cards .ac .ac-veil{
     border-radius: inherit;
   }
-  #software .ap-cards .ac:last-child{ margin-bottom: 0; }
-
-  /* All cards pin at the same point with rising z-index, so each one fully
-     covers the previous (no peeking strip from the card behind). */
   #software .ap-cards .ac:nth-child(1){ z-index: 11; }
   #software .ap-cards .ac:nth-child(2){ z-index: 12; }
   #software .ap-cards .ac:nth-child(3){ z-index: 13; }
@@ -2772,17 +2789,18 @@
   #software .ac-detail{ padding: 22px 20px 24px; }
   #software .ac-detail-title{ font-size: 30px; margin-bottom: 10px; }
 
-  /* raise the section title and drop the description so they don't overlap */
-  #software .ap-word{
-    margin-top: -52px !important;
-  }
-  /* keep the hero subtitle from overflowing the narrow viewport (inline width) */
+  /* Título + subtítulo del banner, agrupados arriba */
+  /* Framer Motion aplica un parallax de ±70px al wordmark. Con el banner ahora
+     fijo toda la sección, ese recorrido lo llevaba a meterse detrás del header
+     al final y a caer POR DEBAJO de su propio subtítulo al principio. Se
+     congela en móvil (el !important gana al style inline de Framer). */
+  #software .ap-word{ margin-top: 0 !important; transform: none !important; }
   #software .ap-subtitle{
     width: auto !important;
     max-width: calc(100% - 12px) !important;
     font-size: 15px !important;
     line-height: 1.4 !important;
-    margin-top: 64px !important;
+    margin-top: 18px !important;
   }
   #stack .ap-subtitle{
     font-size: 15px !important;
@@ -2849,12 +2867,6 @@
   /* compact the interior so the whole card fits on screen */
   #stack .ac-detail{ padding: 22px 20px 24px; }
   #stack .ac-detail-title{ font-size: 30px; margin-bottom: 10px; }
-}
-
-/* Force all three #software cards to pin at the exact same height (the 3rd was
-   settling ~24px lower, letting the DataSpaces title peek above it). */
-@media (max-width: 760px){
-  #software .ap-cards .ac{ top: 360px !important; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -3477,7 +3489,11 @@
        Capabilities is only uncovered as the card shrinks/exits. Out = in. */
     margin-top: 0;   /* reveal removed — no pin-spacer to compensate */
     position:relative;
-    z-index:1;
+    /* Stack se sube margin-top:-114vh a propósito, para que su imagen de manos
+       asome DESDE DETRÁS de esta sección. Pero ambas tenían z-index:1 y Stack va
+       después en el DOM, así que ganaba y su banner (720px) tapaba el título
+       "Discover our capabilities". Con 2, se cumple el diseño original. */
+    z-index:2;
   }
   /* Faint painted ground — full-width, natural aspect, anchored top, fades to cream */
   .caps-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
@@ -3798,13 +3814,21 @@
   @media (max-width: 760px){
     .clients{ height:auto !important; scroll-snap-align:start !important; scroll-snap-stop:always !important; }
     .clients-bg, .clients-bg-veil{ display:none !important; }
-    .clients-stage{ position:static !important; height:auto !important; min-height:0 !important; overflow:visible !important; display:flex !important; flex-direction:column !important; padding:140px 0 44px !important; }
-    .cl-title{ position:static !important; transform:none !important; left:auto !important; top:auto !important; order:-1 !important; margin:0 auto 22px !important; }
-    .cl-canvas{ position:static !important; inset:auto !important; transform:none !important; height:auto !important; min-height:0 !important; order:1 !important; padding:0 14px !important; display:flex !important; flex-direction:column !important; }
-    .cl-slot{ position:static !important; left:auto !important; top:auto !important; transform:none !important; width:100% !important; max-width:520px !important; height:auto !important; min-height:0 !important; margin:0 auto 14px !important; display:block !important; pointer-events:auto !important; z-index:auto !important; }
+    .clients-stage{ position:static !important; height:auto !important; min-height:0 !important; overflow:visible !important; display:flex !important; flex-direction:column !important; padding:180px 0 44px !important; }
+    .cl-title{ position:static !important; transform:none !important; left:auto !important; top:auto !important; order:-1 !important; margin:0 auto 46px !important; }
+    .cl-canvas{ position:static !important; inset:auto !important; transform:none !important; height:auto !important; min-height:0 !important; order:1 !important; padding:0 10px !important; display:flex !important; flex-direction:column !important; }
+    .cl-slot{ position:static !important; left:auto !important; top:auto !important; transform:none !important; width:100% !important; max-width:none !important; height:auto !important; min-height:0 !important; margin:0 auto 22px !important; display:block !important; pointer-events:auto !important; z-index:auto !important; }
     .cl-slot-anim{ transform:none !important; opacity:1 !important; visibility:visible !important; height:auto !important; min-height:0 !important; }
-    .cl-card{ width:100% !important; height:auto !important; min-height:179px !important; justify-content:flex-start !important; }
+    .cl-card{ width:100% !important; height:auto !important; min-height:179px !important; justify-content:flex-start !important;
+      /* El escritorio aplica transform:scale(.85) a la card. En móvil eso la
+         encogía (365px de hueco -> 310px visibles) y añadía ~31px de aire
+         fantasma entre cards. Sin scale, la card ocupa el hueco entero. */
+      transform:none !important; }
+    .cl-slot:hover .cl-card{ transform:none !important; box-shadow:none !important; }
     .cl-card--art{ display:none !important; }
+    /* Las cards-ilustración se ocultan, pero su .cl-slot seguía ocupando su
+       margen inferior y duplicaba la separación en ese punto. */
+    .cl-slot:has(.cl-card--art){ display:none !important; }
     .cl-card-year{ display:none !important; }
     .cl-card--lime, .cl-card--magenta, .cl-card--dark{ padding:22px 22px 24px 22px !important; }
     .cl-card-name{ font-size:26px !important; line-height:1.05 !important; }
@@ -4236,6 +4260,10 @@
     align-items:center; justify-content:flex-end;
     text-align:center;
     gap: clamp(16px, 2.4vh, 28px);
+    /* OJO: el padding-bottom que MANDA no es este — footer-cta.js lo pone como
+       estilo inline en el elemento, así que gana a esta regla (y también a la
+       de @media max-width:900px de más abajo, que es código muerto). El valor
+       real está en footer-cta.js. */
     padding: 0 clamp(20px, 4vw, 60px) calc(clamp(40px, 7vh, 82px) + 20px);
   }
   .fc-headline--final{ line-height:.94; }
@@ -4346,7 +4374,7 @@
         <div class="ull-fill"></div>
       </div>
     </div>
-    <div class="ull-label">Load Ulltra</div>
+    <div class="ull-label">Loading Ulltra</div>
     <svg class="ull-aperture" id="ull-aperture" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
         <mask id="ull-ap-mask" maskUnits="userSpaceOnUse" x="-4000" y="-4000" width="12000" height="12000">
@@ -4605,15 +4633,15 @@
   <script defer src="assets/capabilities.js?v=53"></script>
   <script defer src="assets/clients.js?v=61"></script>
   <script defer src="assets/client-logos.js?v=53"></script>
-  <script defer src="assets/footer-cta.js?v=55"></script>
-  <script defer src="assets/hero.js?v=74"></script>
+  <script defer src="assets/footer-cta.js?v=56"></script>
+  <script defer src="assets/hero.js?v=75"></script>
   <script defer src="assets/home-nav-work.js?v=3"></script>
   <script defer src="assets/book-meeting.js?v=3"></script>
   <script defer src="assets/oc-clients.js?v=1"></script>
 
   <script src="assets/section-nav.js?v=11"></script>
 
-  <script src="assets/software-equal-cards.js?v=2"></script>
+  <script src="assets/software-equal-cards.js?v=3"></script>
 
   <script src="assets/stack-expand.js?v=9"></script>
 <script src="assets/home-hero-scramble.js?v=2"></script>
