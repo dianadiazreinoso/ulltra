@@ -238,7 +238,12 @@
     .cripto-inner{ min-height:0; display:block; padding:clamp(72px,12vw,120px) 0; }
     .cripto-road{ position:static; transform:none; width:auto; flex-direction:column; margin-top:clamp(36px,7vw,56px); }
     .cr-card{ text-align:left; }
-    .cr-arrow{ flex:none; height:auto; transform:none; display:flex; align-items:center; justify-content:center; margin:6px 0; } .cr-arrow svg{ width:46px; height:20px; transform:rotate(90deg); }
+    /* La flecha se gira 90deg, así que su caja de layout (46x20) NO coincide con
+       su tamaño visual (20 ancho x 46 alto): se salía 6px por arriba y por abajo
+       y se montaba sobre las cards. Se reserva el alto real (46px) y se sube con
+       position+z-index para que nunca quede por debajo de la card (las cards
+       llevan transform de GSAP, que crea contexto de apilado). */
+    .cr-arrow{ flex:none; position:relative; z-index:2; height:46px; transform:none; display:flex; align-items:center; justify-content:center; margin:6px 0; } .cr-arrow svg{ width:46px; height:20px; transform:rotate(90deg); }
     .cripto-note{ position:static; transform:none; width:auto; margin-top:26px; }
   }
 

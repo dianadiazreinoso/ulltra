@@ -465,6 +465,11 @@
     .tml-card::before, .tml-card::after{ display:none; }
     .tml-card.in{ opacity:1; transform:translateY(0); }
     .tml-illus{ min-height:100px; max-height:170px; }
+    /* El escritorio pone max-height:calc(100vh - 200px) + overflow:hidden en la
+       card. En viewports bajos (navegador in-app, apaisado, ventana partida) eso
+       recortaba la card y se comía el texto del pie que va debajo de la
+       ilustración. En móvil la card crece con su contenido, así que se anula. */
+    .tml-card{ max-height:none !important; overflow:visible !important; }
     .tml-card{ position:static !important; width:100%; max-width:340px; margin-inline:auto !important; text-align:left !important; left:auto !important; right:auto !important; transform:translateY(16px); opacity:0; transition:opacity .7s cubic-bezier(.19,1,.22,1), transform .7s cubic-bezier(.19,1,.22,1); }
     .tml-card.in{ opacity:1; transform:translateY(0); }
     .tml-card.tml-left .rule{ margin-left:0; }
