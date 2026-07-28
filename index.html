@@ -3797,12 +3797,18 @@
   /* ── mobile: flatten the animated deck into a plain, tappable vertical list ── */
   @media (max-width: 760px){
     .clients{ height:auto !important; }
-    .clients-stage{ position:static !important; height:auto !important; overflow:visible !important; padding:8px 0 24px !important; }
-    .cl-canvas{ position:static !important; inset:auto !important; transform:none !important; height:auto !important; padding:0 14px !important; }
+    .clients-bg, .clients-bg-veil{ display:none !important; }
+    .clients-stage{ position:static !important; height:auto !important; min-height:0 !important; overflow:visible !important; display:flex !important; flex-direction:column !important; padding:24px 0 32px !important; }
+    .cl-title{ position:static !important; transform:none !important; left:auto !important; top:auto !important; order:-1 !important; margin:0 auto 22px !important; }
+    .cl-canvas{ position:static !important; inset:auto !important; transform:none !important; height:auto !important; order:1 !important; padding:0 14px !important; display:flex !important; flex-direction:column !important; }
     .cl-slot{ position:static !important; left:auto !important; top:auto !important; transform:none !important; width:100% !important; max-width:520px !important; margin:0 auto 16px !important; display:block !important; pointer-events:auto !important; z-index:auto !important; }
     .cl-slot-anim{ transform:none !important; opacity:1 !important; visibility:visible !important; }
     .cl-card{ width:100% !important; }
     .cl-card--art{ display:none !important; }
+    .cl-card--lime, .cl-card--magenta, .cl-card--dark{ padding:26px 24px 28px 24px !important; }
+    .cl-card-name{ font-size:28px !important; }
+    .cl-card-type{ font-size:22px !important; }
+    .cl-card-desc{ font-size:15px !important; line-height:1.5 !important; margin-top:12px !important; max-width:none !important; }
   }
 
   .cl-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
