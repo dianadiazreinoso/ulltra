@@ -2497,13 +2497,12 @@
      smaller wordmark (the title is longer than "Software"), and grouped tool
      lists inside the cards. */
 .stk{
-  /* Pulled up one viewport so it sits BEHIND the (opaque) shrinking bust stage:
-     as that stage shrinks, this section's hands image rises into view from below
-     — no separate copy of the image (avoids the duplicate), and its top aligns
-     exactly with the viewport when the bust stage releases (seamless handoff).
-     OJO: este solape es además lo que mantiene OCULTO el mazo de cards de
-     Capabilities (.caps-deck). Si se quita, el mazo reaparece. */
-  margin-top: -114vh;
+  /* El -114vh original era para quedar DETRÁS del bust stage opaco que se
+     encogía en la sección .reveal — sección que ya no existe. Desde entonces lo
+     único que hacía era tapar Capabilities, que asomaba por encima del banner
+     en algunos viewports. Retirada Capabilities, el solape sobra: sin él,
+     #consultancy y esta sección van seguidas. */
+  margin-top: 0;
   z-index: 1;
 }
 .stk .ap-bg-img{
@@ -4626,16 +4625,19 @@
   <script defer src="assets/pixel-dissolve.js?v=53"></script>
   <script defer src="assets/sections.js?v=53"></script>
   <script defer src="assets/reveal.js?v=53"></script>
+  <!-- Capabilities retirada de la home. El archivo sigue en assets/ por si hay
+       que recuperarla: basta con descomentar este script.
   <script defer src="assets/capabilities.js?v=53"></script>
+  -->
   <script defer src="assets/clients.js?v=61"></script>
   <script defer src="assets/client-logos.js?v=53"></script>
   <script defer src="assets/footer-cta.js?v=56"></script>
-  <script defer src="assets/hero.js?v=75"></script>
+  <script defer src="assets/hero.js?v=76"></script>
   <script defer src="assets/home-nav-work.js?v=3"></script>
   <script defer src="assets/book-meeting.js?v=3"></script>
   <script defer src="assets/oc-clients.js?v=1"></script>
 
-  <script src="assets/section-nav.js?v=11"></script>
+  <script src="assets/section-nav.js?v=12"></script>
 
   <script src="assets/software-equal-cards.js?v=3"></script>
 
