@@ -61,6 +61,11 @@
         // of the sticky short cards — z-index only works on a positioned element,
         // so we use relative (static would be painted under the sticky cards).
         longCard.style.position = "relative";
+        // El CSS compartido pone top:360px para el sticky de las cards cortas.
+        // Al pasar esta card a `relative` ese top la desplazaba 360px hacia abajo
+        // SIN ocupar sitio en el layout, así que se derramaba fuera de #stack y
+        // tapaba el título de "Selected work". Lo anulamos.
+        longCard.style.top = "0px";
         longCard.style.zIndex = "20";
         longCard.style.minHeight = "";
         longCard.style.height = "";
@@ -71,6 +76,7 @@
       // desktop: restore the long card to first position
       if (wrap.firstElementChild !== longCard) wrap.insertBefore(longCard, wrap.firstElementChild);
       longCard.style.position = "";
+      longCard.style.top = "";
       longCard.style.zIndex = "";
       btn.style.display = "";
 
