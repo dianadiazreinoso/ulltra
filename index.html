@@ -3796,19 +3796,20 @@
 
   /* ── mobile: flatten the animated deck into a plain, tappable vertical list ── */
   @media (max-width: 760px){
-    .clients{ height:auto !important; }
+    .clients{ height:auto !important; scroll-snap-align:start !important; scroll-snap-stop:always !important; }
     .clients-bg, .clients-bg-veil{ display:none !important; }
-    .clients-stage{ position:static !important; height:auto !important; min-height:0 !important; overflow:visible !important; display:flex !important; flex-direction:column !important; padding:24px 0 32px !important; }
+    .clients-stage{ position:static !important; height:auto !important; min-height:0 !important; overflow:visible !important; display:flex !important; flex-direction:column !important; padding:28px 0 40px !important; }
     .cl-title{ position:static !important; transform:none !important; left:auto !important; top:auto !important; order:-1 !important; margin:0 auto 22px !important; }
-    .cl-canvas{ position:static !important; inset:auto !important; transform:none !important; height:auto !important; order:1 !important; padding:0 14px !important; display:flex !important; flex-direction:column !important; }
-    .cl-slot{ position:static !important; left:auto !important; top:auto !important; transform:none !important; width:100% !important; max-width:520px !important; margin:0 auto 16px !important; display:block !important; pointer-events:auto !important; z-index:auto !important; }
-    .cl-slot-anim{ transform:none !important; opacity:1 !important; visibility:visible !important; }
-    .cl-card{ width:100% !important; }
+    .cl-canvas{ position:static !important; inset:auto !important; transform:none !important; height:auto !important; min-height:0 !important; order:1 !important; padding:0 14px !important; display:flex !important; flex-direction:column !important; }
+    .cl-slot{ position:static !important; left:auto !important; top:auto !important; transform:none !important; width:100% !important; max-width:520px !important; height:auto !important; min-height:0 !important; margin:0 auto 14px !important; display:block !important; pointer-events:auto !important; z-index:auto !important; }
+    .cl-slot-anim{ transform:none !important; opacity:1 !important; visibility:visible !important; height:auto !important; min-height:0 !important; }
+    .cl-card{ width:100% !important; height:auto !important; min-height:0 !important; justify-content:flex-start !important; }
     .cl-card--art{ display:none !important; }
-    .cl-card--lime, .cl-card--magenta, .cl-card--dark{ padding:26px 24px 28px 24px !important; }
-    .cl-card-name{ font-size:28px !important; }
-    .cl-card-type{ font-size:22px !important; }
-    .cl-card-desc{ font-size:15px !important; line-height:1.5 !important; margin-top:12px !important; max-width:none !important; }
+    .cl-card-year{ display:none !important; }
+    .cl-card--lime, .cl-card--magenta, .cl-card--dark{ padding:22px 22px 24px 22px !important; }
+    .cl-card-name{ font-size:26px !important; line-height:1.05 !important; }
+    .cl-card-type{ font-size:20px !important; }
+    .cl-card-desc{ font-size:15px !important; line-height:1.45 !important; margin-top:10px !important; max-width:none !important; }
   }
 
   .cl-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
@@ -4602,7 +4603,7 @@
   <script defer src="assets/sections.js?v=53"></script>
   <script defer src="assets/reveal.js?v=53"></script>
   <script defer src="assets/capabilities.js?v=53"></script>
-  <script defer src="assets/clients.js?v=60"></script>
+  <script defer src="assets/clients.js?v=61"></script>
   <script defer src="assets/client-logos.js?v=53"></script>
   <script defer src="assets/footer-cta.js?v=55"></script>
   <script defer src="assets/hero.js?v=74"></script>
