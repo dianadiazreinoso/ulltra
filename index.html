@@ -2506,8 +2506,11 @@
   z-index: 1;
 }
 .stk .ap-bg-img{
-  background-image: url("assets/stack-bg.jpg");
-  background-position: 50% 42%;
+  background-image: url("assets/stack-bg-monolith.webp?v=1");
+  /* La pintura es panorámica (2.43:1) y el banner es más cuadrado, así que
+     `cover` escala por altura: se ve TODO el alto y se recorta a los lados.
+     Por eso el eje Y da igual aquí y solo importa el X. */
+  background-position: 50% 50%;
   filter: saturate(0.96) contrast(1.03);
 }
 /* Center the title + subtitle group in the OPEN band (top of image → top of
@@ -2817,6 +2820,12 @@
 @media (max-width: 760px){
   /* sticky descendants need a non-clipping section (.ap sets overflow:hidden) */
   #stack{ overflow: visible; }
+
+  /* En móvil el banner es casi vertical y de la pintura (panorámica) solo se ve
+     un tercio del ancho. Centrado al 50% se cortaba la figura de la derecha
+     (las dos están en x 1004-1171 de 1712 y la ventana acababa en 1145).
+     Al 70% las dos entran enteras y quedan centradas, con el monolito detrás. */
+  .stk .ap-bg-img{ background-position: 70% 50%; }
 
   #stack .ap-banner{
     position: sticky;
