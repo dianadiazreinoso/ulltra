@@ -437,7 +437,7 @@
     .tml-cards{ position:static; display:flex; flex-direction:column; gap:26px; }
     .tml-card{ position:static !important; margin:0 !important; align-self:stretch; width:auto; height:auto; }
     .tml-card::before, .tml-card::after{ display:none; }
-    .tml-illus{ min-height:180px; }
+    .tml-illus{ min-height:120px; max-height:210px; }
   }
   @media (max-width:900px){
     .eco{ min-height:0; }
@@ -464,7 +464,7 @@
     .tml-card{ position:static !important; margin:0 auto !important; align-self:center; width:100%; max-width:340px; height:auto; opacity:0; transform:translateY(16px); transition:opacity .7s cubic-bezier(.19,1,.22,1), transform .7s cubic-bezier(.19,1,.22,1); }
     .tml-card::before, .tml-card::after{ display:none; }
     .tml-card.in{ opacity:1; transform:translateY(0); }
-    .tml-illus{ min-height:140px; }
+    .tml-illus{ min-height:100px; max-height:170px; }
     .tml-card{ position:static !important; width:100%; max-width:340px; margin-inline:auto !important; text-align:left !important; left:auto !important; right:auto !important; transform:translateY(16px); opacity:0; transition:opacity .7s cubic-bezier(.19,1,.22,1), transform .7s cubic-bezier(.19,1,.22,1); }
     .tml-card.in{ opacity:1; transform:translateY(0); }
     .tml-card.tml-left .rule{ margin-left:0; }
@@ -562,7 +562,7 @@
     .kpi{ padding:clamp(16px, 4vw, 24px) 0; }
     .kpi:first-child, .kpi:nth-child(2){ padding-top:0; }
     .kpi-label{ font-size:13px; min-height:2.6em; display:flex; align-items:flex-start; }
-    .kpi-num{ font-size:clamp(46px, 15vw, 68px); }
+    .kpi-num{ font-size:clamp(32px, 8.5vw, 44px); }
     .kpi-note{ max-width:none; font-size:13px; }
   }
 
@@ -598,9 +598,9 @@
     .hero{ min-height:100svh; height:100svh; padding-top:0; box-sizing:border-box; }
     .hero .wrap{ height:100%; }
     .hero-grid{ display:flex; flex-direction:column; height:100%; gap:0; justify-content:flex-start; padding-top:78px; padding-bottom:28px; box-sizing:border-box; }
-    .hero-visual{ order:-1; min-height:0; flex:0 0 40vh; }
+    .hero-visual{ order:-1; min-height:0; flex:0 0 24vh; }
     .hero-copy{ flex:0 0 auto; text-align:center; }
-    #rosco{ width:min(380px, 82vw); }
+    #rosco{ width:min(230px, 52vw); }
     .hero-brand{ margin-inline:auto; max-width:200px; }
     .manifesto h2{ font-size:40px; }
     .hero h1{ font-size:clamp(30px, 8vw, 44px); }

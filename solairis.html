@@ -300,7 +300,11 @@
   #pipeline .eyebrow, #pipeline h2, #pipeline .section-lede{ transition:color .5s ease; }
   #pipeline .pipeline, #pipeline .stage, #pipeline .stage h4, #pipeline .stage p, #pipeline .code-note, #pipeline .stage::after{ transition:color .5s ease, background-color .5s ease, border-color .5s ease; }
   #pipeline .pipeline{ border:none; background:transparent; overflow:visible; display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:1fr; gap:clamp(12px,1.4vw,22px); }
-  @media(max-width:720px){ #pipeline .pipeline{ grid-template-columns:1fr; } }
+  @media(max-width:720px){
+    h1{ font-size:2rem !important; }
+    .h1-sub{ white-space:normal !important; font-size:.6em !important; }
+    .stats{ grid-template-columns:1fr !important; }
+    .sl-stage{ justify-content:flex-start !important; padding-top:96px !important; } #pipeline .pipeline{ grid-template-columns:1fr; } }
   #pipeline .stage{ border-right:none; padding-top:35px; padding-bottom:36px; }
   #pipeline .stage--img{ padding:0; overflow:hidden; }
   #pipeline .stage--img img{ display:block; width:100%; height:100%; object-fit:cover; }
