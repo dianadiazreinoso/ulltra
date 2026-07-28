@@ -3794,6 +3794,17 @@
   .cl-card--lime.cl-card--link{    color:#F1EEDC !important; }
   .cl-card--dark.cl-card--link{    color:#F2EDE1 !important; }
 
+  /* ── mobile: flatten the animated deck into a plain, tappable vertical list ── */
+  @media (max-width: 760px){
+    .clients{ height:auto !important; }
+    .clients-stage{ position:static !important; height:auto !important; overflow:visible !important; padding:8px 0 24px !important; }
+    .cl-canvas{ position:static !important; inset:auto !important; transform:none !important; height:auto !important; padding:0 14px !important; }
+    .cl-slot{ position:static !important; left:auto !important; top:auto !important; transform:none !important; width:100% !important; max-width:520px !important; margin:0 auto 16px !important; display:block !important; pointer-events:auto !important; z-index:auto !important; }
+    .cl-slot-anim{ transform:none !important; opacity:1 !important; visibility:visible !important; }
+    .cl-card{ width:100% !important; }
+    .cl-card--art{ display:none !important; }
+  }
+
   .cl-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
   .cl-card-id{ display:flex; flex-direction:column; gap:2px; }
   .cl-card-name{
