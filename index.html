@@ -2702,6 +2702,15 @@
   .ap-word{font-size: clamp(40px, 13vw, 100px)}
 }
 
+/* Las dos variables que anima el JS de las cards de Software se registran con
+   inherits:false. Sin registrar, una custom property se hereda, y cambiarla en
+   cada fotograma invalida el estilo de TODO el subárbol de la card (el título,
+   las 8 filas y sus iconos). Con inherits:false el recálculo se queda en el
+   elemento. Si el navegador no soporta @property (Safari < 16.4) simplemente
+   se ignora y todo sigue funcionando. */
+@property --sw-fade{ syntax: "<number>"; inherits: false; initial-value: 1; }
+@property --sw-y{ syntax: "<length>"; inherits: false; initial-value: 0px; }
+
 /* ── Software · móvil "crossfade sobre banner fijo" ───────────────────────────
    Comportamiento: al hacer snap se ve SOLO el banner (imagen de fondo + título
    + subtítulo). Con un poco de scroll entra la card 1; más scroll y la card 1
@@ -4681,7 +4690,7 @@
 
   <script src="assets/section-nav.js?v=12"></script>
 
-  <script src="assets/software-equal-cards.js?v=6"></script>
+  <script src="assets/software-equal-cards.js?v=7"></script>
 
   <script src="assets/stack-expand.js?v=9"></script>
 <script src="assets/home-hero-scramble.js?v=2"></script>
