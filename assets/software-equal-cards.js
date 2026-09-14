@@ -16,10 +16,10 @@
 
    IMPORTANTE — por qué existe la clase `sw-fade-ready`:
    el CSS oculta las cards por defecto para que el relevo empiece en negro. Si
-   este archivo falta o se queda en una versión vieja, nadie pone --sw-fade y
-   las cards quedan invisibles PARA SIEMPRE (ya pasó). Para que ese fallo no
-   pueda repetirse, el CSS solo oculta las cards cuando este JS ha añadido la
-   clase `sw-fade-ready` a #software. Sin JS, se ven. */
+   este archivo falta o se queda en una versión vieja, nadie enciende las cards
+   y quedan invisibles PARA SIEMPRE (ya pasó). Para que ese fallo no pueda
+   repetirse, el CSS solo las oculta cuando este JS ha añadido la clase
+   `sw-fade-ready` a #software. Sin JS, se ven. */
 (function () {
   "use strict";
 
@@ -105,31 +105,60 @@
   });
   window.addEventListener("orientationchange", function () { setTimeout(run, 300); });
 
-  /* ── B) Relevo por opacidad de las cards de #software ──────────────────── */
-  /* Ventanas sobre el progreso de scroll de la sección (0 = arriba, 1 = final).
-     Cada card: [entra desde, entra hasta, sale desde, sale hasta]. Son
-     consecutivas, no solapadas: una se va del todo y entonces entra la
-     siguiente, así no se transparenta el fondo con dos cards a medias. La
-     tercera no sale nunca. El primer tramo (0 -> 0.16) no tiene ninguna card:
-     es donde se ve solo el banner al hacer snap. */
-  var WINDOWS = [
-    [0.16, 0.23, 0.38, 0.45],
-    [0.45, 0.52, 0.67, 0.74],
-    [0.74, 0.81, 9, 9]
-  ];
+  /* ── B) Relevo de las cards de #software ───────────────────────────────
+     Cada card tiene UN umbral: por encima de él está encendida. Como están
+     superpuestas y con z-index creciente, la 2 al encenderse tapa a la 1 y la 3
+     tapa a la 2, así que no hace falta apagar la de debajo: el relevo se ve
+     limpio y sin que se transparente el fondo con dos cards a medias. Marcha
+     atrás funciona igual (al apagarse la de arriba reaparece la de abajo).
 
-  function ramp(p, a, b) {               // 0 en a, 1 en b
-    if (b === a) return p >= b ? 1 : 0;
-    var v = (p - a) / (b - a);
-    return v < 0 ? 0 : (v > 1 ? 1 : v);
-  }
+     El fundido se interpola aquí, con reloj propio (no con la posición del
+     scroll). Antes la opacidad se calculaba en cada fotograma a partir del
+     scroll, y en iOS los eventos de scroll llegan a trompicones durante la
+     inercia: de ahí el fundido a tirones. Tampoco se usa un `transition` de
+     CSS: en estas cards no arranca, porque Framer Motion tiene tomada la
+     propiedad opacity. */
+  var UMBRALES = [0.18, 0.45, 0.72];
+  var HISTERESIS = 0.015;   // margen para que no parpadee justo en el umbral
+  var DUR = 550;            // ms de fundido
+
+  function easeOut(t) { var u = 1 - t; return 1 - u * u * u; }
 
   function initCrossfade() {
     var sec = document.querySelector("#software");
     var cards = [].slice.call(document.querySelectorAll("#software .ap-cards .ac"));
     if (!sec || cards.length < 3) return false;
 
-    var pending = null;
+    var estado = [false, false, false];   // encendida/apagada
+    var valor  = [0, 0, 0];               // opacidad actual
+    var desde  = [0, 0, 0];               // opacidad al empezar el fundido
+    var hacia  = [0, 0, 0];               // destino
+    var t0     = [0, 0, 0];               // instante de inicio
+    var tween = null, pending = null;
+
+    function aplicar(i) {
+      cards[i].style.setProperty("--sw-fade", valor[i].toFixed(3));
+    }
+
+    function paso(now) {
+      var vivo = false;
+      for (var i = 0; i < cards.length; i++) {
+        if (valor[i] === hacia[i]) continue;
+        var t = (now - t0[i]) / DUR;
+        if (t >= 1) { valor[i] = hacia[i]; }
+        else { valor[i] = desde[i] + (hacia[i] - desde[i]) * easeOut(t < 0 ? 0 : t); vivo = true; }
+        aplicar(i);
+      }
+      tween = vivo ? requestAnimationFrame(paso) : null;
+    }
+
+    function lanzar(i, destino, now) {
+      if (hacia[i] === destino) return;
+      desde[i] = valor[i];
+      hacia[i] = destino;
+      t0[i] = now;
+      if (tween === null) tween = requestAnimationFrame(paso);
+    }
 
     function paint() {
       pending = null;
@@ -139,23 +168,31 @@
         for (var d = 0; d < cards.length; d++) {
           cards[d].style.removeProperty("--sw-fade");
           cards[d].style.pointerEvents = "";
+          estado[d] = false; valor[d] = 0; hacia[d] = 0;
         }
         return;
       }
 
       var r = sec.getBoundingClientRect();
-      var travel = r.height - window.innerHeight;   // recorrido scrolleable real
+      var travel = r.height - window.innerHeight;
       if (travel <= 0) return;
       var p = -r.top / travel;
       if (p < 0) p = 0;
       if (p > 1) p = 1;
 
-      for (var i = 0; i < cards.length && i < WINDOWS.length; i++) {
-        var w = WINDOWS[i];
-        var o = ramp(p, w[0], w[1]) * (1 - ramp(p, w[2], w[3]));
-        cards[i].style.setProperty("--sw-fade", o.toFixed(3));
-        cards[i].style.pointerEvents = o > 0.5 ? "auto" : "none";
+      var now = (window.performance && performance.now) ? performance.now() : Date.now();
+      var arriba = -1;
+      for (var i = 0; i < cards.length && i < UMBRALES.length; i++) {
+        var u = UMBRALES[i];
+        if (estado[i]) { if (p < u - HISTERESIS) estado[i] = false; }
+        else { if (p >= u) estado[i] = true; }
+        lanzar(i, estado[i] ? 1 : 0, now);
+        if (estado[i]) arriba = i;
       }
+      for (var j = 0; j < cards.length; j++) {
+        cards[j].style.pointerEvents = (j === arriba) ? "auto" : "none";
+      }
+
       // Se activa el CSS solo cuando ya hay valores puestos: así no hay parpadeo
       // y, si este archivo faltara, las cards se seguirían viendo.
       sec.classList.add("sw-fade-ready");
@@ -165,6 +202,7 @@
       if (pending === null) pending = requestAnimationFrame(paint);
     }
 
+    for (var k = 0; k < cards.length; k++) aplicar(k);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
     window.addEventListener("orientationchange", function () { setTimeout(paint, 300); });

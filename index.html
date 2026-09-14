@@ -2738,8 +2738,15 @@
   #software .ap-banner{
     position: sticky;
     top: 0;
+    /* svh asume que Safari muestra la barra inferior. Cuando esa barra se
+       colapsa al hacer scroll, la pantalla crece y un 100svh se queda corto
+       (medido en un iPhone 15: viewport 771px, banner 684px -> 87px de hueco
+       crema abajo). lvh es la altura SIN barras: nunca deja hueco y, a
+       diferencia de dvh, no cambia de tamaño al aparecer/ocultarse la barra,
+       así que tampoco da saltos. Lo que sobra por abajo es solo fondo. */
     height: 100svh;
-    min-height: 100svh;
+    height: 100lvh;
+    min-height: 100lvh;
     padding-top: clamp(104px, 15svh, 150px);
     padding-bottom: 0;
     justify-content: flex-start;
@@ -2750,8 +2757,10 @@
   #software .ap-cards.container{
     position: sticky;
     top: 0;
+    /* La capa de cards se queda en svh a propósito: así la card se ancla al
+       borde de la pantalla MÁS PEQUEÑA y se ve entera salga o no la barra. */
     height: 100svh;
-    margin-top: -100svh;        /* se solapa exactamente con el banner */
+    margin-top: -100lvh;        /* debe valer lo que mide el banner */
     display: block;
     width: calc(100vw - 24px);
     margin-inline: auto;
@@ -2786,6 +2795,11 @@
      que escribe Framer Motion (en este layout sus valores son casi 0, así que
      sin este !important el "fallo seguro" no serviría de nada). */
   #software .ap-cards .ac{ opacity: 1 !important; }
+
+  /* Con el JS activo, la opacidad sale de esta variable. El fundido lo interpola
+     el propio JS con su reloj (no un `transition`): probado que en estas cards
+     el transition no llega a arrancar porque Framer Motion tiene tomada la
+     propiedad opacity, y una custom property tampoco dispara transiciones. */
   #software.sw-fade-ready .ap-cards .ac{
     opacity: var(--sw-fade, 1) !important;
   }
@@ -2795,6 +2809,7 @@
   #software .ap-cards .ac .ac-veil{
     border-radius: inherit;
   }
+
   #software .ap-cards .ac:nth-child(1){ z-index: 11; }
   #software .ap-cards .ac:nth-child(2){ z-index: 12; }
   #software .ap-cards .ac:nth-child(3){ z-index: 13; }
@@ -4660,7 +4675,7 @@
 
   <script src="assets/section-nav.js?v=12"></script>
 
-  <script src="assets/software-equal-cards.js?v=4"></script>
+  <script src="assets/software-equal-cards.js?v=5"></script>
 
   <script src="assets/stack-expand.js?v=9"></script>
 <script src="assets/home-hero-scramble.js?v=2"></script>
