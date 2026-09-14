@@ -2771,11 +2771,23 @@
     border-radius: 32px;
     overflow: hidden;
     box-shadow: none;
-    /* Framer Motion también escribe style.opacity en estas cards (su reveal de
-       entrada), así que pisaba el relevo. Se lee de una custom property con
-       !important: así el inline de Framer no gana y el JS solo toca --sw-fade. */
-    opacity: var(--sw-fade, 0) !important;
     will-change: opacity;
+  }
+  /* Framer Motion también escribe style.opacity en estas cards (su reveal de
+     entrada), así que pisaba el relevo. Se lee de una custom property con
+     !important: así el inline de Framer no gana y el JS solo toca --sw-fade.
+
+     A PRUEBA DE FALLOS: esta regla cuelga de .sw-fade-ready, una clase que
+     añade software-equal-cards.js cuando YA ha calculado las opacidades. Si ese
+     archivo falta o se queda en una versión vieja, la clase no se pone, esta
+     regla no aplica y las cards se ven (sin relevo, pero visibles). Antes el
+     defecto era 0 y desaparecían las tres para siempre. */
+  /* Por defecto VISIBLES, y con !important para ganarle también al style inline
+     que escribe Framer Motion (en este layout sus valores son casi 0, así que
+     sin este !important el "fallo seguro" no serviría de nada). */
+  #software .ap-cards .ac{ opacity: 1 !important; }
+  #software.sw-fade-ready .ap-cards .ac{
+    opacity: var(--sw-fade, 1) !important;
   }
   /* Fix de recorte en iOS/Safari: .ac-bg y .ac-veil llevan su propia capa de
      composición y se salen de las esquinas redondeadas del padre. */
@@ -4648,7 +4660,7 @@
 
   <script src="assets/section-nav.js?v=12"></script>
 
-  <script src="assets/software-equal-cards.js?v=3"></script>
+  <script src="assets/software-equal-cards.js?v=4"></script>
 
   <script src="assets/stack-expand.js?v=9"></script>
 <script src="assets/home-hero-scramble.js?v=2"></script>
