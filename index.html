@@ -2715,8 +2715,11 @@
   #software{
     overflow: visible;
     /* Runway: 1 pantalla de banner + 3 fases de card. En svh para que no salte
-       al ocultarse la barra del navegador. */
-    height: 380svh;
+       al ocultarse la barra del navegador.
+       260svh = 1.6 pantallas de scroll en total: la card 1 entra a los ~140px
+       (un golpe de dedo) y de una card a otra hay media pantalla. Con 380svh
+       había que bajar 2 pantallas enteras para llegar a la tercera. */
+    height: 260svh;
     padding-bottom: 0;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -2802,6 +2805,9 @@
      propiedad opacity, y una custom property tampoco dispara transiciones. */
   #software.sw-fade-ready .ap-cards .ac{
     opacity: var(--sw-fade, 1) !important;
+    /* Entran subiendo desde abajo. El !important es necesario porque Framer
+       Motion escribe su propio translateY inline en estas cards. */
+    transform: translate3d(0, var(--sw-y, 0px), 0) !important;
   }
   /* Fix de recorte en iOS/Safari: .ac-bg y .ac-veil llevan su propia capa de
      composición y se salen de las esquinas redondeadas del padre. */
@@ -4675,7 +4681,7 @@
 
   <script src="assets/section-nav.js?v=12"></script>
 
-  <script src="assets/software-equal-cards.js?v=5"></script>
+  <script src="assets/software-equal-cards.js?v=6"></script>
 
   <script src="assets/stack-expand.js?v=9"></script>
 <script src="assets/home-hero-scramble.js?v=2"></script>

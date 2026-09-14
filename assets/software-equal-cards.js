@@ -111,6 +111,7 @@
      tapa a la 2, así que no hace falta apagar la de debajo: el relevo se ve
      limpio y sin que se transparente el fondo con dos cards a medias. Marcha
      atrás funciona igual (al apagarse la de arriba reaparece la de abajo).
+     Cada card entra subiendo 44px desde abajo a la vez que aparece.
 
      El fundido se interpola aquí, con reloj propio (no con la posición del
      scroll). Antes la opacidad se calculaba en cada fotograma a partir del
@@ -118,9 +119,10 @@
      inercia: de ahí el fundido a tirones. Tampoco se usa un `transition` de
      CSS: en estas cards no arranca, porque Framer Motion tiene tomada la
      propiedad opacity. */
-  var UMBRALES = [0.18, 0.45, 0.72];
+  var UMBRALES = [0.10, 0.40, 0.70];
   var HISTERESIS = 0.015;   // margen para que no parpadee justo en el umbral
-  var DUR = 550;            // ms de fundido
+  var DUR = 620;            // ms de la entrada
+  var DESPL = 44;           // px que sube la card al entrar
 
   function easeOut(t) { var u = 1 - t; return 1 - u * u * u; }
 
@@ -136,8 +138,12 @@
     var t0     = [0, 0, 0];               // instante de inicio
     var tween = null, pending = null;
 
+    /* valor[i] es el progreso 0->1 de la entrada. De él salen las dos cosas:
+       la opacidad y el desplazamiento vertical. */
     function aplicar(i) {
-      cards[i].style.setProperty("--sw-fade", valor[i].toFixed(3));
+      var v = valor[i];
+      cards[i].style.setProperty("--sw-fade", v.toFixed(3));
+      cards[i].style.setProperty("--sw-y", ((1 - v) * DESPL).toFixed(1) + "px");
     }
 
     function paso(now) {
@@ -167,6 +173,7 @@
         sec.classList.remove("sw-fade-ready");
         for (var d = 0; d < cards.length; d++) {
           cards[d].style.removeProperty("--sw-fade");
+          cards[d].style.removeProperty("--sw-y");
           cards[d].style.pointerEvents = "";
           estado[d] = false; valor[d] = 0; hacia[d] = 0;
         }
